@@ -72,3 +72,26 @@ echo SendChartData ($chart);
 </chart>
 
 }}} 
+
+это сама функция которая вставляет. что внутри происходит - ппц
+{{{
+function InsertChart( $flash_file, $library_path, $php_source, $width=1000, $height=500, $bg_color="666666", $transparent=false, $license="XN69-IWCH7RVPJQF3Y4G8T05A1LB.2OPDEKZUR" ){
+	
+	$php_source=urlencode($php_source);
+	$library_path=urlencode($library_path);
+	$html="<OBJECT classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000' codebase='http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0' ";
+	$html.="WIDTH=".$width." HEIGHT=".$height." id='charts' ALIGN=''>";
+	$u=(strpos ($flash_file,"?")===false)? "?" : ((substr($flash_file, -1)==="&")? "":"&");
+	$html.="<PARAM NAME=movie VALUE='".$flash_file.$u."library_path=".$library_path."&stage_width=".$width."&stage_height=".$height."&php_source=".$php_source;
+	if($license!=null){$html.="&license=".$license;}
+	$html.="'> <PARAM NAME=quality VALUE=high> <PARAM NAME=bgcolor VALUE=#".$bg_color."> ";
+	if($transparent){$html.="<PARAM NAME=wmode VALUE=transparent> ";}
+	$html.="<EMBED src='".$flash_file.$u."library_path=".$library_path."&stage_width=".$width."&stage_height=".$height."&php_source=".$php_source;
+	if($license!=null){$html.="&license=".$license;}
+	$html.="' quality=high bgcolor=#".$bg_color." WIDTH=".$width." HEIGHT=".$height." NAME='charts' ALIGN='' swLiveConnect='true' ";
+	if($transparent){$html.="wmode=transparent ";}
+	$html.="TYPE='application/x-shockwave-flash' PLUGINSPAGE='http://www.macromedia.com/go/getflashplayer'></EMBED></OBJECT>";
+	return $html;
+	
+}
+}}}
