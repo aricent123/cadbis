@@ -1,6 +1,8 @@
 #labels Phase-Requirements
 для вызова компонента используется
+{{{
 echo InsertChart ( "charts.swf", "charts_library", "index.php", 1000, 500,CCCCCC,false,"KK" );
+}}}
 где index.php - файл, вот такого содержания:
 {{{
 <?php
