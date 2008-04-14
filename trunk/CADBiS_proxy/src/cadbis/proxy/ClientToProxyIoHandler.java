@@ -51,10 +51,9 @@ public class ClientToProxyIoHandler extends AbstractProxyIoHandler {
         this.remoteAddress = remoteAddress;
         connector.setHandler(connectorHandler);
     }
-
+    
     @Override
     public void sessionOpened(final IoSession session) throws Exception {
-
         connector.connect(remoteAddress).addListener(new IoFutureListener<ConnectFuture>() {
             public void operationComplete(ConnectFuture future) {
                 try {
