@@ -1,0 +1,21 @@
+<?php
+
+		$user_messages[$usr_id]['from']=array();
+		$user_messages[$usr_id]['subject']=array();
+		$user_messages[$usr_id]['status']=array();
+		$user_messages[$usr_id]['date']=array();
+		$user_messages[$usr_id]['time']=array();
+		$user_messages[$usr_id]['priority']=array();
+		$user_messages[$usr_id]['text']=array();
+		for($k=1;$k<count($user_vars_all);$k++)
+			{
+			$mess_v=explode("$smb",$user_vars_all[$k]);
+			$user_messages[$usr_id]['from'][$k-1]=$mess_v[0];
+			$user_messages[$usr_id]['subject'][$k-1]=$mess_v[1];
+			$user_messages[$usr_id]['status'][$k-1]=$mess_v[2];
+			$user_messages[$usr_id]['date'][$k-1]=$mess_v[3];
+			$user_messages[$usr_id]['time'][$k-1]=$mess_v[4];
+			$user_messages[$usr_id]['priority'][$k-1]=$mess_v[5];
+			$user_messages[$usr_id]['text'][$k-1]=$mess_v[6];
+			}
+?>

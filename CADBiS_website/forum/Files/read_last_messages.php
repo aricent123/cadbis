@@ -1,0 +1,36 @@
+<?php
+$themes_data=array();
+for ($i=0;$i<count($all_themes);$i++)
+	{
+	$vrs1=file($dir."/".$all_themes[$i].".".$vars['theme_ext']);
+	$vrs="";
+	$vrs.=$vrs1[0];
+	for($j=1;$j<count($vrs1);$j++)
+		{
+		$vrs.=$vrs1[$j];
+		}
+	$theme_dat=explode($smb1,$vrs);
+	$themes_data[$i]['ips']=$theme_dat[1];
+	$theme_vars=explode($smb,$theme_dat[0]);
+	$themes_data[$i]['title']=$theme_vars[0];
+	$themes_data[$i]['nick']=$theme_vars[1];
+	$themes_data[$i]['email']=$theme_vars[2];
+	$themes_data[$i]['url']=$theme_vars[3];
+	$themes_data[$i]['date']=$theme_vars[4];
+	$themes_data[$i]['views']=$theme_vars[5];
+	$themes_data[$i]['descr']=$theme_vars[6];
+	$themes_data[$i]['rights']=$theme_vars[7];
+	$themes_data[$i]['namesrights']=$theme_vars[8];
+	$themes_data[$i]['names']=$theme_vars[9];
+	$themes_data[$i]['status']=$theme_vars[10];
+	$themes_data[$i]['refresh']=$themes_data[$i]['date'];
+	$themes_data[$i]['count']=0;
+	$theme=$all_themes[$i];
+	$mes_file=$theme.".".$vars['mess_ext'];
+	$file1=file($vars['dir_themes']."/".$mes_file);
+	$file=implode("",$file1);
+	$strings=explode($smb1,$file);
+	$vrs=explode($smb,$strings[count($strings)-2]);
+	$themes_data[$i]['time']=$vrs[count($vrs)-3];
+	}
+?>
