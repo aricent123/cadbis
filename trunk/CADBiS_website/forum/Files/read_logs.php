@@ -1,0 +1,45 @@
+<?php
+$logs['date']=array();
+$logs['ip']=array();
+$logs['browser']=array();
+$logs['referer']=array();
+$logs['connection']=array();
+$logs['port']=array();
+$logs['old_logs']=array();
+$file1=file($vars['file_logs']);
+$file="";
+for($i=0;$i<count($file1);$i++)
+	{
+	$string=$file1[$i];
+	$file.=$string;
+	}
+if($file!="")
+{
+$strings=explode("$smb1",$file);
+for($i=0;$i<count($strings);$i++)
+	{
+	if($strings[$i]!="")
+		{
+		$variables=explode("$smb",$strings[$i]);
+		if($variables[0]!="")
+		{
+/*		$logs['ip'][$i]=$variables[0];
+		$logs['date'][$i]=$variables[1];
+		$logs['browser'][$i]=$variables[2];
+		$logs['referer'][$i]=$variables[3];
+		$logs['connection'][$i]=$variables[4];
+		$logs['port'][$i]=$variables[5];
+		$logs['old_logs'][$i]=$variables[6];	
+*/		$logs['ip'][]=$variables[0];
+		$logs['host'][]=$variables[1];
+		$logs['date'][]=$variables[2];
+		$logs['browser'][]=$variables[3];
+		$logs['referer'][]=$variables[4];
+		$logs['connection'][]=$variables[5];
+		$logs['port'][]=$variables[6];
+		$logs['old_logs'][]=$variables[7];	
+		}
+		}
+	}
+}
+?>

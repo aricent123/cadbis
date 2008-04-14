@@ -1,0 +1,104 @@
+<?php
+$total_messages=0;
+for($i=0;$i<count($all_themes);$i++)
+	{
+	$total_messages+=$themes_data[$i]['count'];
+	}
+//error_reporting(E_ALL);
+$total_messages_f=0;
+$total_topics_f=array();
+$hdl=opendir($vars['dir_themes']);
+while($file=readdir($hdl))
+	{        
+	if(strstr($file,$vars['mess_ext'])==true)
+		{
+		$file1=file($vars['dir_themes']."/".$file);
+		$file2=implode("",$file1);
+		$buf=explode("$smb1",$file2);
+		$total_messages_f=$total_messages_f+count($buf)-1;
+		}
+	for($i=0;$i<count($forums['ext']);$i++)
+		{
+	if(strstr($file,".".$forums['ext'][$i])==true)
+		{
+		$file1=file($vars['dir_themes']."/".$file);
+		$file2=implode("",$file1);
+		$buf=explode("$smb",$file2);
+		for($j=0;$j<count($users_info['login']);$j++)
+			{
+			if($users_info['id'][$j]==$buf[1])
+			$total_topics_f[$j]=$total_topics_f[$j]+1;
+			//echo("user ".$users_info['login'][$j]." themes:".$total_topics_f[$j]." [$j]<br>");
+			//$total_usr_themes[$j]=$total_topics_f[$j];
+			}
+		}
+		}
+	}
+
+
+$total_usr_themes=array();
+for($i=0;$i<count($all_users);$i++)
+	{
+	$total_usr_themes[]=0;
+	for($j=0;$j<count($all_themes);$j++)
+		{
+		if($themes_data[$j]['nick']==$users_info['id'][$i])
+			{
+			$total_usr_themes[$i]++;
+			}
+		}
+	}
+$max_mess="";
+$max_mess_c=-1;
+for($i=0;$i<count($all_users);$i++)
+	{
+	if($users_info['count'][$i]>$max_mess_c)
+		{
+		$max_mess=$users_info['nick'][$i];
+		$max_mess_c=$users_info['count'][$i];
+		}
+	
+	}
+$max_themes="";
+$max_themes_c=-1;
+for($i=0;$i<count($total_usr_themes);$i++)
+	{
+	if($total_topics_f[$i]>$max_themes_c)
+		{
+		//$max_themes=$users_info['nick'][$i];
+		//$max_themes_c=$total_usr_themes[$i];
+
+		$max_themes=$users_info['nick'][$i];
+		$max_themes_c=$total_topics_f[$i];
+		}
+	}
+for($i=0;$i<count($all_users);$i++)
+	{
+	if($users_info['raiting'][$i]=="")
+		{
+		$users_info1['raiting'][$i]=($total_messages_f)?round($users_info['count'][$i]/$total_messages_f*10)+$total_topics_f[$i]:0;
+		}
+		else
+		{
+		$users_info1['raiting'][$i]=($total_messages_f)?$users_info['raiting'][$i]+round($users_info['count'][$i]/$total_messages_f*10)+$total_topics_f[$i]:0;
+		}
+	}
+$max_raiting="";
+$max_raiting_c=-1;
+for($i=0;$i<count($all_users);$i++)
+	{
+	if($users_info1['raiting'][$i]>$max_raiting_c)
+		{
+		$max_raiting=$users_info['nick'][$i];
+		$max_raiting_c=$users_info1['raiting'][$i];
+		}
+	}
+/*
+$new_users=array();
+for($i=0;$i<count($all_users);$i++)
+	{
+	if($all_users[$i]>time()-3600*24*7)$new_users[]=$users_info['nick'][$i];
+	}
+*/
+$total_users=count($all_users);
+?>
