@@ -183,7 +183,7 @@ if($form)
                         Время:
                         </td><td width=50%><? OUT(gethours($adata["time"]).":".getmins($adata["time"]).":".getsecs($adata["time"])) ?></td></tr>                        
                       </table>
-                    </tr></td>
+                    </td></tr>
                   </table>                
                   <table width=100%><td width=50% class=tbl1 align=left>
                    <? $gd=$USR->GetGroupData($data["group"]);
