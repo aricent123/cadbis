@@ -318,7 +318,7 @@ class CAnnoucements
            Текст объявления
            </td><td>
            <textarea class=input name=inp_ann[] rows=8 style="width:100%;"><? OUT($text) ?></textarea></td>         
-           </td></table>
+           </table>
            <table align=center><td><input type=submit class=button value="Добавить" ></td></table>
            </form>
            <?
