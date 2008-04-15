@@ -1,5 +1,7 @@
 #summary Как установить Eclipse + PHP + Apache + PDT + ZendDebugger + Subclipse + MySQL
 
+[Оригинал на http://www.thierryb.net/pdtwiki/index.php?title=Using_PDT_:_Installation_:_Installing_the_Zend_Debugger]
+
 = Introduction =
 Для начала надо всё это иметь на флешке. 
 Лучше всего создать директорию WWW где-нибудь на диске (пусть будет C). 
