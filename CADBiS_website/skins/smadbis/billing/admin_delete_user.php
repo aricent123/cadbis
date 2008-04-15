@@ -213,8 +213,7 @@ if($form)
  ?>  
   
    <div align=center><input type=submit class=button value="Удалить"></div>
-   </form>
-  
+   
    <br>
    <? } else {OUT("<div align=center><b>нет ни одного пользователя!</b></div>");}?>
    <div align=center><a href="<? OUT("?p=$p&act=$act") ?>">назад</a></div>

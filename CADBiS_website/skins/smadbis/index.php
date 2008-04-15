@@ -154,7 +154,7 @@ $MDL->LoadModule($p,false);
 	   <td width=88px height=53px><img src="<? OUT(SK_DIR) ?>/img/right_luc.gif"></td>
 	   <td bgcolor=#F0F6F8 width=149px></td>
 	   </table>	
-	  </tr></td>
+	  </td></tr>
  	  <tr><td width=100% height=100%>
 	   <table width=228px height=100% cellspacing=0 cellpadding=0 valign=top align=left border=0>
 	    <td width=45px height=100% background="<? OUT(SK_DIR) ?>/img/right_lm.gif"></td>
