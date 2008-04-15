@@ -35,7 +35,7 @@ if(isset($mod)  && $mod=="delete")
                <input type=hidden name=ids[] value="<? OUT($ids[$i]) ?>">
                   <div align=center><b><? OUT($ids[$i]) ?></b></div>               
                   <table width=100% align=center class=tbl2>
-                    </td><td width=100%>
+                    <tr><td width=100%>
                       <table  width=100%>
                         <tr><td width=50%>
                         Название тарифа:
@@ -47,7 +47,7 @@ if(isset($mod)  && $mod=="delete")
                         Время:
                         </td><td width=50%><? OUT(gethours($tdata["time"]).":".getmins($tdata["time"]).":".getsecs($tdata["time"])) ?></td></tr>
                         </table>
-                    </tr></td>
+                    </td></tr>
                   </table>   
                <?
                }
@@ -88,7 +88,7 @@ if($form)
    ?>
                   <div align=center><b><? OUT($data["gid"]) ?></b></div>
                   <table width=100% align=center class=tbl2>
-                    </td><td width=100%>
+                    <tr><td width=100%>
                       <table  width=100%>
                         <tr><td width=50%>
                         Название тарифа:
@@ -103,7 +103,7 @@ if($form)
                         Время:
                         </td><td width=50%><? OUT(gethours($tdata["time"]).":".getmins($tdata["time"]).":".getsecs($tdata["time"])) ?></td></tr>
                         </table>
-                    </tr></td>
+                    </td></tr>
                   </table>                
                   <table width=100%><td width=50% class=tbl1 align=left>
                    <? if($data["level"]<=$BILLEVEL){ ?><input type=checkbox name=ids[] value="<? OUT($data["gid"]) ?>">выбрать</td> <? } ?>

@@ -602,7 +602,7 @@ if(!class_exists("CArticles"))
             else
             {          
              ?>
-             <b><font color=red>Внимание!</b></font> Вы собираетесь удалить статью. Если вы уверены, что хотите это сделать -
+             <b><font color=red>Внимание!</font></b> Вы собираетесь удалить статью. Если вы уверены, что хотите это сделать -
              нажмите "я уверен". В противном случае выберите "назад". <br><br><br>
              
              <div align=center><a href="<? OUT("?p=$p&act=$act&a=delete&topic=$topic&page=$page&id=$id&mod=sure") ?>">я уверен, что хочу удалить "<? OUT($data["title"]) ?>"</a><br></div><br><br>
@@ -750,14 +750,16 @@ if(!class_exists("CArticles"))
                       <td width=50%>
                       <? OUT($nickselect) ?>
                       </td>  
-                    </tr>                    
+                    </tr>      
+                    <tr>              
                       <td width=50%>
                        Email:
                       </td>
                       <td width=50%>
                       <? OUT($emailselect) ?>
                       </td> 
-                    </tr>                     
+                    </tr>
+                    <tr>                    
                       <td width=50%>
                        URL:
                       </td>
@@ -1295,7 +1297,7 @@ if(!class_exists("CArticles"))
           {
             ?>           
             <br><br>
-            Добавление новой статьи. Заполните предлагаемые поля и нажмите кнопку "сохранить".
+            Добавление новой статьи. Заполните предлагаемые поля и нажмите кнопку "сохранить".            
             <form action="<? OUT("?p=$p&act=$act&a=$a&type=$type&id=$id&topic=$topic&editor=$editor") ?>&mod=save" method=post id="EditForm" enctype="multipart/form-data">
             <table width=100%>
             <tr><td class=tbl1 width=50%>Название:</td><td class=tbl1 width=50%><input style="width:100%" type=text name=title value="<? OUT($title) ?>"><br><small>Пример: Закупки по госзаказу</small></td></tr>
@@ -1314,8 +1316,8 @@ if(!class_exists("CArticles"))
              {
             ?>
             <input type="hidden" name="text">
-            </FORM>
             </TD></TR>
+            </form>                        
             <TR><TD height="1" bgcolor="#dddddd"></TD></TR>
             <TR><TD height="25" bgcolor="#dddddd"><div id="tools"></div></TD></TR>
             <TR><TD height="25" bgcolor="#dddddd">
