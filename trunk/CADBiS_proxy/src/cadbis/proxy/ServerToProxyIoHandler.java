@@ -19,6 +19,11 @@
  */
 package cadbis.proxy;
 
+import org.apache.mina.common.IoSession;
+import org.apache.mina.common.ReadFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Handles the server to proxy part of the proxied connection.
  *
@@ -27,4 +32,32 @@ package cadbis.proxy;
  *
  */
 public class ServerToProxyIoHandler extends AbstractProxyIoHandler {
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Override
+	public void sessionCreated(IoSession session) throws Exception {
+		String rmAddr = session.getRemoteAddress().toString();
+		String lcAddr = session.getLocalAddress().toString();
+		logger.info("Connection from " +lcAddr+" to "+rmAddr+", session started \r\n");
+	}
+
+	@Override
+	public void messageSent(IoSession session, Object message) throws Exception {
+		String sMsg = message.toString();
+		String rmAddr = session.getRemoteAddress().toString();
+		String lcAddr = session.getLocalAddress().toString();
+		logger.info("Connection from " +lcAddr+" to "+rmAddr+", sent "+sMsg.length()+": \r\n");
+		logger.info(sMsg);
+	}
+
+	@Override
+	public void messageReceived(IoSession session, Object message)
+			throws Exception {
+		String sMsg = message.toString();
+		String rmAddr = session.getRemoteAddress().toString();
+		String lcAddr = session.getLocalAddress().toString();
+		logger.info("Connection from " +lcAddr+" to "+rmAddr+", recieved "+sMsg.length()+": \r\n");
+		logger.info(sMsg);
+	}
+	
 }

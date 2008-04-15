@@ -39,8 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ClientToProxyIoHandler extends AbstractProxyIoHandler {
     private final ServerToProxyIoHandler connectorHandler = new ServerToProxyIoHandler();
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     private final IoConnector connector;
 
     private final SocketAddress remoteAddress;
@@ -57,8 +56,8 @@ public class ClientToProxyIoHandler extends AbstractProxyIoHandler {
         connector.connect(remoteAddress).addListener(new IoFutureListener<ConnectFuture>() {
             public void operationComplete(ConnectFuture future) {
                 try {
-                    future.getSession().setAttribute(session);
-                    session.setAttribute(future.getSession());
+                    future.getSession().setAttribute("",session);
+                    session.setAttribute("",future.getSession());
                     future.getSession().setTrafficMask(TrafficMask.ALL);
                 } catch (RuntimeIoException e) {
                     // Connect failed
