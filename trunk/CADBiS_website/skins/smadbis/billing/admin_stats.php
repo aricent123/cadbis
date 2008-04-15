@@ -119,8 +119,8 @@ if($action=="today" || $action=="week" || $action=="month")
    <form action="<? OUT("?p=$p&act=$act&action=$action&draw=$draw&sort=$sort") ?>" method=post>
    <Table width=100%><td class=tbl1>Выбрать только тариф:<br>    
    <? OUT($tarsel) ?><input style="width:30%" class=button value="Просмотр" type=submit> 
-   </form>
-   </td></table>
+    </td></table>
+    </form>
    <?  
    if(count($accts)){ 
    ?>

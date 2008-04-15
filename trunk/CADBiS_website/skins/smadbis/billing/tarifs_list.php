@@ -42,7 +42,7 @@
   ?>
                   <div align=center><b><? OUT($data["gid"]) ?></b></div>
                   <table width=100% align=center class=tbl2>
-                    </td><td width=100%>
+                    <td width=100%>
                     <div align=center><b><? OUT($data["packet"]) ?></b></div>                      
                     <div align=right><font style="font-size:9px">Пользователей:<? OUT(count($BILL->GetUsersOfTarif($data["gid"])))?></font></div>
                     <tr><td width=100%>
@@ -90,7 +90,7 @@
                     </td><td width=50%>
                     <? OUT($day_traffic_limit) ?></td></tr>                                                            
                     </table>  
-                    </tr></td>
+                    </td></tr>
                   </table>                
   
    <?

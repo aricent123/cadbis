@@ -115,9 +115,10 @@ for($i=0;$i<$daycount;++$i)
  </td>
  <?
  }
-?></table>  
+?>
+</table>  
 </td>
-</tr><tr><td class=tbl1 colspan=2 width=100%>
+<tr><td class=tbl1 colspan=2 width=100%>
 Цветовое обозначение: <br>                                                                                                                                                    
 <table style="font-size:9px"><td><table width=10px height=10px bgcolor=#00FF00 align=left><td></td></table></td><td> - Норма (траффик потреблялся в соответствии с нормой дня)</td></table>
 <table style="font-size:9px"><td><table width=10px height=10px bgcolor=#778800 align=left><td></td></table></td><td> - Незначительное превышение нормы (траффик незначительно превысил норму)</td></table>
