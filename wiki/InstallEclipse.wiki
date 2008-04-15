@@ -17,6 +17,7 @@
 {{{
   DocumentRoot "C:/www/home"
 }}}
+И заменить все вхождения "C:/www/bin/apache/htdocs" в этом файле на "C:/www/home"
 так же найти строчку
 {{{
 DirectoryIndex index.html
