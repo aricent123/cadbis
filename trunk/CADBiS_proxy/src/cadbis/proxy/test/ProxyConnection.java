@@ -123,7 +123,7 @@ class ProxyConnection extends Thread {
 				 {
 					 endTime = new Date().getTime();
 					 Thread.sleep(100);
-					 logger.info("waiting:"+(endTime-startTime)+" ms");
+					 //logger.info("waiting:"+(endTime-startTime)+" ms");
 				 }				 
 			 }
 			 catch(InterruptedException e)

@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Sealed: true
+Main-Class: cadbis.proxy.test.Proxy
+Class-Path: lib/log4j-1.2.12.jar lib/mina-core-2.0.0-M1.jar lib/mina-filter-codec-netty-2.0.0-M1.jar lib/mina-filter-compression-2.0.0-M1.jar lib/mina-integration-jmx-2.0.0-M1.jar lib/slf4j-api-1.5.0.jar lib/slf4j-log4j12-1.5.0.jar lib/slf4j-simple-1.5.0.jar
+
