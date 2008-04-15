@@ -40,9 +40,10 @@ Listen 8080
 }}}
 или любой другой свободный порт. (тогда проверка работоспособности будет заключаться в заходе на URL http://localhost:8080).
   * Скопировать ZendDebugger.dll в папку C:\www\bin\php\ext (если нет - создать её). 
-  * Посмотреть через phpinfo где находится файл php.ini (Loaded Configuration File). Открыть его в редакторе. Далее найти строчку "extension_dir = ...". Под ней вставить следующую строку:
+  * Посмотреть через phpinfo где находится файл php.ini (Loaded Configuration File). Открыть его в редакторе. Далее найти строчку "extension_dir = ...". Под ней вставить следующие строки:
 {{{
 extension=ZendDebugger.dll
+extension=php_mysql.dll
 }}}
 Далее в конец файла добавить строки:
 {{{
