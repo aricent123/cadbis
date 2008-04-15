@@ -53,6 +53,7 @@ zend_debugger.expose_remotely=always
 }}}
 Так же заменить implicit_flush = Off на implicit_flush = On и  заменить output_buffering = 4096 на output_buffering = 0
 Ещё заменить short_open_tag = Off на short_open_tag = On
+Так же заменить display_errors = Off на display_errors = On
   * Перезапустить Apache и убедиться по phpinfo, что в группе "Powered by" появилась надпись
 {{{
 with Zend Debugger v5.2.12, Copyright (c) 1999-2007, by Zend Technologies
