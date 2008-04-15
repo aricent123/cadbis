@@ -17,6 +17,14 @@
 {{{
   DocumentRoot "C:/www/home"
 }}}
+так же найти строчку
+{{{
+DirectoryIndex index.html
+}}}
+добавить туда index.php так:
+{{{
+DirectoryIndex index.html index.php
+}}}
   * Создать в папке C:/www/home файл index.php с содержимым:
 {{{
   <?php phpinfo(); ?> 
