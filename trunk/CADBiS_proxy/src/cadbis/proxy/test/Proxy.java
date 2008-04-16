@@ -5,11 +5,14 @@ import java.net.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sun.awt.windows.ThemeReader;
+
 public class Proxy {
 
 	public static final String usageArgs =" <localport> <host> <port> <timeout_ms>";
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	static int clientCount;
+	private Integer threadCount=0;
 
 public void run(int localport, String host, int port,long timeout) {
 	try 
@@ -25,8 +28,9 @@ public void run(int localport, String host, int port,long timeout) {
 				if(cSocket!=null) 
 				{
 					logger.info("accepted as #"+clientCount+":"+cSocket);
+					logger.info("Total threads count=" + threadCount);
 					clientCount++;
-					ProxyConnection c = new ProxyConnection(cSocket,host,port,timeout);
+					ProxyConnection c = new ProxyConnection(cSocket,host,port,timeout,threadCount);
 					c.start();
 				}
 			} 
