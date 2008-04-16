@@ -2,13 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="lib/mina-core-2.0.0-M1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/mina-filter-codec-netty-2.0.0-M1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/mina-filter-compression-2.0.0-M1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/mina-integration-jmx-2.0.0-M1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-api-1.5.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-log4j12-1.5.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-simple-1.5.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.12.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.6-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
