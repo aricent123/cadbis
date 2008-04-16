@@ -948,7 +948,7 @@ else
 	for($i=0;$i<count($news_list);$i++){
                $ud=get_user_data($news_list[$i]["name"]);  	 
                 ?>
-                <div align=center><a tyle="font-size:8.5px;" href="?p=users&act=userinfo&id=<? OUT ($news_list[$i]["name"]) ?>"><? OUT($ud["nick"]) ?></a>: "<a style="font-size:9px;" href="?p=news&view=post&id=<? OUT($news_list[$i]["id"]) ?>"><b><? OUT($news_list[$i]["head"]) ?></a></b>"</div>
+                <div align=center><a style="font-size:8.5px;" href="?p=users&act=userinfo&id=<? OUT ($news_list[$i]["name"]) ?>"><? OUT($ud["nick"]) ?></a>: "<a style="font-size:9px;" href="?p=news&view=post&id=<? OUT($news_list[$i]["id"]) ?>"><b><? OUT($news_list[$i]["head"]) ?></b></a>"</div>
                 <? OUT($news_list[$i]["text"]) ?><br>(<a style="font-size:9px;" href="?p=news&view=post&id=<? OUT($news_list[$i]["id"]) ?>">читать целиком</a>)<br>                
                 <font color=gray style="font-size:8.5px">/<? OUT(norm_date($news_list[$i]["date"])) ?></font><br>
                 <? }

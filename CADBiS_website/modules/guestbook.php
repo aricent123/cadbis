@@ -632,17 +632,17 @@ if($_NOTBAR)
          <form name="comment_form" action="<? OUT("?p=$p&page=$page") ?>" method="post">
             <tr><td width=100%>Имя*: <br>
             <input type="text" name="name" class=inputbox style="width:100%" value="<? OUT($name) ?>"<? if(check_auth())OUT("readonly") ?>><br>
-            </tr></td>
+            </td></tr>
             <tr><td width=100%>E-mail: <br>
             <input type="text" name="email" class=inputbox style="width:100%" value="<? OUT($email) ?>"<? if(check_auth())OUT("readonly") ?>><br>
-            </tr></td>
+            </td></tr>
             <tr><td width=100%>Url: <br>
             <input type="text" name="url" class=inputbox style="width:100%" value="<? OUT($url) ?>"<? if(check_auth())OUT("readonly") ?>><br>
-            </tr></td>
+            </td></tr>
             <tr><td width=100%>Комментарий* (не длиннее <? OUT($GV["guestbook_maxtextlen"]) ?> символов): <br>
             <textarea rows=5 name="text" rows=9 class=inputbox style="width:100%"><? OUT($text) ?></textarea><br><br>
             * - Обязательные для заполнения поля            
-            </tr></td></table>
+            </td></tr></table>
             <br>
             <input type="hidden" name="add" value="1">
             <div align=center><input type="submit" value="Отправить" class=button></div>
@@ -705,7 +705,7 @@ if($_NOTBAR)
                            if(count($answers)>0)
                            {
                            ?>
-                           </tr></td>
+                           </td></tr>
                            <tr>
                            <td colspan=2 width=90% ><B>Ответы:</B>
                                <table width=90% align=center> 
@@ -730,8 +730,7 @@ if($_NOTBAR)
                             </td></tr>   
                        <?  } ?>
 
-                  </td>
-                  </tr> 
+
                   </table><br><br> 
         <?php  }
         if(!count($messages))OUT("<div align=center>нет сообщений</div>");  

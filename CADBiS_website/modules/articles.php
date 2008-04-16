@@ -1466,11 +1466,11 @@ if($_NOTBAR)
        if($i<$pcnt-1)echo(", ");
       }   
       ?>
-      <table width=100%>
+      <table width=100%><tr>
       <td class=tdarttopic>Заголовок</td>
       <td class=tdarttopic>Автор</td>
       <td class=tdarttopic>Дата</td>
-      <td class=tdarttopic>Описание</td><tr>    
+      <td class=tdarttopic>Описание</td></tr><tr>    
       <?php   
       $alist=$PDIV->GetPage($data["articles"],$page);
       for($i=0;$i<count($alist);++$i)
