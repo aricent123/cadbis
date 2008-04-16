@@ -1,4 +1,4 @@
-package cadbis.proxy.test;
+package cadbis.proxy;
 
 import java.util.HashMap;
 
