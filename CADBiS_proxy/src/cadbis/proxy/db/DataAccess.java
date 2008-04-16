@@ -1,6 +1,5 @@
 package cadbis.proxy.db;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,12 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DataAccess {
+	private final String FILE_DB_PROPERTIES = "database.properties";
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+	
 	private Connection connection = null;
-    private String userName = "testuser";
-    private String password = "testpass";
-    private String jdbcUrl = "jdbc:mysql://localhost/test";
-    private String jdbcDriver = "com.mysql.jdbc.Driver";
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private String userName;
+    private String password;
+    private String jdbcUrl;
+    private String jdbcDriver;    
     
     private static DataAccess instance = null;
 	
@@ -24,8 +25,7 @@ public class DataAccess {
 	{
 	    Properties properties = new Properties();
 	    try {
-	        //properties.load(new FileInputStream("database.properties"));
-	    	properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("database.properties"));
+	    	properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_DB_PROPERTIES));
 		    this.userName = properties.getProperty("userName");
 		    this.password = properties.getProperty("password");
 		    this.jdbcUrl = properties.getProperty("jdbcUrl");
