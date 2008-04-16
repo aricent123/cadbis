@@ -789,7 +789,7 @@ class CUsers
                         ICQ:
                         </td><td width=50%><? OUT(make_icq_str($list[$i]["icq"])) ?></td></tr>
                       </table>
-                    </tr></td>
+                    </td></tr>
                   </table>
                   <?
                   }
@@ -1275,7 +1275,7 @@ class CUsers
                         ICQ:
                         </td><td width=50%><? OUT(make_icq_str($data["icq"])) ?></td></tr>
                       </table>
-                    </tr></td>
+                    </td></tr>
                   </table>
                   <table width=100%><td width=50% class=tbl1 align=left>
                   <input type=checkbox name=ids[] value="<? OUT($data['id']) ?>">выбрать</td>
@@ -1382,7 +1382,7 @@ class CUsers
                         </td><td width=50% class=tbl1><? OUT(norm_date($ulist[$i]["time"])) ?></td></tr>
 
                       </table>
-                    </tr></td>
+                    </td></tr>
                   </table>
              <?
              }
@@ -1529,7 +1529,7 @@ class CUsers
           <? if($udata["signature"]){ ?>
           <tr><td width=100% align=center><br>
           Подпись:
-          </tr></td>
+          </td></tr>
           <tr><td width=100%>
           <? OUT($udata["signature"]) ?>
           </td></tr>
@@ -1537,7 +1537,7 @@ class CUsers
           <? if($udata["info"]){ ?>
           <tr><td width=100% align=center><br>
           Дополнительная информация:
-          </tr></td>
+          </td></tr>
           <tr><td width=100%>
           <? OUT($udata["info"]) ?>
           </td></tr>
@@ -1558,10 +1558,10 @@ class CUsers
         <a href="?p=smadbis&act=users&action=add&mode=edit&uid=<? OUT($udata["id"]) ?>">редактировать</a></td><td width=20% align=center>
         <a href="?p=smadbis&act=users&action=block&uid=<? OUT($udata["id"]) ?>">
         <? if($BILL->IsUserActivated($udata["id"])){ ?>блокировать<? }else{ ?><font color=green>разблокировать<? }?></font></a><br>
-        </a></td>
+        </td>
         <td width=20% align=center>
         <a href="?p=smadbis&act=stats&action=sessions&user=<? OUT($udata["login"]) ?>">статистика</a></td>
-        </td>
+        
         <td width=20% align=center>
         <a href="?p=smadbis&act=stats&action=urls&uid=<? OUT($udata["uid"]) ?>">Топ сайтов</a></td></table>
         </td>

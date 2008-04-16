@@ -172,7 +172,7 @@ if($BILLEVEL<3)return;
                         </td><td width=50%><? OUT(norm_date($list[$i]["last_change"])) ?></td></tr>
 
                       </table>
-                    </tr></td>
+                    </td></tr>
                   </table>                
         <?
         }}}
@@ -286,7 +286,7 @@ if($BILLEVEL<3)return;
                         </td><td width=50%><? OUT(norm_date($list[$i]["last_change"])) ?></td></tr>
 
                       </table>
-                    </tr></td>
+                    </td></tr>
                   </table>                
                   <table width=50% height=100%>
                   <td align=center class=tbl1 width=30%>
