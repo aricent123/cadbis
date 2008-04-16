@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -16,16 +17,20 @@ public class DataAccess {
     private String jdbcUrl = "jdbc:mysql://localhost/test";
     private String jdbcDriver = "com.mysql.jdbc.Driver";
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    
+    private static DataAccess instance = null;
 	
 	private DataAccess()
 	{
 	    Properties properties = new Properties();
 	    try {
-	        properties.load(new FileInputStream("database.properties"));
+	        //properties.load(new FileInputStream("database.properties"));
+	    	properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("database.properties"));
 		    this.userName = properties.getProperty("userName");
 		    this.password = properties.getProperty("password");
 		    this.jdbcUrl = properties.getProperty("jdbcUrl");
-		    this.jdbcDriver = properties.getProperty("jdbcDriver");	        
+		    this.jdbcDriver = properties.getProperty("jdbcDriver");
+		    Connect();
 	    } 
 	    catch (IOException e) 
 	    {
@@ -33,6 +38,12 @@ public class DataAccess {
 	    }
 	}
 	
+	public static DataAccess getInstance()
+	{
+		if(instance == null)
+			instance = new DataAccess();
+		return instance;
+	}
 	
 	public boolean Connect()
 	{
@@ -43,10 +54,18 @@ public class DataAccess {
             connection = DriverManager.getConnection (jdbcUrl, userName, password);
             result = true;
         }
-        catch (Exception e)
+        catch (SQLException e)
         {
         	logger.error("Cannot connect to database server " + e.getMessage());
         }        
+        catch(ClassNotFoundException e)
+        {
+        	logger.error("Cannot connect to database server. Class not found: " + e.getMessage());
+        }
+        catch(Exception e)
+        {
+        	logger.error("Unknown error while connecting to database server. " + e.getMessage());
+        }
         return result;
 	}
 
@@ -71,8 +90,45 @@ public class DataAccess {
 		this.Disconnect();
 		super.finalize();
 	}
-	
-	
-	
-	
+
+	public Connection getConnection() {
+		return connection;
+	}
+
+	public void setConnection(Connection connection) {
+		this.connection = connection;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getJdbcUrl() {
+		return jdbcUrl;
+	}
+
+	public void setJdbcUrl(String jdbcUrl) {
+		this.jdbcUrl = jdbcUrl;
+	}
+
+	public String getJdbcDriver() {
+		return jdbcDriver;
+	}
+
+	public void setJdbcDriver(String jdbcDriver) {
+		this.jdbcDriver = jdbcDriver;
+	}
+		
 }

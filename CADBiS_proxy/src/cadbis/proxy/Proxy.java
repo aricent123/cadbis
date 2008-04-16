@@ -5,6 +5,8 @@ import java.net.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cadbis.proxy.db.User;
+
 import sun.awt.windows.ThemeReader;
 
 public class Proxy {
@@ -47,7 +49,12 @@ public void run(int localport, String host, int port,long timeout) {
 }
 
 	public static void main(String[] argv) 
-	{	 
+	{	
+		User user = new User();
+		String[] fields = {"user","password"};
+		user.getItemsByQuery("select * from users", fields);
+		
+		
 		Proxy self = new Proxy();
 		if(argv.length>=3) 
 		{
