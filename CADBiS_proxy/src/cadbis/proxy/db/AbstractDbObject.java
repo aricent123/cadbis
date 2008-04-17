@@ -36,6 +36,11 @@ public abstract class AbstractDbObject<objT extends BusinessObject> {
 	}	
 	
 	
+	/**
+	 * Returns the items by any query
+	 * @param query
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public List<objT> getItemsByQuery(String query)
 	{
@@ -59,21 +64,35 @@ public abstract class AbstractDbObject<objT extends BusinessObject> {
 				   logger.error("Reflection error: " + e.getMessage());
 			   }
 			   
-			   String[] persistFields = row.getPerstistenceFields(); 	
+			   String[][] persistFields = row.getPerstistenceFields(); 	
 			   
 			   for(int i=0;i<persistFields.length;++i)
 			   {
 				   Class[] par=new Class[1];
 				   par[0]= Object.class;
-				   String persistName = persistFields[i].substring(0,1).toUpperCase()+persistFields[i].substring(1);
+				   String persistName = persistFields[i][0].substring(0,1).toUpperCase()+persistFields[i][0].substring(1);
 				   try
-				   {					   
-					   Method mthd=row.getClass().getMethod("set"+persistName,par);
-					   mthd.invoke(row, rs.getObject(persistFields[i]));					   
+				   {
+					   if(rs.findColumn(persistFields[i][0]) >= 0)
+					   {
+						   Method mthd=row.getClass().getMethod("set"+persistName,par);
+						   if(persistFields[i][1] == "String")
+							   mthd.invoke(row, rs.getString(persistFields[i][0]));
+						   else if(persistFields[i][1] == "Integer")
+							   mthd.invoke(row, rs.getInt(persistFields[i][0]));
+						   else if(persistFields[i][1] == "Date")
+							   mthd.invoke(row, rs.getDate(persistFields[i][0]));
+					   }
+					   
+					   					   
 				   }
 				   catch( NoSuchMethodException e)
 				   {
 					   logger.error("Error! Method 'set"+persistName+"' for class '"+row.getClass().getName()+"' must be implemented!");
+				   }
+				   catch(SQLException e)
+				   {
+					   /* ignore */
 				   }
 				   catch(Exception e)
 				   {
@@ -92,7 +111,31 @@ public abstract class AbstractDbObject<objT extends BusinessObject> {
 		
 		return list;
 	}
+
 	
+	/**
+	 * Execute sql query
+	 * @param sql
+	 */
+	public void execSql(String sql)
+	{
+		if(dataAccess==null || dataAccess.getConnection()==null)
+			return;
+		try
+		{		
+			Statement s = dataAccess.getConnection().createStatement();
+			s.executeUpdate (sql);
+		}
+		catch(SQLException e)
+		{
+			logger.error("Query execution error: " + e.getMessage());
+		}			
+	}
+	
+	/**
+	 * Returns the instances count
+	 * @return count
+	 */
 	public int getCount()
 	{
 		int count = 0;

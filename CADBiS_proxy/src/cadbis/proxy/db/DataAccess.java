@@ -1,16 +1,15 @@
 package cadbis.proxy.db;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cadbis.proxy.Configurator;
+
 public class DataAccess {
-	private final String FILE_DB_PROPERTIES = "database.properties";
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private Connection connection = null;
@@ -23,19 +22,11 @@ public class DataAccess {
 	
 	private DataAccess()
 	{
-	    Properties properties = new Properties();
-	    try {
-	    	properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_DB_PROPERTIES));
-		    this.userName = properties.getProperty("userName");
-		    this.password = properties.getProperty("password");
-		    this.jdbcUrl = properties.getProperty("jdbcUrl");
-		    this.jdbcDriver = properties.getProperty("jdbcDriver");
-		    Connect();
-	    } 
-	    catch (IOException e) 
-	    {
-	    	logger.error("Could not read database.properties file: " + e.getMessage());
-	    }
+		this.userName = Configurator.getInstance().getProperty("userName");
+		this.password = Configurator.getInstance().getProperty("password");
+		this.jdbcUrl = Configurator.getInstance().getProperty("jdbcUrl");
+		this.jdbcDriver = Configurator.getInstance().getProperty("jdbcDriver");
+		Connect();
 	}
 	
 	public static DataAccess getInstance()
