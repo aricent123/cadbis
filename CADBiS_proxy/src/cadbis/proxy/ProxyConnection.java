@@ -8,12 +8,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import cadbis.proxy.utils.StringUtils;
 
 
 
@@ -44,13 +41,13 @@ class ProxyConnection extends Thread {
 		 OutputStream clientOut = null;
 		 InputStream serverIn = null;
 		 OutputStream serverOut = null;
-		 Socket toServer = null;
+		 
 	  
 		 int cAvail=-1,sAvail=-1,chBuf=-1;
 		 long startTime = new Date().getTime();
 		 long endTime = new Date().getTime();
-		 HttpParser httpParser = new HttpParser();
-		 
+		 final HttpParser httpParser = new HttpParser();
+		 Socket toServer = null;
 		 
 		 // opening the connection to server
 		 try
@@ -67,7 +64,7 @@ class ProxyConnection extends Thread {
 		 }
 		 
 		 
-		 logger.info("open connection to:"+toServer+"(timeout="+timeout+" ms)");		 
+		 logger.debug("open connection to:"+toServer+"(timeout="+timeout+" ms)");		 
 		 
 		 // defining the streams
 		 try
@@ -126,38 +123,68 @@ class ProxyConnection extends Thread {
 			 
 			 // trying to send data to server
 			 try{
+				 // creating the buffer for the readed data
 				 ArrayList<byte[]> buffer = new ArrayList<byte[]>();
-				 int sAvailCounter = 0;
 				 while((sAvail=serverIn.available())>0) 
 				 {	
+					 // we can recieve sAvail bytes
 					 rcvdBytes += sAvail;
+					 // indicate that we have read smthg
 					 isReadWrite = true;
+					 // indicate the last read time
 					 startTime = new Date().getTime();
 					 byte[] charBuf = new byte[sAvail];
 					 serverIn.read(charBuf);
+					 // adding the data to buffer
 					 buffer.add(charBuf);				     
 				 }
 				 
 				 
-				 
+				 // if we have read smthg
 				 if(buffer.size()>0)
 				 {
-					 //logger.info("buffer, blocks count = " + buffer.size());					 
+					 logger.debug("buffer, blocks count = " + buffer.size());					 
 					 for(int i=0;i<buffer.size();++i)
 					 {
-						 //logger.info("block["+i+"].size=" + buffer.get(i).length);
+						 logger.debug("block["+i+"].size=" + buffer.get(i).length);
 						 clientOut.write(buffer.get(i));
 						 clientOut.flush();
 					 }
 					 
 					 
-					 // collecting
-					 final String host = httpParser.GetHeader("Host");
+					 // collecting (preCollector)
+					 // bytes recieved
 					 final long bytes = rcvdBytes;
+					 // current user IP
+					 final String userIp = fromClient.getInetAddress().getHostAddress();
+					 // next proxy (squid) IP
+					 final String toServerIp = toServer.getInetAddress().getHostAddress();
+					 // creating the closure and the separate thread					 
 					 new Thread(){
 							public void run()
-							{					 
-								Collector.getInstance().Collect(fromClient.getInetAddress().getHostAddress(), host, bytes, new Date());
+							{	
+								Integer hostPort = 80;
+								String hostName = httpParser.GetHeader("Host");
+								String hostIp = toServerIp;
+								if(hostName.indexOf(":")>0){
+									String[] buf = hostName.split(":");
+									if(buf.length > 1)
+									{
+										hostName = buf[0];
+										hostPort = Integer.valueOf(buf[1]);
+									}
+								}
+								
+								try
+								{
+									Socket dnsQuery = new Socket(hostName,hostPort);
+									hostIp = dnsQuery.getInetAddress().getHostAddress();
+								}
+								catch(IOException e)
+								{
+									logger.error("PreCollector fails to recognize the host's ip address: " + e.getMessage());
+								}								
+								Collector.getInstance().Collect(userIp, hostName, bytes, new Date(), hostIp);
 							}
 					 }.start();
 					 
@@ -194,7 +221,7 @@ class ProxyConnection extends Thread {
 			 serverOut.close();
 			 fromClient.close();
 			 toServer.close();
-			 logger.info("Connections closed successfully...");
+			 logger.debug("Connections closed successfully...");
 		 } 
 		 catch(Exception e) 
 		 {

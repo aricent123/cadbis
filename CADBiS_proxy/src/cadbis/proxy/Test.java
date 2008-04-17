@@ -8,6 +8,7 @@ final class TestThread extends Thread
 	private static Integer var=0;
 	private static Integer ThreadsCount =0;
 	private static Object testObj = new Object();
+	@SuppressWarnings("static-access")
 	@Override
 	public void run() {		
 		synchronized (testObj) {
