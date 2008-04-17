@@ -1647,12 +1647,12 @@ class CUsers
            </td></tr>
            <tr><td width=50%>
            Пароль<font color=red>*</font>:</td>
-           </td><td>
+           <td>
            <input class=inputbox name=password type=password style="width:100%" maxlength="<? OUT($GV_USERS["max_password_len"]) ?>">
            </td></tr>
            <tr><td width=50%>
            Подтверждение<font color=red>*</font>:</td>
-           </td><td>
+           <td>
            <input class=inputbox name=password2 type=password style="width:100%" maxlength="<? OUT($GV_USERS["max_password_len"]) ?>">
            </td></tr>
            <tr><td width=50%>
@@ -1663,8 +1663,8 @@ class CUsers
            <tr><td width=50%>
            Пол:</td>
            <td>
-           <input type=radio name=gender value="1"<? if((isset($gender) && $gender) || !isset($gender))OUT(" checked"); ?>>мужской
-           <input type=radio name=gender value="0"<? if(isset($gender) && !$gender)OUT(" checked") ?>>женский
+           <input type=radio name=gender value="1" <? if((isset($gender) && $gender) || !isset($gender))OUT(" checked"); ?> >мужской
+           <input type=radio name=gender value="0" <? if(isset($gender) && !$gender)OUT(" checked") ?> >женский
            </td></tr>
            <tr><td width=50%>
            E-mail:</td>
@@ -1725,7 +1725,7 @@ class CUsers
            </td></tr>
            <tr><td width=50%>
            Пароль:</td>
-           </td><td>
+           <td>
            ***
            </td></tr>
            <tr><td width=50%>
@@ -2060,10 +2060,10 @@ class CUsers
       $onlist=$USR->GetOnlineUsersList();
       ?>
       <table width=100%>
-      <tr><td width=80%><font style="font-size:9px">всего пользователей:</td><td style="font-size:9px"><? OUT(count($list)) ?></td></tr>
-      <tr><td width=80%><font style="font-size:9px">новых сегодня:</td><td style="font-size:9px"><? OUT($day) ?></td></tr>
-      <tr><td width=80%><font style="font-size:9px">новых за неделю:</td ><td style="font-size:9px"><? OUT($week) ?></td></tr>
-      <tr><td width=80%><font style="font-size:9px">новых за месяц:</td><td style="font-size:9px"><? OUT($month) ?></td></tr>
+      <tr><td width=80%><font style="font-size:9px">всего пользователей:</font></td><td style="font-size:9px"><? OUT(count($list)) ?></td></tr>
+      <tr><td width=80%><font style="font-size:9px">новых сегодня:</font></td><td style="font-size:9px"><? OUT($day) ?></td></tr>
+      <tr><td width=80%><font style="font-size:9px">новых за неделю:</font></td ><td style="font-size:9px"><? OUT($week) ?></td></tr>
+      <tr><td width=80%><font style="font-size:9px">новых за месяц:</font></td><td style="font-size:9px"><? OUT($month) ?></td></tr>
       </table><br>
       <? if($CURRENT_USER["level"]>=8){ ?><a style="font-size:10px" href="?p=user_page&act=root&id=users&mod=online"><? } ?>
       сейчас на сайте: <? OUT(count($onlist)) ?>
