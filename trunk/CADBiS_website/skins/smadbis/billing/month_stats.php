@@ -74,6 +74,7 @@ for($i=0;$i<$daycount;++$i)
 ?>
 <div align=center style="font-size:11px"><b>Месячное потребление трафика:</b></div>
 <table width=80% class=tbl1 align=center>
+<tr>
 <td width=50%>
  <table align=center height=180px width=200px >
   <tr><td width=60px bgcolor="#<? OUT($restclr) ?>" height="<? OUT("".(100-$prc_tr)) ?>%"></td>
