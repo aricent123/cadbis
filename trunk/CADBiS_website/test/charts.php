@@ -151,6 +151,16 @@ var $width;
 var $height;
 //Цвет фона
 var $bg_color;
+
+function CGraphics($chart_type, $library_path="charts_library", $width=1024, $height=768, $bg_color="AACCCC")
+{
+	$this->chart_type = $chart_type;
+	$this->library_path = $library_path;
+	$this->width = $width;
+	$this->height = $height;
+	$this->bg_color = $bg_color;
+}
+
 };
 
 //-------------------------------------
