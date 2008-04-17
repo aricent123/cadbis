@@ -14,15 +14,15 @@ import org.slf4j.LoggerFactory;
 import cadbis.proxy.bl.BusinessObject;
 
 
-public abstract class AbstractDbObject<objT extends BusinessObject> {
+public abstract class AbstractDAO<objT extends BusinessObject> {
     private final Logger logger = LoggerFactory.getLogger(getClass());
-	protected DataAccess dataAccess = null;
+	protected DBConnection dataAccess = null;
 	protected String tableName;
 	
 	protected Class<objT> paramClass;
 
 	@SuppressWarnings("unchecked")
-	public AbstractDbObject(DataAccess dataAccess, String tableName)
+	public AbstractDAO(DBConnection dataAccess, String tableName)
 	{
 		this.dataAccess = dataAccess;
 		this.tableName = tableName;

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import cadbis.proxy.Configurator;
 
-public class DataAccess {
+public class DBConnection {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private Connection connection = null;
@@ -18,9 +18,9 @@ public class DataAccess {
     private String jdbcUrl;
     private String jdbcDriver;    
     
-    private static DataAccess instance = null;
+    private static DBConnection instance = null;
 	
-	private DataAccess()
+	private DBConnection()
 	{
 		this.userName = Configurator.getInstance().getProperty("username");
 		this.password = Configurator.getInstance().getProperty("password");
@@ -29,10 +29,10 @@ public class DataAccess {
 		Connect();
 	}
 	
-	public static DataAccess getInstance()
+	public static DBConnection getInstance()
 	{
 		if(instance == null)
-			instance = new DataAccess();
+			instance = new DBConnection();
 		return instance;
 	}
 	

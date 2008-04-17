@@ -107,6 +107,9 @@ class ProxyConnection extends Thread {
 				{
 					httpParser.ClearHeaders();
 					httpParser.ParseHeaders(cRcvdData);
+					// check if url is denied
+					//Collector.getInstance().
+					
 					cRcvdData = httpParser.GetFixedFullRequestHeader();
 					byte[] RcvdBytes = cRcvdData.getBytes();
 					for(int i=0;i<RcvdBytes.length;++i)
