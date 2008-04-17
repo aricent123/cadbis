@@ -787,7 +787,7 @@ if(!class_exists("CArticles"))
             {
             $data=$ART->GetArticleData($id);
             ?>
-             комментариев</a>:<? OUT ($data["ccount"]) ?><br>        
+             комментариев:<? OUT ($data["ccount"]) ?><br>        
             <div align=center><a href="<? OUT("?p=$p&act=$act&a=view&topic=$topic&page=$page") ?>">назад</a><br></div>     
             <table align=center width=100%><td>
             <div align=center><b><? OUT($data["title"]); ?></b></div><br>
@@ -1350,7 +1350,7 @@ if(!class_exists("CArticles"))
             </td></tr> 
             <tr><td align=left>
             Редактор: | <b>HTML</b> | <a href="<? OUT("?p=$p&act=$act&a=$a&type=$type&topic=$topic&id=$id") ?>">Обычный</a>
-            <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
+            <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>) 
             </td></tr>           
             </table>
             <div align=center><input type="button" class="button" value="Сохранить" onclick="Save()"></div>

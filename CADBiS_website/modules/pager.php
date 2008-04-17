@@ -10,6 +10,8 @@ $MDL_DESCR="For pager";
 $MDL_UNIQUEID="pager";
 $MDL_MAKER="SMStudio";
 
+
+
 if(!$_GETINFO)
 {
 
@@ -105,7 +107,30 @@ var $data_dir;
     fwrite($fp,$txt);
     fclose($fp);    
     }    
+
+  //-----------------------------------------------------------------------        
     
+   function CopyPage($id)
+    {
+    $pdata=$this->GetPageData($id);
+    include $this->list_file;
+    $new_id=time();
+    $fp=fopen($this->data_dir."/".$new_id,"w+");
+    if(!$fp)return false;    
+    fwrite($fp,$text);
+    fclose($fp);
+    $fp=fopen($this->list_file,"w+");
+    $txt="<?php\r\n";
+    for($i=0;$i<count($PGR);++$i)
+      $txt.="\$PGR[$i][\"title\"]=\"".$PGR[$i]["title"]."\";\r\n"."\$PGR[$i][\"id\"]=\"".$PGR[$i]["id"]."\";\r\n";
+    $i=count($PGR);
+    $title="Копия '".$pdata["title"]."'";
+    $txt.="\$PGR[$i][\"title\"]=\"".$title."\";\r\n"."\$PGR[$i][\"id\"]=\"".$new_id."\";\r\n";
+    $txt.="?>";
+    fwrite($fp,$txt);
+    fclose($fp);
+    copy($this->data_dir."/".$id,$this->data_dir."/".$new_id);
+    }       
   //-----------------------------------------------------------------------    
     
    function AddPageToMenu($id)
@@ -118,7 +143,11 @@ var $data_dir;
     $txt="<?php\r\n";
     //save exists menu items
     for($i=0;$i<count($MENU);++$i)
-      $txt.="\$MENU[$i][\"link\"]=\"".$MENU[$i]["link"]."\";\r\n"."\$MENU[$i][\"title\"]=\"".$MENU[$i]["title"]."\";\r\n";
+      $txt.="\$MENU[$i][\"link\"]=\"".$MENU[$i]["link"]."\";\r\n".
+      "\$MENU[$i][\"title\"]=\"".$MENU[$i]["title"]."\";\r\n".
+      "\$MENU[$i][\"ulevel\"]=\"".$MENU[$i]["ulevel"]."\";\r\n".
+      "\$MENU[$i][\"group\"]=\"".$MENU[$i]["group"]."\";\r\n".
+      "\$MENU[$i][\"parent\"]=\"".$MENU[$i]["parent"]."\";\r\n";         
      
     $k=-1;
     
@@ -128,7 +157,11 @@ var $data_dir;
 
     //add new item  
     $i=count($MENU);    
-    $txt.="\$MENU[$i][\"link\"]=\"?p=pager&id=$id\";\r\n"."\$MENU[$i][\"title\"]=\"".$PGR[$k]["title"]."\";\r\n";
+    $txt.="\$MENU[$i][\"link\"]=\"?p=pager&id=$id\";\r\n".
+    "\$MENU[$i][\"title\"]=\"".$PGR[$k]["title"]."\";\r\n".
+    "\$MENU[$i][\"ulevel\"]=\"0\";\r\n".
+    "\$MENU[$i][\"group\"]=\"0\";\r\n".
+    "\$MENU[$i][\"parent\"]=\"0\";\r\n";
     $txt.="?>";     
 
     //ok, opening file
@@ -202,9 +235,19 @@ global $id;
     //we'll need for our own extract $GLOBALS
     include "config.php";
     
+    ?>
+    <script language="javascript">
+    function ConfirmUnsaved()
+    {
+    return confirm('Вы уверены что хотите переключить редактор? Несохранённые данные будут потеряны!');
+    }
+    </script>
+    <?
+    
     if(!isset($a))$a="";
     $PGR= new CPager($DIRS["pager_data"],$DIRS["pager_list"]);
     $list=$PGR->GetPagesList();
+    if(!isset($editor))$editor="html";    
     if(isset($furl))$furl=str_replace(">","&",$furl);
     switch($a)
      {
@@ -230,47 +273,18 @@ global $id;
          <input type=text name=title style="width:100%" value="Моя страница"><br><br>
           <?               
             if(isset($editor) && $editor=="html")
-             {
+             {           
+			$oFCKeditor = new FCKeditor('text') ;
+			$oFCKeditor->BasePath	= "js/fckeditor/" ;
+			$oFCKeditor->Value		= "Новая страница";
+			$oFCKeditor->Height = 500;
+			$oFCKeditor->Create() ;		             	
             ?>
-            <table width=100%><tr><td>
-            <input type="hidden" name="text">
-            </FORM>
-            </TD></TR>
-            <TR><TD height="1" bgcolor="#dddddd"></TD></TR>
-            <TR><TD height="25" bgcolor="#dddddd"><div id="tools"></div></TD></TR>
-            <TR><TD height="25" bgcolor="#dddddd">
-            Шрифт
-            <div id="fonts">        
-            <select id="fface" onchange="SetFace()">
-            <option value="Arial">Arial
-            <option value="Courier New">Courier New
-            <option value="Tahoma">Tahoma
-            <option value="Times New Roman">Times New Roman
-            <option value="Verdana" selected>Verdana
-            </select>
-            Размер
-            <select id="fsize" style="width:40" onchange="SetSize()">
-            <option value="1">1
-            <option value="2" selected>2
-            <option value="3">3
-            <option value="4">4
-            <option value="5">5
-            <option value="6">6
-            <option value="7">7
-            </select>
-            </div>
-            </td></tr><tr><td>
-            <IFRAME id="EditFrame" width="100%" height=400px frameborder="0" style="border-width:1px; border-color:#000000; border-style: solid;" contenteditable="true"></IFRAME>         
-            <script>
-               var Content; 
-                Content="<div align=center><b>Моя страница</b></div><br>";
-            </script>
-            <SCRIPT src="js/editor.js"></SCRIPT>
-            </td></tr></table>          
+            
             <br>
-            Редактор: | <b>HTML</b> | <a href="<? OUT("?p=$p&a=$a&pgrec=$pgrec&act=$act&type=$type&id=$id") ?>">Обычный</a>
+            Редактор: | <b>HTML</b> | <a href="<? OUT("?p=$p&a=$a&pgrec=$pgrec&editor=text&act=$act&type=$type&id=$id") ?>" onclick="return ConfirmUnsaved()">Обычный</a>
             <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
-            <div align=center><input type="button" class="button" value="Сохранить" onclick="Save()"></div>
+            <div align=center><input type="submit" class="button" value="Сохранить"></div></form>
             <?                          
              }
              else
@@ -278,7 +292,7 @@ global $id;
             ?>                     
          Текст:<br>
          <textarea name=text style="width:100%" rows=30><div align=center><b>Моя страница</b></div><? OUT("\r\n") ?></textarea><br>
-            Редактор: | <a href="<? OUT("?p=$p&act=$act&a=$a&pgrec=$pgrec&editor=html&type=$type&id=$id") ?>">HTML</a> | <b>Обычный</b>
+            Редактор: | <a href="<? OUT("?p=$p&act=$act&a=$a&pgrec=$pgrec&editor=html&type=$type&id=$id") ?>" onclick="return ConfirmUnsaved()">HTML</a> | <b>Обычный</b>
             <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div>          
          <input type=checkbox name=nb unchecked>Переводить переход на новую строку в &lt;br&gt;? <br>  
          <input type=checkbox name=kt unchecked>Отключить HTML-теги ?        
@@ -308,6 +322,7 @@ global $id;
      case "edit":
         if(isset($mod) && $mod=="save")
          {
+        $title=$FLTR->DirectProcessString($title);         
             if(isset($editor) && $editor=="html")
             {         
             $text=$FLTR->DirectProcessHTML($text);         
@@ -335,55 +350,33 @@ global $id;
          <input type=text name=title style="width:100%" value="<? OUT($data["title"]) ?>"><br><br>
          <?               
             if(isset($editor) && $editor=="html")
-             {
+             {             
             ?>
-            <table width=100%><tr><td>
-            <input type="hidden" name="text">
-            </FORM>
-            </TD></TR>
-            <TR><TD height="1" bgcolor="#dddddd"></TD></TR>
-            <TR><TD height="25" bgcolor="#dddddd"><div id="tools"></div></TD></TR>
-            <TR><TD height="25" bgcolor="#dddddd">
-            Шрифт
-            <div id="fonts">        
-            <select id="fface" onchange="SetFace()">
-            <option value="Arial">Arial
-            <option value="Courier New">Courier New
-            <option value="Tahoma">Tahoma
-            <option value="Times New Roman">Times New Roman
-            <option value="Verdana" selected>Verdana
-            </select>
-            Размер
-            <select id="fsize" style="width:40" onchange="SetSize()">
-            <option value="1">1
-            <option value="2" selected>2
-            <option value="3">3
-            <option value="4">4
-            <option value="5">5
-            <option value="6">6
-            <option value="7">7
-            </select>
-            </div>
-            </td></tr><tr><td>
-            <IFRAME id="EditFrame" width="100%" height=400px frameborder="0" style="border-width:1px; border-color:#000000; border-style: solid;" contenteditable="true"></IFRAME>         
-            <script>
-               var Content; 
-                Content="<? OUT(str_replace("\r\n","",addslashes(get_file($DIRS["pager_data"]."/".$pgrec)))) ?>";
-            </script>
-            <SCRIPT src="js/editor.js"></SCRIPT>
+            <table width=100% height="500px"><tr><td>          
+            <?
+            $text=str_replace("\r\n","",get_file($DIRS["pager_data"]."/".$pgrec));
+            $text=str_replace("\r","",$text);
+            $text=str_replace("\n","",$text);
+            
+			$oFCKeditor = new FCKeditor('text') ;
+			$oFCKeditor->BasePath	= "js/fckeditor/" ;
+			$oFCKeditor->Value		= $text;
+			$oFCKeditor->Height = 500;
+			$oFCKeditor->Create() ;			                       
+            ?>
             </td></tr></table>          
             <br>
-            Редактор: | <b>HTML</b> | <a href="<? OUT("?p=$p&a=$a&pgrec=$pgrec&act=$act&type=$type&id=$id") ?>">Обычный</a>
+            Редактор: | <b>HTML</b> | <a href="<? OUT("?p=$p&a=$a&pgrec=$pgrec&act=$act&type=$type&id=$id&editor=txt") ?>" onclick="return ConfirmUnsaved()">Обычный</a>
             <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
-            <div align=center><input type="button" class="button" value="Сохранить" onclick="Save()"></div>
+            <div align=center><input type="submit" class="button" value="Сохранить"></div>           </FORM>  
             <?                          
              }
              else
              {
             ?>            
             Текст:<br>
-            <textarea class=inputbox name=text style="width:100%" rows=30><? include($DIRS["pager_data"]."/".$pgrec); ?></textarea><br>
-            Редактор: | <a href="<? OUT("?p=$p&act=$act&a=$a&pgrec=$pgrec&editor=html&type=$type&id=$id") ?>">HTML</a> | <b>Обычный</b>
+            <textarea class=inputbox name=text style="width:100%" rows=30><? OUT(get_file($DIRS["pager_data"]."/".$pgrec)); ?></textarea><br>
+            Редактор: | <a href="<? OUT("?p=$p&act=$act&a=$a&pgrec=$pgrec&editor=html&type=$type&id=$id") ?>" onclick="return ConfirmUnsaved()">HTML</a> | <b>Обычный</b>
             <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
             <input class=inputbox type=checkbox name=nb unchecked>Переводить переход на новую строку в &lt;br&gt;? <br>  
             <input class=inputbox type=checkbox name=kt unchecked>Отключить HTML-теги ?         
@@ -411,9 +404,14 @@ global $id;
          }     
 
        break;        
+     case "copy":
+         OUT("вроде скопировали");          
+        $PGR->CopyPage($pgrec);
+       break;         
      case "save": 
        for($i=0;$i<count($tits);++$i)
         {
+        $tits[$i]=$FLTR->DirectProcessString($tits[$i]);
         $list[$i]["title"]=$tits[$i];        
         }
         $PGR->SavePages($list);
@@ -436,6 +434,7 @@ global $id;
              <a href="<? OUT("?p=$p&act=$act&id=$id") ?>&a=delete&pgrec=<? OUT($list[$i]["id"]) ?>">удалить</a><br>
              <a href="<? OUT("?p=$p&act=$act&id=$id") ?>&a=edit&pgrec=<? OUT($list[$i]["id"]) ?>">изменить</a><br>
              <a href="<? OUT("?p=$p&act=$act&id=$id") ?>&a=tomenu&pgrec=<? OUT($list[$i]["id"]) ?>">в меню</a><br>
+             <a href="<? OUT("?p=$p&act=$act&id=$id") ?>&a=copy&pgrec=<? OUT($list[$i]["id"]) ?>">создать копию</a><br>
              <a href="?p=pager&id=<? OUT($list[$i]["id"]) ?>">просмотр</a>
             </td>
          </tr><tr><td colspan=3></td></tr>
@@ -465,7 +464,17 @@ global $id;
   {
 if($_MODULE)
   if($id && file_exists($DIRS["pager_data"]."/".$id))
-    include $DIRS["pager_data"]."/".$id;
+  {
+  	OUT(get_file($DIRS["pager_data"]."/".$id));
+    if(check_auth() && _isroot())
+    {
+    ?>
+    <div align=center>
+    <a href="?p=user_page&act=root&id=pager&a=edit&pgrec=<? OUT($id) ?>">Редактировать</a>
+    </div>
+    <?
+    }   
+  }
   else {global $page; $page="404";$this->LoadModule("error",false);}
   }
 }

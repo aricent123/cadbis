@@ -11,6 +11,7 @@ $MDL_UNIQUEID="news";
 $MDL_MAKER="ShurupINC";
 
 
+
 if(!$_GETINFO)
 {
 
@@ -546,13 +547,14 @@ elseif($_ADMIN)
              <td align=center>Управление</td>
           </tr>
         <?php
-        for($n_idx=0; $n_idx<$news->get_news_count(); ++$n_idx){
+        $cnt=$news->get_news_count();
+        for($n_idx=$cnt-1; $n_idx>=0; --$n_idx){
            $news_info = $news->get_news_info($news_files[$n_idx]);
            // добавление списка новостей 
            ?>
               <tr>
                 <td align=center><?php echo $n_idx ?></td>
-                <td align=center><?php echo $news_info["head"] ?></td>
+                <td align=center><?php OUT("<a href=?p=$p&view=post&id=".$news_files[$n_idx].">"); echo $news_info["head"] ?></a></td>
                 <td align=center><? $ud=get_user_data($news_info["name"]); OUT("<a href=?p=users&act=userinfo&id=".$news_info["name"].">".$ud["nick"]."</a>"); ?></td>
                 <td align=center><?php echo norm_date($news_info["date"]) ?></td>
                 <td align=center><?php 
@@ -572,11 +574,11 @@ elseif($_ADMIN)
           //----------ADD------------//
           //-------------------------//
           case "add":
-
+		if(!isset($editor))$editor="html";
                   $id = get_serial();
                   // $a = 1 - значит "добавлнеие", а не "редавктирование"
                   ?>  
-                  <form action="<? echo("?p=$p&$page&action=save&id=$id&a=1&act=$act") ?>" method=post id="EditForm" enctype="multipart/form-data">
+                  <form action="<? echo("?p=$p&page=$page&action=save&id=$id&editor=$editor&a=1&act=$act") ?>" method=post id="EditForm" enctype="multipart/form-data">
                      <table width=100%>
                         <tr><td class=tbl1 width=50%>Название:</td><td class=tbl1 width=50%><input style="width:100%" type=text name='head' value=''><br><small>Пример: Новость №1</small></td></tr>
                         <tr><td class=tbl1 width=50%>Автор:</td><td class=tbl1 width=50%><? OUT($CURRENT_USER["nick"]) ?></td></tr>
@@ -585,43 +587,43 @@ elseif($_ADMIN)
                      </table>
                      <table width=100%>
                         <tr><td class=tbl1 width=100%>Текст новости:</td></tr>
-                        <tr><td class=tbl1 width=100%>
-                           <input type="hidden" name="text">
-                           </FORM>
-                           </TD></TR>
-                           <TR><TD height="1" bgcolor="#dddddd"></TD></TR>
-                           <TR><TD height="25" bgcolor="#dddddd"><div id="tools"></div></TD></TR>
-                           <TR><TD height="25" bgcolor="#dddddd">
-                           Шрифт
-                           <div id="fonts">        
-                           <select id="fface" onchange="SetFace()">
-                              <option value="Arial">Arial
-                              <option value="Courier New">Courier New
-                              <option value="Tahoma">Tahoma
-                              <option value="Times New Roman">Times New Roman
-                              <option value="Verdana" selected>Verdana
-                           </select>
-                           Размер
-                           <select id="fsize" style="width:40" onchange="SetSize()">
-                              <option value="1">1
-                              <option value="2" selected>2
-                              <option value="3">3
-                              <option value="4">4
-                              <option value="5">5
-                              <option value="6">6
-                              <option value="7">7
-                           </select>
-                           </div>
-                           <IFRAME id="EditFrame" width="100%" height=400px frameborder="0" style="border-width:1px; border-color:#000000; border-style: solid;" contenteditable="true"></IFRAME>         
-                           <script>
-                             var Content; 
-                             Content="<? OUT(str_replace("\r\n","",addslashes($text))) ?>";
-                           </script>
-                           <SCRIPT src="js/editor.js"></SCRIPT>          
-                           </td></tr> 
-                       </table>
-                  <div align=center><input type="button" class="button" value="Сохранить" onclick="Save()"></div>
+			<?               
+            if(isset($editor) && $editor=="html")
+             {
+            ?>
+            <tr><td>
+            <?php 
+            $oFCKeditor = new FCKeditor('text') ;
+			$oFCKeditor->BasePath	= "js/fckeditor/" ;
+			$oFCKeditor->Value		= $fulltext;
+			$oFCKeditor->Height = 500;
+			$oFCKeditor->Create() ;		
+            ?>
+            </td></tr>               
+			</table>          
+            <br>
+            Редактор: | <b>HTML</b> | <a href="<? OUT("?p=$p&page=$page&action=$action&id=$id&a=1&act=$act&editor=txt") ?>">Обычный</a>
+            <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
+            <div align=center><input type="submit" class="button" value="Сохранить"></div>
+            <?                          
+             }
+             else
+             {
+            ?>        
+			<tr><td class=tbl1 width=100%>    
+            Текст:<br>
+            <textarea class=inputbox name=text style="width:100%" rows=30></textarea><br>
+            </td></tr></table>                  
+            Редактор: | <a href="<? OUT("?p=$p&page=$page&action=$action&id=$id&a=1&act=$act&editor=html") ?>">HTML</a> | <b>Обычный</b>
+            <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
+            <input class=inputbox type=checkbox name=nb unchecked>Переводить переход на новую строку в &lt;br&gt;? <br>  
+            <input class=inputbox type=checkbox name=kt unchecked>Отключить HTML-теги ?<br>
+            <input class=inputbox type=checkbox name=ml unchecked>Переводить в href URL'ы ?          
+            <div align=center><input type=submit value="Сохранить" class=button></div>  
+            
+            </form> 
             <?
+             }
                   echo "<center><b><a href='?p=$p&page=$page&act=$act'>Назад</a></b></center>";
           break;
           //-------------------------//
@@ -632,6 +634,7 @@ elseif($_ADMIN)
                   $news_info = $news->get_news_info($id);
                   $fulltext = $news->get_news_text($id);
                   $author=$news_info["name"];
+                  if(!isset($editor))$editor="html";
 
             if($MDL->IsModuleExists("users"))
              {            
@@ -657,9 +660,9 @@ elseif($_ADMIN)
                $authorselect=$udata["nick"];
                }
              }
-             else {$authorselect="root";}                    
+             else {$authorselect="root";}      
                   ?>  
-                  <form action="<? echo("?page=$page&action=save&id=$id&act=$act") ?>" method=post id="EditForm" enctype="multipart/form-data">
+                  <form action="<? echo("?p=$p&page=$page&action=save&editor=$editor&id=$id&act=$act") ?>" method=post id="EditForm" enctype="multipart/form-data">
                      <table width=100%>
                         <tr><td class=tbl1 width=50%>Название:</td><td class=tbl1 width=50%><input style="width:100%" type=text name='head' value="<? echo $news_info["head"] ?>"><br><small>Пример: Новость №1</small></td></tr>
                         <tr><td class=tbl1 width=50%>Автор:</td><td class=tbl1 width=50%><? OUT($authorselect) ?></td></tr>
@@ -667,44 +670,46 @@ elseif($_ADMIN)
                         <tr><td class=tbl1 width=50%>Краткое описание:</td><td class=tbl1 width=50%><input style="width:100%" type=text name='small_text' value="<? echo $news_info["text"] ?>"></td></tr>
                      </table>
                      <table width=100%>
+                     
                         <tr><td class=tbl1 width=100%>Текст новости:</td></tr>
-                        <tr><td class=tbl1 width=100%>
-                           <input type="hidden" name="text">
-                           </FORM>
-                           </TD></TR>
-                           <TR><TD height="1" bgcolor="#dddddd"></TD></TR>
-                           <TR><TD height="25" bgcolor="#dddddd"><div id="tools"></div></TD></TR>
-                           <TR><TD height="25" bgcolor="#dddddd">
-                           Шрифт
-                           <div id="fonts">        
-                           <select id="fface" onchange="SetFace()">
-                              <option value="Arial">Arial
-                              <option value="Courier New">Courier New
-                              <option value="Tahoma">Tahoma
-                              <option value="Times New Roman">Times New Roman
-                              <option value="Verdana" selected>Verdana
-                           </select>
-                           Размер
-                           <select id="fsize" style="width:40" onchange="SetSize()">
-                              <option value="1">1
-                              <option value="2" selected>2
-                              <option value="3">3
-                              <option value="4">4
-                              <option value="5">5
-                              <option value="6">6
-                              <option value="7">7
-                           </select>
-                           </div>
-                           <IFRAME id="EditFrame" width="100%" height=400px frameborder="0" style="border-width:1px; border-color:#000000; border-style: solid;" contenteditable="true"></IFRAME>         
-                           <script>
-                             var Content; 
-                             Content="<? OUT(str_replace("\r\n","",addslashes($fulltext))) ?>";
-                           </script>
-                           <SCRIPT src="js/editor.js"></SCRIPT>          
-                           </td></tr> 
-                       </table>
-                  <div align=center><input type="button" class="button" value="Сохранить" onclick="Save()"></div>                 
+			<?               
+            if(isset($editor) && $editor=="html")
+             {
+            	//$fulltext=$FLTR->ReverseProcessHTML($fulltext);
+            ?>                        
+            <tr><td>
+            <?php 
+            $oFCKeditor = new FCKeditor('text') ;
+			$oFCKeditor->BasePath	= "js/fckeditor/" ;
+			$oFCKeditor->Value		= $fulltext;
+			$oFCKeditor->Height = 500;
+			$oFCKeditor->Create() ;		
+            ?>
+            </td></tr>   
+            </table>          
+            <br>
+            Редактор: | <b>HTML</b> | <a href="<? OUT("?p=$p&page=$page&action=$action&id=$id&a=1&act=$act&editor=txt") ?>">Обычный</a>
+            <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
+            <div align=center><input type="submit" class="button" value="Сохранить"></div>
+            <?                          
+             }
+             else
+             {
+            ?>        
+			<tr><td class=tbl1 width=100%>    
+            Текст:<br>
+            <textarea class=inputbox name=text style="width:100%" rows=30><? OUT($fulltext) ?></textarea><br>
+            </td></tr></table>                  
+            Редактор: | <a href="<? OUT("?p=$p&page=$page&action=$action&id=$id&a=1&act=$act&editor=html") ?>">HTML</a> | <b>Обычный</b>
+            <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
+            <input class=inputbox type=checkbox name=nb unchecked>Переводить переход на новую строку в &lt;br&gt;? <br>  
+            <input class=inputbox type=checkbox name=kt unchecked>Отключить HTML-теги ?<br>
+            <input class=inputbox type=checkbox name=ml unchecked>Переводить в href URL'ы ?         
+            <div align=center><input type=submit value="Сохранить" class=button></div>  
+            
+            </form> 
             <?
+             }        
                   echo "<center><b><a href='?p=$p&page=$page&act=$act'>Назад</a></b></center>";            
 
           break;
@@ -730,12 +735,19 @@ elseif($_ADMIN)
                   $a=0;
                   $news_info = array();
 
-                  $news_info["head"] = $head;
-                  $news_info["date"] = $date;
+                  $news_info["head"] = $FLTR->CutString($FLTR->ExtractSmallText($FLTR->DirectProcessString($head),125),"title");
+                  $news_info["date"] = $FLTR->DirectProcessString($date);
                   $news_info["name"] = $CURRENT_USER["id"];
-                  $news_info["text"] = $small_text;
+                  if(!$small_text)
+                  {
+                  	$small_text = $FLTR->ExtractSmallText(strip_tags($text))."...";
+                  }                  
+                  $news_info["text"] = $FLTR->DirectProcessString($small_text,0);
                   $news_info["file"] = $id."html";
-                  $news_info["fulltext"] = $text;
+                  if(isset($editor) && $editor=="txt") 
+                    $news_info["fulltext"] = $FLTR->DirectProcessText($text,$nb,$kt,$ml);
+                  else
+                    $news_info["fulltext"] = $FLTR->DirectProcessHTML($text);
                                   
                   $add_res = $news->add_news($id,$news_info);
                   if($add_res)
@@ -745,11 +757,18 @@ elseif($_ADMIN)
                   echo "<center><b><a href='?p=$p&page=$page&action=$action&act=$act'>Назад</a></b></center>";
              }else{
                   $news_info = $news->get_news_info($id);
-                  $news_info["head"] = $head;
+                  $news_info["head"] = $FLTR->DirectProcessString($head);
                   //$news_info["date"] = $date;
-                  $news_info["name"] = $art;
-                  $news_info["text"] = $small_text;  
-                  $news_info["fulltext"] = $text;
+                  $news_info["name"] = $FLTR->DirectProcessString($art);
+                  if(!$small_text)
+                  {
+                  	$small_text = $FLTR->ExtractSmallText(strip_tags($text))."...";
+                  }                      
+                  $news_info["text"] = $FLTR->DirectProcessString($small_text,0);  
+                  if(isset($editor) && $editor=="txt") 
+                    $news_info["fulltext"] = $FLTR->DirectProcessText($text,$nb,$kt,$ml);
+                  else
+                    $news_info["fulltext"] = $FLTR->DirectProcessHTML($text);
 
                   $news->edit_news($id,$news_info);
                   echo "<center><b><a href='?p=$p&page=$page&id=$id&action=$action&act=$act'>Исправления приняты</a></b></center>";
@@ -784,7 +803,9 @@ if($_NOTBAR)
       if(!isset($name))$name="";
       if(!isset($email))$email="";
       if(!isset($url))$url="";
-            
+
+	if($GV["news_comments"])
+      {
       $error="";
       if(isset($add) && $add==1){
        $error="";
@@ -799,11 +820,20 @@ if($_NOTBAR)
        $new_comment["ip"]=get_ip_address();
        $new_comment["text"]=$FLTR->DirectProcessText($text);
        
+       
+       if($GV["news_captcha"])
+       {
+       if($_POST['img_code']!=$_SESSION['IMG'])
+       		$error.="<br><b>Ошибка:</b> Код картинки не совпадает с введённым!<br>";
+       }
+       
+       
        if(!$text)$error.="<br><b>Ошибка:</b> Необходимо ввести текст!<br>";
        if(!$name)$error.="<br><b>Ошибка:</b> Необходимо ввести ваш ник!<br>";
 
        if(!$error)$news->add_comment($id,$new_comment);
        } 
+      }
 
       if(!isset($view) || $view=="list"){
 
@@ -827,11 +857,11 @@ if($_NOTBAR)
                 $ud=get_user_data($news_list[$i]["name"]);   
                 ?><br>
                 <table width=100%><tr><td>
-                <table width=100%><td class=tdnewsheader><a href="?p=users&act=userinfo&id="<? OUT ($news_list[$i]["name"]) ?>"><? OUT($ud["nick"]) ?></a>, <b><? OUT(norm_date($news_list[$i]["date"])) ?></b>, <? OUT($news_list[$i]["head"]) ?></td><td></td></table>
+                <table width=100%><td class=tdnewsheader><a href="?p=users&act=userinfo&id=<? OUT ($news_list[$i]["name"]) ?>"><? OUT($ud["nick"]) ?></a>, <b><? OUT(norm_date($news_list[$i]["date"])) ?></b>, <? OUT($news_list[$i]["head"]) ?></td><td></td></table>
                 </td></tr><tr><td class=tdnewspost>
                 <? OUT($news_list[$i]["text"]) ?>
                 <br>
-                <small>[<a href="?p=news&view=post&id=<? OUT($news_list[$i]["id"]) ?>">читать целиком</a>] Комментариев: (<? OUT($news_list[$i]["comc"]) ?>)</small>
+                <small>[<a href="?p=news&view=post&id=<? OUT($news_list[$i]["id"]) ?>">читать целиком</a>] <?php if($GV["news_comments"]){?>Комментариев: (<? OUT($news_list[$i]["comc"]) ?>)<?php }?></small>
                 </td>
                 </table> <?php }
     if(!count($news_list))OUT("<div align=center>no news</div>");
@@ -852,7 +882,7 @@ if($_NOTBAR)
           <table width=85% align=center><td> <?
           OUT($news->GetNewsPost($news_info["file"]));
           ?></td></table><?
-      
+	if($GV["news_comments"]){
           echo "<br><br><div align=center><b><u>Комментарии:</u></b><br><br>";
 
           $comments = $news->get_comments($id);
@@ -870,8 +900,14 @@ if($_NOTBAR)
                         Автор: <a href="?p=users&act=userinfo&id=<? OUT($comment["author"]) ?>"><? OUT($ud["nick"]) ?></a>
                         <?
                         }
-                      else
-                        echo "Автор: ".$comment["author"]; ?>
+                      else{
+                      	$ud = get_user_data($comment["author"]);
+                      	if($ud["id"] == "!GUEST!")
+                      		echo "Автор: ".$ud["nick"];
+                      	else
+                        	echo "Автор: ".$comment["author"]; 
+                      }
+                        ?>
                       </td><td>
                       <?php echo "Дата: ".norm_date($comment["time"]) ?>
                       </td></tr>
@@ -892,6 +928,7 @@ if($_NOTBAR)
                 {
                 OUT("<div align=center><b>НЕТ КОММЕНТАРИЕВ</b></div>");
                 }
+
          if($error)OUT($error);      
          ?>
          <table align=center style="border: 0px" width=50%><td>
@@ -901,7 +938,14 @@ if($_NOTBAR)
                   echo "action='?p=$p&view=post&id=$id'";
                ?>
             method="post">      
-            
+            <?php 
+            if($GV["news_captcha"])
+            {
+            ?>
+            Код картинки:<input type="text" name="img_text"/><img src="captcha.php"><br>              	
+            <?php 
+            }                       
+             ?>            
             Имя: <br>
             <input type="text" name="name" class=inputbox style="width:50%;" <? if(check_auth())OUT("value=\"".$CURRENT_USER["nick"]."\" readonly");else OUT($name); ?>><br>
             E-mail: <br>
@@ -915,6 +959,56 @@ if($_NOTBAR)
             <input type="submit" class=button value="Отправить">
          </form>
         </td></table>   
+<<<<<<< .mine
+        <?php 
+        
+        			} // eof if(news_comments)
+        ?>
+        
+       <br><div align=center><a href="<? OUT("?p=$p") ?>">Назад</a></div>        
+       <?      
+       }
+      } 
+      if(check_auth() && $CURRENT_USER["level"]>=5)
+      {
+      ?>
+      <div align=center>
+      <a href="?p=<? OUT($p) ?>&act=admin">Администрирование</a>
+      </div>
+      <?
+       }         
+       ?>
+
+       <?
+    }
+  else
+    include(SK_DIR."/news.php");
+else
+  if(!file_exists(SK_DIR."/newsbar.php"))
+   {      
+   global $DIRS;
+     $news = new CNews($DIRS["news_list"],$DIRS["news_files"]);
+      $news->comment_part_sep = "[*3*]";
+      $news->news_info_sep    = "[*1*]";
+      $news->comment_sep      = "[*2*]";
+      $news->comment_info_sep = "[*4*]";  
+      $news->set_max_news(5); 
+      $news_list = $news->get_news_on_page(1);
+      if(!count($news_list))echo("<div align=center>нет новостей</div>");
+	for($i=0;$i<count($news_list);$i++){
+               $ud=get_user_data($news_list[$i]["name"]);  	 
+                ?>
+                <div align=center><a tyle="font-size:8.5px;" href="?p=users&act=userinfo&id=<? OUT ($news_list[$i]["name"]) ?>"><? OUT($ud["nick"]) ?></a>: "<a style="font-size:9px;" href="?p=news&view=post&id=<? OUT($news_list[$i]["id"]) ?>"><b><? OUT($news_list[$i]["head"]) ?></a></b>"</div>
+                <? OUT($news_list[$i]["text"]) ?><br>(<a style="font-size:9px;" href="?p=news&view=post&id=<? OUT($news_list[$i]["id"]) ?>">читать целиком</a>)<br>                
+                <font color=gray style="font-size:8.5px">/<? OUT(norm_date($news_list[$i]["date"])) ?></font><br>
+                <? }
+                          
+   }
+  else
+    include(SK_DIR."/newsbar.php");
+
+}
+=======
        <br><div align=center><a href="<? OUT("?p=$p") ?>">Назад</a></div>        
        <?      
        }
@@ -958,4 +1052,5 @@ else
     include(SK_DIR."/newsbar.php");
 
 }
+>>>>>>> .r47
 ?>
