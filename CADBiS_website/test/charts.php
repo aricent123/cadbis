@@ -132,4 +132,27 @@ function SendChartData( $chart=array() ){
 	echo $xml;
 }
 //====================================
+
+//-------------------------------------
+class CGraphics
+{
+//тип графика
+var $chart_type;
+//многомерный массив данных графика
+var $chart_data;
+//Имя загрузчика Flash
+var $flash_file;
+//Имя папки Файлов Flash графиков
+var $library_path;
+//PHP файл с данными графика
+var $php_source;
+//Размеры Flash
+var $width;
+var $height;
+//Цвет фона
+var $bg_color;
+};
+
+//-------------------------------------
+
 ?>
