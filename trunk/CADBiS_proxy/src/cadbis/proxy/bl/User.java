@@ -4,8 +4,11 @@ public class User implements BusinessObject{
 	private String user;
 	private String password;
 		
-	public String[] getPerstistenceFields() {
-		String[] fields = {"user","password"};
+	public String[][] getPerstistenceFields() {
+		String[][] fields = {
+						{"user","String"},
+						{"password","String"}
+					};
 		return fields;
 	}	
 	

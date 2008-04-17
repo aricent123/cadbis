@@ -22,22 +22,18 @@ class ProxyConnection extends Thread {
 	 private Socket fromClient;
 	 private String host;
 	 private int port;
-	 private Integer threadCount=0;
-	 private Object mutex;
+	 private static Integer threadCount = 0;
 	 private long timeout;
 	 private final Logger logger = LoggerFactory.getLogger(getClass());
-	 private final int MAX_ITERATIONS = 10;
 
-	 ProxyConnection(Socket s, String host, int port, long timeout, Integer threadCount) 
+	 ProxyConnection(Socket s, String host, int port, long timeout) 
 	 {
 	  fromClient=s;
 	  this.host = host;
 	  this.port = port;
 	  this.timeout=timeout;
-	  this.mutex = mutex;
-	  this.threadCount = threadCount;	  
 		 synchronized (getClass()) {
-				this.threadCount++;
+				threadCount++;
 				logger.info("ThreadCount=" + threadCount);
 			 }	  	  
 	 }
@@ -91,6 +87,7 @@ class ProxyConnection extends Thread {
 		 boolean isReadWrite = true;
 		 while(isReadWrite || endTime - startTime < timeout) 
 		 {
+			 long rcvdBytes = 0;
 			 isReadWrite = false;
 			 // trying to recieve data from client
 			 try{
@@ -133,6 +130,7 @@ class ProxyConnection extends Thread {
 				 int sAvailCounter = 0;
 				 while((sAvail=serverIn.available())>0) 
 				 {	
+					 rcvdBytes += sAvail;
 					 isReadWrite = true;
 					 startTime = new Date().getTime();
 					 byte[] charBuf = new byte[sAvail];
@@ -140,18 +138,31 @@ class ProxyConnection extends Thread {
 					 buffer.add(charBuf);				     
 				 }
 				 
+				 
+				 
 				 if(buffer.size()>0)
 				 {
-					 //logger.info("buffer, blocks count = " + buffer.size());
-					 
+					 //logger.info("buffer, blocks count = " + buffer.size());					 
 					 for(int i=0;i<buffer.size();++i)
 					 {
 						 //logger.info("block["+i+"].size=" + buffer.get(i).length);
 						 clientOut.write(buffer.get(i));
 						 clientOut.flush();
 					 }
+					 
+					 
+					 // collecting
+					 final String host = httpParser.GetHeader("Host");
+					 final long bytes = rcvdBytes;
+					 new Thread(){
+							public void run()
+							{					 
+								Collector.getInstance().Collect(fromClient.getInetAddress().getHostAddress(), host, bytes, new Date());
+							}
+					 }.start();
+					 
+					 
 				 }
-				
 			 }
 			 catch(IOException e)
 			 {
