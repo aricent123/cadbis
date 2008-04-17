@@ -35,7 +35,7 @@ public class Collector {
 		return instance;
 	}
 	
-	public Action getActionByIp(String ip)
+	public Action getActionByUserIp(String ip)
 	{
 		return actionsOfIps.get(ip.hashCode());
 	}
@@ -53,12 +53,12 @@ public class Collector {
 			actionsOfIps.put(actions.get(i).getIp().toString().hashCode(), actions.get(i));
 	}
 	
-	public void Collect(String ip, String url, Long bytes, Date date)
+	public void Collect(String userIp, String hostUrl, Long rcvdBytes, Date date, String hostIp)
 	{
 		synchronized (wLock) {
-			Action action = getActionByIp(ip);
+			Action action = getActionByUserIp(userIp);
 			if(action!=null){
-				action.getCollectedUrls().add(new CollectedData(url,bytes,date));
+				action.getCollectedUrls().add(new CollectedData(hostUrl,rcvdBytes,date, hostIp));
 				//logger.info("Collecting data... ip="+ip+", url="+url+", bytes="+bytes);
 			}
 		}
@@ -72,13 +72,14 @@ public class Collector {
 				List<CollectedData> col = actions.get(i).getCollectedUrls();
 				for(int j=0; j<col.size(); ++j)
 				{
-					logger.info("Collected data for ip="+actions.get(i).getIp()+"("+actions.get(i).getUser()+"), url="+col.get(j).url+", bytes="+col.get(j).bytes);
+					logger.info("Collected data for userIp="+actions.get(i).getIp()+"("+actions.get(i).getUser()+"), url="+col.get(j).url+", bytes="+col.get(j).bytes+", hostIp="+col.get(j).ip);
 					actionDAO.execSql("insert into url_log values ('"+
 							actions.get(i).getUnique_id() +"','"+
 							actions.get(i).getUser() +"','"+
 							col.get(j).url+"',"+
 							col.get(j).bytes+",'"+
-							new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(col.get(j).date)+"')");
+							new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(col.get(j).date)+"','"+
+							col.get(j).ip+"')");
 				}
 			}
 			actions.clear();

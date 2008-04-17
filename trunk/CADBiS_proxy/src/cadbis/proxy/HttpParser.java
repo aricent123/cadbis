@@ -62,10 +62,10 @@ public class HttpParser {
 		if(RequestString.indexOf("http://") == -1)
 		{
 			String fixedReq = FullRequestHeader.replace(RequestMethod + " ", RequestMethod + " http://" + GetHeader("Host")); 
-			//logger.info("Request String is wrong, fixing... Fixed value='"+fixedReq+"'");
+			logger.debug("Request String is wrong, fixing... Fixed value='"+fixedReq+"'");
 			return fixedReq;
 		}
-		//logger.info("Request String is OK");
+		logger.debug("Request String is OK");
 		return FullRequestHeader;
 	}
 }

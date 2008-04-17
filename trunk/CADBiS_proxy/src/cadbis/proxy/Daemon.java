@@ -25,9 +25,12 @@ public class Daemon extends Thread{
 		synchronized (dLock) {
 			while(true)
 			{
+				logger.debug("Refreshing the sessions info.");
 				Collector.getInstance().RefreshInfo();
-				try{
-					Thread.currentThread().sleep(Integer.valueOf(Configurator.getInstance().getProperty("DaemonPeriod")));
+				try{					
+					Integer dPeriod = Integer.valueOf(Configurator.getInstance().getProperty("DaemonPeriod"));
+					logger.debug("Sleep for " + dPeriod +" ms");
+					Thread.currentThread().sleep(dPeriod);
 				}
 				catch (InterruptedException e) {
 					logger.error("Daemon thread terminated! " +e.getMessage());
@@ -35,6 +38,7 @@ public class Daemon extends Thread{
 				catch (NumberFormatException e) {
 					logger.error("Configuration error! " + e.getMessage());
 				}
+				logger.debug("Waking up, flushing info.");
 				Collector.getInstance().FlushCollected();
 			}	
 		}

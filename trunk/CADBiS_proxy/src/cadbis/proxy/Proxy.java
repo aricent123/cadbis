@@ -1,17 +1,9 @@
 package cadbis.proxy;
 
 import java.net.*;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import cadbis.proxy.bl.Action;
-import cadbis.proxy.bl.User;
-import cadbis.proxy.db.ActionDAO;
-import cadbis.proxy.db.UserDAO;
-
-import sun.awt.windows.ThemeReader;
 
 public class Proxy {
 
@@ -32,7 +24,7 @@ public void run(int localport, String host, int port,long timeout) {
 				cSocket = sSocket.accept();				
 				if(cSocket!=null) 
 				{
-					logger.info("accepted as #"+clientCount+":"+cSocket);
+					logger.debug("accepted as #"+clientCount+":"+cSocket);
 					clientCount++;
 					ProxyConnection c = new ProxyConnection(cSocket,host,port,timeout);
 					c.start();
