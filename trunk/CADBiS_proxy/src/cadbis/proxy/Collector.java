@@ -59,7 +59,7 @@ public class Collector {
 			Action action = getActionByUserIp(userIp);
 			if(action!=null){
 				action.getCollectedUrls().add(new CollectedData(hostUrl,rcvdBytes,date, hostIp));
-				//logger.info("Collecting data... ip="+ip+", url="+url+", bytes="+bytes);
+				logger.debug("Collecting data... ip="+hostIp+", url="+hostUrl+", bytes="+rcvdBytes);
 			}
 		}
 	}
@@ -72,7 +72,7 @@ public class Collector {
 				List<CollectedData> col = actions.get(i).getCollectedUrls();
 				for(int j=0; j<col.size(); ++j)
 				{
-					logger.info("Collected data for userIp="+actions.get(i).getIp()+"("+actions.get(i).getUser()+"), url="+col.get(j).url+", bytes="+col.get(j).bytes+", hostIp="+col.get(j).ip);
+					logger.debug("Collected data for userIp="+actions.get(i).getIp()+"("+actions.get(i).getUser()+"), url="+col.get(j).url+", bytes="+col.get(j).bytes+", hostIp="+col.get(j).ip);
 					actionDAO.execSql("insert into url_log values ('"+
 							actions.get(i).getUnique_id() +"','"+
 							actions.get(i).getUser() +"','"+

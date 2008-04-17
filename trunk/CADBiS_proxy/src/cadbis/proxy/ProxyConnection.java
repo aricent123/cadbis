@@ -182,15 +182,14 @@ class ProxyConnection extends Thread {
 									{
 										Socket dnsQuery = new Socket(hostName,hostPort);
 										hostIp = dnsQuery.getInetAddress().getHostAddress();
+										dnsQuery.close();
 									}
 									catch(IOException e)
 									{
 										logger.error("PreCollector fails to recognize the host's ip address: " + e.getMessage());
 									}
+									Collector.getInstance().Collect(userIp, hostName, bytes, new Date(), hostIp);
 								}
-								else
-									hostName = toServerHostName;
-								Collector.getInstance().Collect(userIp, hostName, bytes, new Date(), hostIp);
 							}
 					 }.start();
 					 
@@ -228,9 +227,10 @@ class ProxyConnection extends Thread {
 			 fromClient.close();
 			 toServer.close();
 			 logger.debug("Connections closed successfully...");
-		 } 
+		 }
 		 catch(Exception e) 
 		 {
+			 logger.error("Warning! Connections close error!");
 			 e.printStackTrace(System.err);
 		 }
 		 finally
