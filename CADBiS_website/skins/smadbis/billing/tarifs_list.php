@@ -90,7 +90,11 @@
                     </td><td width=50%>
                     <? OUT($day_traffic_limit) ?></td></tr>                                                            
                     </table>  
+<<<<<<< .mine
+                    </td>
+=======
                     </td></tr>
+>>>>>>> .r53
                   </table>                
   
    <?
