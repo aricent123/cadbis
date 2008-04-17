@@ -6,18 +6,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Proxy {
-
-	public static final String usageArgs =" <localport> <host> <port> <timeout_ms>";
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private final static Logger logger = LoggerFactory.getLogger("Main");
 	static int clientCount;
 
-public void run(int localport, String host, int port,long timeout) {
+public void run(String bindhost, int bindport, String fwdhost, int fwdport,long timeout) {
 	try 
 	{		
-		ServerSocket sSocket = new ServerSocket(localport);
+		ServerSocket sSocket = null;
+		 try
+		 {
+			 sSocket = new ServerSocket();
+			 sSocket.bind(new InetSocketAddress(InetAddress.getByName(bindhost),bindport));
+		 }
+		 catch(UnknownHostException e)
+		 {
+			 logger.error("Unknown host: " + e.getMessage());
+		 }
+		
+
 		while(true) 
 		{
-			logger.info("listening to " + String.valueOf(localport)+"...");
+			logger.info("listening to " + String.valueOf(bindport)+"...");
 			Socket cSocket=null;
 			try 
 			{
@@ -26,7 +35,7 @@ public void run(int localport, String host, int port,long timeout) {
 				{
 					logger.debug("accepted as #"+clientCount+":"+cSocket);
 					clientCount++;
-					ProxyConnection c = new ProxyConnection(cSocket,host,port,timeout);
+					ProxyConnection c = new ProxyConnection(cSocket,fwdhost,fwdport,timeout);
 					c.start();
 				}
 			} 
@@ -45,18 +54,19 @@ public void run(int localport, String host, int port,long timeout) {
 	public static void main(String[] argv) 
 	{		
 		Proxy self = new Proxy();
-		if(argv.length>=3) 
-		{
-			int localport = Integer.parseInt(argv[0]);
-			String url = argv[1];
-			int port = Integer.parseInt(argv[2]);
-			int timeout = Integer.parseInt(argv[3]);
-			Daemon.getInstance().start();
-			self.run(localport,url,port,timeout);			
-		} 
-		else 
-		{
-			System.err.println("usage: java " + self.getClass().getName() + usageArgs);
-		}
+			try
+			{
+				String bindhost =  Configurator.getInstance().getProperty("bindhost");
+				int bindport = Integer.parseInt(Configurator.getInstance().getProperty("bindport"));
+				String fwdhost = Configurator.getInstance().getProperty("fwdhost");
+				int fwdport = Integer.parseInt(Configurator.getInstance().getProperty("fwdport"));
+				int timeout = Integer.parseInt(Configurator.getInstance().getProperty("timeout"));
+				Daemon.getInstance().start();
+				self.run(bindhost,bindport,fwdhost,fwdport,timeout);							
+			}
+			catch(Exception e)
+			{
+				logger.error("");
+			}
 	}
 }

@@ -28,7 +28,7 @@ public class Daemon extends Thread{
 				logger.debug("Refreshing the sessions info.");
 				Collector.getInstance().RefreshInfo();
 				try{					
-					Integer dPeriod = Integer.valueOf(Configurator.getInstance().getProperty("DaemonPeriod"));
+					Integer dPeriod = Integer.valueOf(Configurator.getInstance().getProperty("daemonperiod"));
 					logger.debug("Sleep for " + dPeriod +" ms");
 					Thread.currentThread().sleep(dPeriod);
 				}

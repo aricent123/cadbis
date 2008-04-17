@@ -22,10 +22,10 @@ public class DataAccess {
 	
 	private DataAccess()
 	{
-		this.userName = Configurator.getInstance().getProperty("userName");
+		this.userName = Configurator.getInstance().getProperty("username");
 		this.password = Configurator.getInstance().getProperty("password");
-		this.jdbcUrl = Configurator.getInstance().getProperty("jdbcUrl");
-		this.jdbcDriver = Configurator.getInstance().getProperty("jdbcDriver");
+		this.jdbcUrl = Configurator.getInstance().getProperty("jdbcurl");
+		this.jdbcDriver = Configurator.getInstance().getProperty("jdbcdriver");
 		Connect();
 	}
 	
