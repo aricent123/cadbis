@@ -159,6 +159,7 @@ class ProxyConnection extends Thread {
 					 final String userIp = fromClient.getInetAddress().getHostAddress();
 					 // next proxy (squid) IP
 					 final String toServerIp = toServer.getInetAddress().getHostAddress();
+					 final String toServerHostName = toServer.getInetAddress().getHostName();
 					 // creating the closure and the separate thread					 
 					 new Thread(){
 							public void run()
@@ -166,24 +167,29 @@ class ProxyConnection extends Thread {
 								Integer hostPort = 80;
 								String hostName = httpParser.GetHeader("Host");
 								String hostIp = toServerIp;
-								if(hostName.indexOf(":")>0){
-									String[] buf = hostName.split(":");
-									if(buf.length > 1)
+								if(hostName!= null)
+								{
+									if(hostName.indexOf(":")>0){
+										String[] buf = hostName.split(":");
+										if(buf.length > 1)
+										{
+											hostName = buf[0];
+											hostPort = Integer.valueOf(buf[1]);
+										}
+									}
+									
+									try
 									{
-										hostName = buf[0];
-										hostPort = Integer.valueOf(buf[1]);
+										Socket dnsQuery = new Socket(hostName,hostPort);
+										hostIp = dnsQuery.getInetAddress().getHostAddress();
+									}
+									catch(IOException e)
+									{
+										logger.error("PreCollector fails to recognize the host's ip address: " + e.getMessage());
 									}
 								}
-								
-								try
-								{
-									Socket dnsQuery = new Socket(hostName,hostPort);
-									hostIp = dnsQuery.getInetAddress().getHostAddress();
-								}
-								catch(IOException e)
-								{
-									logger.error("PreCollector fails to recognize the host's ip address: " + e.getMessage());
-								}								
+								else
+									hostName = toServerHostName;
 								Collector.getInstance().Collect(userIp, hostName, bytes, new Date(), hostIp);
 							}
 					 }.start();
