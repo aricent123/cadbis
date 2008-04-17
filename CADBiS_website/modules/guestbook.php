@@ -597,13 +597,19 @@ if($_NOTBAR)
    if(strlen($name1)<$GV["guestbook_minnamelen"])$error.="<br><b>Ошибка:</b> имя не может быть короче ".$GV["guestbook_minnamelen"]." символов!<br>";     
    if(strlen($text)<$GV["guestbook_mintextlen"])$error.="<br><b>Ошибка:</b> текст не может быть короче ".$GV["guestbook_mintextlen"]." символов!<br>";
    if(strlen($text)>$GV["guestbook_maxtextlen"])$error.="<br><b>Ошибка:</b> текст не может быть длиннее ".$GV["guestbook_maxtextlen"]." символов!<br>";
-         
+   if($GV["guestbook_captcha"])
+   {   
+   if($_POST['img_code']!=$_SESSION['IMG']) $error.="<br><b>Ошибка:</b> Код картинки не совпадает с введённым кодом!<br>";
+   }
+
+       
    if(!$error)
       {
        $guest->add_message($name1,$email,$url,time(),"",$text);
        $name=$FLTR->DirectProcessString($name);
        $email=$FLTR->DirectProcessString($email);
        $url=$FLTR->DirectProcessString($url);
+       $_SESSION['IMG']="";
        $text="";            
       }
       else
@@ -630,25 +636,34 @@ if($_NOTBAR)
          <div align=centeR><b>Оставить отзыв:</b></div>
          <table align=center width=70% class=tbl1>
          <form name="comment_form" action="<? OUT("?p=$p&page=$page") ?>" method="post">
-            <tr><td width=100%>Имя*: <br>
-            <input type="text" name="name" class=inputbox style="width:100%" value="<? OUT($name) ?>"<? if(check_auth())OUT("readonly") ?>><br>
-            </td></tr>
-            <tr><td width=100%>E-mail: <br>
-            <input type="text" name="email" class=inputbox style="width:100%" value="<? OUT($email) ?>"<? if(check_auth())OUT("readonly") ?>><br>
-            </td></tr>
-            <tr><td width=100%>Url: <br>
-            <input type="text" name="url" class=inputbox style="width:100%" value="<? OUT($url) ?>"<? if(check_auth())OUT("readonly") ?>><br>
-            </td></tr>
-            <tr><td width=100%>Комментарий* (не длиннее <? OUT($GV["guestbook_maxtextlen"]) ?> символов): <br>
-            <textarea rows=5 name="text" rows=9 class=inputbox style="width:100%"><? OUT($text) ?></textarea><br><br>
+   <tr><td  width=30%>
+   <?php 
+   if($GV["guestbook_captcha"]){
+   ?>
+   <table border=0 width=30% style="margin:0px;">
+   <td width=90px>Код картинки*:</td>
+   <td width=1px><img src="captcha.php"></td></table>
+   <td width=70%><input type=text class=inputbox style="width:100%" name=img_code></td></tr>
+   <?php 
+	}
+	?>
+         
+            <tr><td width=30%>Имя*:</td><td>
+            <input type="text" name="name" class=inputbox style="width:100%" value="<? OUT($name) ?>"<? if(check_auth())OUT("readonly") ?>></td><tr>
+            <tr><td width=30%>E-mail:</td><td>
+            <input type="text" name="email" class=inputbox style="width:100%" value="<? OUT($email) ?>"<? if(check_auth())OUT("readonly") ?>></td><tr>
+            <tr><td width=30%>Url:</td><td>
+            <input type="text" name="url" class=inputbox style="width:100%" value="<? OUT($url) ?>"<? if(check_auth())OUT("readonly") ?>></td><tr>
+            <tr><td colspan=2>Комментарий* (не длиннее <? OUT($GV["guestbook_maxtextlen"]) ?> символов):</td><td>
+            <tr><td colspan=2><textarea rows=5 name="text" rows=9 class=inputbox style="width:100%"><? OUT($text) ?></textarea><br>
             * - Обязательные для заполнения поля            
-            </td></tr></table>
+            </tr></td></table>
             <br>
             <input type="hidden" name="add" value="1">
             <div align=center><input type="submit" value="Отправить" class=button></div>
          </form>   
          <? if($GV["guestbook_premoderation"]){ ?>
-         <div align=justify><b>Внимание:</b> Гостевая книга модерируется. Ваш отзыв будет доступен только после утверждения администратором!</div>
+         <div align=center><b>Внимание:</b> Гостевая книга модерируется. Ваш отзыв будет доступен только после утверждения администратором!</div>
          <? } ?>
          
          <?   }
@@ -705,7 +720,7 @@ if($_NOTBAR)
                            if(count($answers)>0)
                            {
                            ?>
-                           </td></tr>
+                           </tr></td>
                            <tr>
                            <td colspan=2 width=90% ><B>Ответы:</B>
                                <table width=90% align=center> 
@@ -730,7 +745,8 @@ if($_NOTBAR)
                             </td></tr>   
                        <?  } ?>
 
-
+                  </td>
+                  </tr> 
                   </table><br><br> 
         <?php  }
         if(!count($messages))OUT("<div align=center>нет сообщений</div>");  
