@@ -2,11 +2,11 @@ package cadbis.proxy.db;
 
 import cadbis.proxy.bl.Action;
 
-public class ActionDAO extends AbstractDbObject<Action> {
+public class ActionDAO extends AbstractDAO<Action> {
 
 	public ActionDAO()
 	{
-		super(DataAccess.getInstance(), "actions");
+		super(DBConnection.getInstance(), "actions");
 	}
 	
 }

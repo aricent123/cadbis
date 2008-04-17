@@ -64,6 +64,15 @@ public class Collector {
 		}
 	}
 	
+	public boolean CheckAccessToUrl(String userIp, String url)
+	{
+		Action action = getActionByUserIp(userIp);
+		
+		
+		return true;		
+	}
+	
+	
 	public void FlushCollected()
 	{
 		synchronized (wLock) {		
