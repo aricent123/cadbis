@@ -22,7 +22,8 @@ class ProxyConnection extends Thread {
 	 private static Integer threadCount = 0;
 	 private long timeout;
 	 private final Logger logger = LoggerFactory.getLogger(getClass());
-
+	 private static final int MAX_BLOCK_SIZE = 4096;
+	 
 	 ProxyConnection(Socket s, String host, int port, long timeout) 
 	 {
 	  fromClient=s;
@@ -79,9 +80,12 @@ class ProxyConnection extends Thread {
 			 logger.error(e.getMessage());
 		 }
 
-		 
-		 
+		 // current user IP
+		 final String userIp = fromClient.getInetAddress().getHostAddress();
+		 // next proxy (squid) IP
+		 final String toServerIp = toServer.getInetAddress().getHostAddress();
 		 boolean isReadWrite = true;
+		 boolean isAccessDenied = false;
 		 while(isReadWrite || endTime - startTime < timeout) 
 		 {
 			 long rcvdBytes = 0;
@@ -108,13 +112,15 @@ class ProxyConnection extends Thread {
 					httpParser.ClearHeaders();
 					httpParser.ParseHeaders(cRcvdData);
 					// check if url is denied
-					//Collector.getInstance().
-					
-					cRcvdData = httpParser.GetFixedFullRequestHeader();
-					byte[] RcvdBytes = cRcvdData.getBytes();
-					for(int i=0;i<RcvdBytes.length;++i)
-						serverOut.write(RcvdBytes[i]);
-					serverOut.flush();
+					isAccessDenied = !Collector.getInstance().CheckAccessToUrl(userIp,httpParser.GetHeader("Host"));
+					if(!isAccessDenied)
+					{
+						cRcvdData = httpParser.GetFixedFullRequestHeader();
+						byte[] RcvdBytes = cRcvdData.getBytes();
+						for(int i=0;i<RcvdBytes.length;++i)
+							serverOut.write(RcvdBytes[i]);
+						serverOut.flush();
+					}
 				}
 				
 			 }
@@ -124,24 +130,52 @@ class ProxyConnection extends Thread {
 			 }
 			 
 			 
+			 final String HeaderHost = httpParser.GetHeader("Host");
 			 // trying to send data to server
 			 try{
 				 // creating the buffer for the readed data
-				 ArrayList<byte[]> buffer = new ArrayList<byte[]>();
-				 while((sAvail=serverIn.available())>0) 
-				 {	
-					 // we can recieve sAvail bytes
-					 rcvdBytes += sAvail;
-					 // indicate that we have read smthg
-					 isReadWrite = true;
-					 // indicate the last read time
-					 startTime = new Date().getTime();
-					 byte[] charBuf = new byte[sAvail];
-					 serverIn.read(charBuf);
-					 // adding the data to buffer
-					 buffer.add(charBuf);				     
-				 }
-				 
+				 ArrayList<byte[]> buffer = new ArrayList<byte[]>();				 
+				if(!isAccessDenied)
+				{					
+					 while((sAvail=serverIn.available())>0) 
+					 {	
+						 // we can recieve sAvail bytes
+						 rcvdBytes += sAvail;
+						 // indicate that we have read smthg
+						 isReadWrite = true;
+						 // indicate the last read time
+						 startTime = new Date().getTime();
+						 byte[] charBuf = new byte[sAvail];
+						 serverIn.read(charBuf);
+						 // adding the data to buffer
+						 buffer.add(charBuf);				     
+					 }
+				}
+				else
+				{
+					isAccessDenied = false;
+					String accDenied = Configurator.getInstance().getFile_denied_access();
+					accDenied = accDenied.replace("%U",httpParser.GetHeader("Host"));
+					accDenied = accDenied.replace("%T",new Date().toString());
+					for(int i=0;i<accDenied.length();i+=MAX_BLOCK_SIZE)
+					{
+						if(i+MAX_BLOCK_SIZE<accDenied.length())
+							sAvail = MAX_BLOCK_SIZE;
+						else
+							sAvail = accDenied.length() - sAvail - 1;													
+						buffer.add(accDenied.substring(i,sAvail).getBytes());
+						sAvail = 0;
+					}
+					// log this action
+					 new Thread(){
+							public void run()
+							{	
+								Collector.getInstance().AddDeniedAccessAttempt(userIp, HeaderHost);
+							}
+					 }.start();
+						
+				}
+				
 				 
 				 // if we have read smthg
 				 if(buffer.size()>0)
@@ -158,10 +192,6 @@ class ProxyConnection extends Thread {
 					 // collecting (preCollector)
 					 // bytes recieved
 					 final long bytes = rcvdBytes;
-					 // current user IP
-					 final String userIp = fromClient.getInetAddress().getHostAddress();
-					 // next proxy (squid) IP
-					 final String toServerIp = toServer.getInetAddress().getHostAddress();
 					 final String toServerHostName = toServer.getInetAddress().getHostName();
 					 // creating the closure and the separate thread					 
 					 new Thread(){
@@ -189,7 +219,7 @@ class ProxyConnection extends Thread {
 									}
 									catch(IOException e)
 									{
-										logger.error("PreCollector fails to recognize the host's ip address: " + e.getMessage());
+										logger.error("PreCollector fails to recognize the host's ip address of '"+hostName+"': " + e.getMessage());
 									}
 									Collector.getInstance().Collect(userIp, hostName, bytes, new Date(), hostIp);
 								}

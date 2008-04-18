@@ -2,6 +2,8 @@ package cadbis.proxy;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import cadbis.proxy.bl.Action;
 import cadbis.proxy.bl.CollectedData;
+import cadbis.proxy.bl.UrlDenied;
 import cadbis.proxy.db.ActionDAO;
+import cadbis.proxy.db.DeniedUrlDAO;
 
 public class Collector {
 	private List<Action> actions = null;
@@ -49,8 +53,14 @@ public class Collector {
 	{
 		actions = getActiveSessions();
 		actionsOfIps.clear();
-		for(int i=0;i<actions.size();++i)
+		for(int i=0;i<actions.size();++i){
 			actionsOfIps.put(actions.get(i).getIp().toString().hashCode(), actions.get(i));
+			DeniedUrlDAO dao = new DeniedUrlDAO();
+			actions.get(i).getDeniedUrls().clear();
+			List<UrlDenied> durls = dao.getItemsByQuery("select * from url_denied where gid="+actions.get(i).getGid());			
+			for(int j=0;j<durls.size();++j)
+				actions.get(i).getDeniedUrls().add(durls.get(j));
+		}
 	}
 	
 	public void Collect(String userIp, String hostUrl, Long rcvdBytes, Date date, String hostIp)
@@ -67,11 +77,23 @@ public class Collector {
 	public boolean CheckAccessToUrl(String userIp, String url)
 	{
 		Action action = getActionByUserIp(userIp);
-		
-		
-		return true;		
+		UrlDenied key = new UrlDenied();
+		key.setUrl(url);
+		int durlid = Collections.binarySearch(action.getDeniedUrls(), key, new Comparator<UrlDenied>(){
+			public int compare(UrlDenied row1, UrlDenied row2) {
+				if (row2.getUrl().toString().matches(row1.getUrl().toString()))
+					return 0;
+				return 1;
+			}});
+		return durlid==-1;
 	}
 	
+	
+	public void AddDeniedAccessAttempt(String userIp, String url)
+	{
+		Action action = getActionByUserIp(userIp);
+		actionDAO.execSql(String.format("insert into url_denied_log(url,unique_id,date) values('%s','%s',NOW())",action.getUnique_id(),url));
+	}
 	
 	public void FlushCollected()
 	{

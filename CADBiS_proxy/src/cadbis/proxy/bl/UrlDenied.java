@@ -3,7 +3,7 @@ package cadbis.proxy.bl;
 public class UrlDenied implements BusinessObject {
 	private Integer duid;
 	private Integer gid;
-	private Integer url;
+	private String url;
 	
 	public String[][] getPerstistenceFields() {
 		String[][] fields = {
@@ -18,24 +18,24 @@ public class UrlDenied implements BusinessObject {
 		return duid;
 	}
 
-	public void setDuid(Integer duid) {
-		this.duid = duid;
+	public void setDuid(Object duid) {
+		this.duid = (Integer)duid;
 	}
 
-	public Integer getGid() {
+	public Object getGid() {
 		return gid;
 	}
 
-	public void setGid(Integer gid) {
-		this.gid = gid;
+	public void setGid(Object gid) {
+		this.gid = (Integer)gid;
 	}
 
-	public Integer getUrl() {
+	public Object getUrl() {
 		return url;
 	}
 
-	public void setUrl(Integer url) {
-		this.url = url;
+	public void setUrl(Object url) {
+		this.url = (String)url;
 	}
 
 }
