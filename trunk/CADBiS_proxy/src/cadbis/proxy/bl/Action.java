@@ -17,7 +17,8 @@ public class Action implements BusinessObject{
 	private String server;
 	private String client_ip;
 	private Integer port;
-		
+	
+	private List<UrlDenied> DeniedUrls = new ArrayList<UrlDenied>();
 	private List<CollectedData> CollectedUrls = new ArrayList<CollectedData>(); 
 	public List<CollectedData> getCollectedUrls()
 	{
@@ -147,6 +148,18 @@ public class Action implements BusinessObject{
 
 	public void setPort(Object port) {
 		this.port = (Integer)port;
+	}
+
+
+
+	public List<UrlDenied> getDeniedUrls() {
+		return DeniedUrls;
+	}
+
+
+
+	public void setDeniedUrls(List<UrlDenied> deniedUrls) {
+		DeniedUrls = deniedUrls;
 	}	
 
 	
