@@ -59,7 +59,7 @@ public class HttpParser {
 	
 	public String GetFixedFullRequestHeader()
 	{
-		if(RequestString.indexOf("http://") == -1)
+		if(!RequestString.matches("^" + RequestMethod + " http:\\/\\/.+"))
 		{
 			String fixedReq = FullRequestHeader.replace(RequestMethod + " ", RequestMethod + " http://" + GetHeader("Host")); 
 			logger.debug("Request String is wrong, fixing... Fixed value='"+fixedReq+"'");
