@@ -37,8 +37,9 @@ public class Test {
 	public static void main(String[] args) {
 		
 		System.out.print(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+		System.out.print(new String("GET http://test.ru/http://asdkhaskjd").matches("^GET http:\\/\\/.+"));
 		TestThread[] pool;
-		pool = new TestThread[20];
+		pool = new TestThread[5];
 		for(int i=0;i<pool.length;++i)
 		{
 			pool[i] = new TestThread();

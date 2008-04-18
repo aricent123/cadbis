@@ -200,28 +200,30 @@ class ProxyConnection extends Thread {
 								Integer hostPort = 80;
 								String hostName = httpParser.GetHeader("Host");
 								String hostIp = toServerIp;
-								if(hostName!= null)
-								{
-									if(hostName.indexOf(":")>0){
-										String[] buf = hostName.split(":");
-										if(buf.length > 1)
-										{
-											hostName = buf[0];
-											hostPort = Integer.valueOf(buf[1]);
+								synchronized (getClass()) {
+									if(hostName!= null)
+									{
+										if(hostName.indexOf(":")>0){
+											String[] buf = hostName.split(":");
+											if(buf.length > 1)
+											{
+												hostName = buf[0];
+												hostPort = Integer.valueOf(buf[1]);
+											}
 										}
+										
+										try
+										{
+											Socket dnsQuery = new Socket(hostName,hostPort);
+											hostIp = dnsQuery.getInetAddress().getHostAddress();
+											dnsQuery.close();
+										}
+										catch(IOException e)
+										{
+											logger.error("PreCollector fails to recognize the host's ip address of '"+hostName+"': " + e.getMessage());
+										}
+										Collector.getInstance().Collect(userIp, hostName, bytes, new Date(), hostIp);
 									}
-									
-									try
-									{
-										Socket dnsQuery = new Socket(hostName,hostPort);
-										hostIp = dnsQuery.getInetAddress().getHostAddress();
-										dnsQuery.close();
-									}
-									catch(IOException e)
-									{
-										logger.error("PreCollector fails to recognize the host's ip address of '"+hostName+"': " + e.getMessage());
-									}
-									Collector.getInstance().Collect(userIp, hostName, bytes, new Date(), hostIp);
 								}
 							}
 					 }.start();
