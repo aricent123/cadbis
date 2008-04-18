@@ -283,7 +283,7 @@ global $id;
             
             <br>
             Редактор: | <b>HTML</b> | <a href="<? OUT("?p=$p&a=$a&pgrec=$pgrec&editor=text&act=$act&type=$type&id=$id") ?>" onclick="return ConfirmUnsaved()">Обычный</a>
-            <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
+            <br><div>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
             <div align=center><input type="submit" class="button" value="Сохранить"></div></form>
             <?                          
              }
@@ -366,7 +366,7 @@ global $id;
             ?>
             </td></tr></table>          
             <br>
-            Редактор: | <b>HTML</b> | <a href="<? OUT("?p=$p&a=$a&pgrec=$pgrec&act=$act&type=$type&id=$id&editor=txt") ?>" onclick="return ConfirmUnsaved()">Обычный</a>
+            <div> Редактор: | <b>HTML</b> | <a href="<? OUT("?p=$p&a=$a&pgrec=$pgrec&act=$act&type=$type&id=$id&editor=txt") ?>" onclick="return ConfirmUnsaved()">Обычный</a>
             <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
             <div align=center><input type="submit" class="button" value="Сохранить"></div>           </FORM>  
             <?                          
@@ -377,7 +377,7 @@ global $id;
             Текст:<br>
             <textarea class=inputbox name=text style="width:100%" rows=30><? OUT(get_file($DIRS["pager_data"]."/".$pgrec)); ?></textarea><br>
             Редактор: | <a href="<? OUT("?p=$p&act=$act&a=$a&pgrec=$pgrec&editor=html&type=$type&id=$id") ?>" onclick="return ConfirmUnsaved()">HTML</a> | <b>Обычный</b>
-            <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
+            <br><div>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>)</div> 
             <input class=inputbox type=checkbox name=nb unchecked>Переводить переход на новую строку в &lt;br&gt;? <br>  
             <input class=inputbox type=checkbox name=kt unchecked>Отключить HTML-теги ?         
             <div align=center><input type=submit value="Сохранить" class=button></div>  
