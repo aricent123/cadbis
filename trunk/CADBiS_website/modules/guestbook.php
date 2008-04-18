@@ -657,7 +657,7 @@ if($_NOTBAR)
             <tr><td colspan=2>Комментарий* (не длиннее <? OUT($GV["guestbook_maxtextlen"]) ?> символов):</td><td>
             <tr><td colspan=2><textarea rows=5 name="text" rows=9 class=inputbox style="width:100%"><? OUT($text) ?></textarea><br>
             * - Обязательные для заполнения поля            
-            </tr></td></table>
+            </td></tr></table>
             <br>
             <input type="hidden" name="add" value="1">
             <div align=center><input type="submit" value="Отправить" class=button></div>
