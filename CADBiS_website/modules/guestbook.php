@@ -720,7 +720,7 @@ if($_NOTBAR)
                            if(count($answers)>0)
                            {
                            ?>
-                           </tr></td>
+                           </td></tr>
                            <tr>
                            <td colspan=2 width=90% ><B>Ответы:</B>
                                <table width=90% align=center> 
@@ -745,8 +745,6 @@ if($_NOTBAR)
                             </td></tr>   
                        <?  } ?>
 
-                  </td>
-                  </tr> 
                   </table><br><br> 
         <?php  }
         if(!count($messages))OUT("<div align=center>нет сообщений</div>");  
