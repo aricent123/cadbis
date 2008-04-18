@@ -959,7 +959,6 @@ if($_NOTBAR)
             <input type="submit" class=button value="Отправить">
          </form>
         </td></table>   
-<<<<<<< .mine
         <?php 
         
         			} // eof if(news_comments)
@@ -998,7 +997,7 @@ else
 	for($i=0;$i<count($news_list);$i++){
                $ud=get_user_data($news_list[$i]["name"]);  	 
                 ?>
-                <div align=center><a tyle="font-size:8.5px;" href="?p=users&act=userinfo&id=<? OUT ($news_list[$i]["name"]) ?>"><? OUT($ud["nick"]) ?></a>: "<a style="font-size:9px;" href="?p=news&view=post&id=<? OUT($news_list[$i]["id"]) ?>"><b><? OUT($news_list[$i]["head"]) ?></a></b>"</div>
+                <div align=center><a tyle="font-size:8.5px;" href="?p=users&act=userinfo&id=<? OUT ($news_list[$i]["name"]) ?>"><? OUT($ud["nick"]) ?></a>: "<a style="font-size:9px;" href="?p=news&view=post&id=<? OUT($news_list[$i]["id"]) ?>"><b><? OUT($news_list[$i]["head"]) ?></b></a>"</div>
                 <? OUT($news_list[$i]["text"]) ?><br>(<a style="font-size:9px;" href="?p=news&view=post&id=<? OUT($news_list[$i]["id"]) ?>">читать целиком</a>)<br>                
                 <font color=gray style="font-size:8.5px">/<? OUT(norm_date($news_list[$i]["date"])) ?></font><br>
                 <? }
@@ -1006,51 +1005,5 @@ else
    }
   else
     include(SK_DIR."/newsbar.php");
-
 }
-=======
-       <br><div align=center><a href="<? OUT("?p=$p") ?>">Назад</a></div>        
-       <?      
-       }
-      } 
-      if(check_auth() && $CURRENT_USER["level"]>=5)
-      {
-      ?>
-      <div align=center>
-      <a href="?p=<? OUT($p) ?>&act=admin">Администрирование</a>
-      </div>
-      <?
-       }         
-       ?>
-
-       <?
-    }
-  else
-    include(SK_DIR."/news.php");
-else
-  if(!file_exists(SK_DIR."/newsbar.php"))
-   {      
-   global $DIRS;
-     $news = new CNews($DIRS["news_list"],$DIRS["news_files"]);
-      $news->comment_part_sep = "[*3*]";
-      $news->news_info_sep    = "[*1*]";
-      $news->comment_sep      = "[*2*]";
-      $news->comment_info_sep = "[*4*]";  
-      $news->set_max_news(5); 
-      $news_list = $news->get_news_on_page(1);
-      if(!count($news_list))echo("<div align=center>нет новостей</div>");
-	for($i=0;$i<count($news_list);$i++){
-               $ud=get_user_data($news_list[$i]["name"]);  	 
-                ?>
-                <div align=center><a style="font-size:8.5px;" href="?p=users&act=userinfo&id=<? OUT ($news_list[$i]["name"]) ?>"><? OUT($ud["nick"]) ?></a>: "<a style="font-size:9px;" href="?p=news&view=post&id=<? OUT($news_list[$i]["id"]) ?>"><b><? OUT($news_list[$i]["head"]) ?></b></a>"</div>
-                <? OUT($news_list[$i]["text"]) ?><br>(<a style="font-size:9px;" href="?p=news&view=post&id=<? OUT($news_list[$i]["id"]) ?>">читать целиком</a>)<br>                
-                <font color=gray style="font-size:8.5px">/<? OUT(norm_date($news_list[$i]["date"])) ?></font><br>
-                <? }
-                          
-   }
-  else
-    include(SK_DIR."/newsbar.php");
-
-}
->>>>>>> .r47
 ?>

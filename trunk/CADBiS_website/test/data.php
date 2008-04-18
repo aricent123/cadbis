@@ -3,13 +3,25 @@
 //include charts.php in your script
 include "charts.php";
 
-//change the chart to a bar chart
+switch($_GET['type'])
+{
+	case 'pie':
+		$chart [ 'chart_type' ] = "pie";
+		break;
+	default:
+		$chart [ 'chart_type' ] = "stacked 3d column";		
+};
 
-$chart [ 'chart_type' ] = "stacked 3d column";
+/*
+ * $
+ * 
+ */
+//change the chart to a bar chart
 $chart [ 'chart_data' ] = array ( array ( "",	"2004",	"2005",	"2006",	"2007" ),
-                                  array ( "צנאגûמצאנפûכג",	10,     	30,		63,		100  ),
- 					    array ( "b",	20,     	50,		83,		30  )
-                         );
+                                  array ( "צנאגûמצאנפûכג",	10,		30,		63,		100  ),
+ 					    		  array ( "b",	20,     	50,		83,		30  )
+                         		);
+                         		
 /*$chart [ 'chart_grid_h' ] = array (   'thickness'  =>  2,
                                       'color'      =>  "FF0000",
                                       'alpha'      =>  15,
