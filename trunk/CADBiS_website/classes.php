@@ -9,7 +9,6 @@
   function is_user_exists($usr_id)
    {
    global $MDL,$DIRS,$GV;
-    if($usr_id=="!ROOT!")return true;
    if( $MDL->IsModuleExists("users"))
     {
     $MDL->Load("users");
@@ -27,20 +26,6 @@
   function get_user_data($usr_id)
    {
    global $MDL,$DIRS,$GV;
-   if($usr_id=="!ROOT!")
-     {
-     $data["level"]=10;
-     $data["id"]="!ROOT!";
-     $data["nick"]=$GV["site_owner"];
-     return $data;
-     }
-    if($usr_id=="!GUEST!")
-     {
-     $data["level"]=0;
-     $data["id"]="!GUEST!";
-     $data["nick"]="гость";
-     return $data;
-     }     
    if( $MDL->IsModuleExists("users"))
     {
     $MDL->Load("users");
@@ -76,37 +61,18 @@
   //returns full address of request
   function getfullurl()
    {
-   global $HTTP_ENV_VARS,$HTTP_SERVER_VARS;
-   $request=$HTTP_SERVER_VARS["REQUEST_URI"];
-   //$request="http://".$HTTP_SERVER_VARS['SERVER_NAME'].$HTTP_SERVER_VARS['PHP_SELF']."?".$HTTP_SERVER_VARS['QUERY_STRING'];
-   $res=strpos($request,"fwdto=");
-   if($res!=FALSE)
-     {
-     $res1=substr($request,0,$res-1);
-     ++$res;
-     while($request[$res]!="&" && $res<strlen($request))$res++;
-     $res2=substr($request,$res,strlen($request)-$res);
-     $request=$res1.$res2;
-     }                                              
-   return "http://".$HTTP_SERVER_VARS['HTTP_HOST'].$request;
-   //return $request;
+   global $HTTP_ENV_VARS;
+   return "http://".$HTTP_ENV_VARS["SERVER_ADDR"].$HTTP_ENV_VARS["REQUEST_URI"];
    }
-      
+   
 //-----------------------------------------------------------------------
   
   //forwards user to index location
-  function resetpage($fwdto="")
+  function resetpage()
    {
-   global $GV,$FLTR;
-   if(($fwdto) && !strstr($fwdto,"?p=user") && strstr($fwdto,"?p="))
-     {
-     $fwdto=$FLTR->ReverseProcessURL($fwdto);
-     die("<meta http-equiv='Refresh' content=\"0;URL='$fwdto'\">
-     <script>document.location.href='".$fwdto."';</script>");
-     }
-   else 
-    die("<meta http-equiv='Refresh' content=\"0;URL='".$GV["default_page"]."'\">
-    <script>document.location.href='?p=".$GV["default_page"]."';</script>");
+   global $GV;
+   //header("Location: "."http://".$HTTP_ENV_VARS["SERVER_ADDR"].$HTTP_ENV_VARS["REQUEST_URI"]);   
+   die("<script>document.location.href='?p=".$GV["default_page"]."';</script>");
    }
    
 //-----------------------------------------------------------------------
@@ -114,8 +80,7 @@
   //forwards user to page
   function setpage($page)
    {
-   die(" <meta http-equiv='Refresh' content=\"0;URL='$page'\">
-   <script>document.location.href='$page';</script>");
+   die("<script>document.location.href='$page';</script>");
    } 
    
 //-----------------------------------------------------------------------   
@@ -175,7 +140,7 @@
  function get_file_type($file)
   {
   $i=0;
-  while(substr($file,-$i-1,-$i)!='.' && $i<strlen($file))$i++;
+  while(substr($file,-$i-1,-$i)!='.')$i++;
    return substr($file,-$i-1);
   }   
    
@@ -211,9 +176,8 @@
   //returns content of file
   function get_file($file)
    {
-   	if(!file_exists($file))
-   		return null;
-   	return file_get_contents($file);
+    $file=file($file);
+    return implode($file,"");
    }
 
 //-----------------------------------------------------------------------
@@ -227,9 +191,8 @@
 	if($date['year']<10)$date['year']="0".$date['year'];	
 	if($date['hours']<10)$date['hours']="0".$date['hours'];
 	if($date['minutes']<10)$date['minutes']="0".$date['minutes'];
-	if($date['seconds']<10)$date['seconds']="0".$date['seconds'];
-	list($usec, $sec) = explode(" ", microtime());        	
-	$date=$date['year'].$date['mon'].$date['mday'].$date['hours'].$date['minutes'].$date['seconds'].$usec;
+	if($date['seconds']<10)$date['seconds']="0".$date['seconds'];        	
+	$date=$date['mday'].$date['mon'].$date['year'].$date['hours'].$date['minutes'].$date['seconds'];
 	return $date;
 	}
 	
@@ -299,7 +262,6 @@ function make_gender_str($gender)
 function make_icq_str($icq)
  {
    $icq=str_replace("style=","[HACK DETECT]",strtolower($icq));
-   $icq=str_replace("-","",strtolower($icq));
  if($icq)
  return "<img valign=top src='http://wwp.icq.com/scripts/online.dll?icq=".$icq."&img=5'>
    <a href='http://wwp.icq.com/scripts/search.dll?to=".$icq."'>".$icq."</a>";
@@ -310,15 +272,15 @@ function make_icq_str($icq)
 //-----------------------------------------------------------------------
 
   //returns link, such as <a href="link">link</a>
-function make_url_str($url)
+function make_url_str($url,$newwindow=false)
  {
  $url=str_replace("style=","[HACK DETECT]",strtolower($url));
  if($url!="")
    {
    if(strtolower(substr($url,0,7))!="http://")
-     return "<a href=\"http://$url\">$url</a>";
+     return "<a ".(($newwindow)?"target=_blank":"")." href=\"http://$url\">$url</a>";
    else
-     return "<a href=\"$url\">$url</a>";
+     return "<a ".(($newwindow)?"target=_blank":"")." href=\"$url\">$url</a>";
    }
  return "нет"; 
  }
@@ -357,14 +319,12 @@ function OUT($str)
 //..........................CLASSES............................//
 //.............................................................//
 
-include("js/fckeditor/fckeditor_php5.php"); 
- 
 //*************************** timer ***********************************//
 /////////////////////////////////////////////////////////////////////////
 class CTimer 
  {
- public $startTime;
- public $endTime;
+ var $startTime;
+ var $endTime;
  function start() 
   {
   $this->startTime = gettimeofday();
@@ -412,11 +372,11 @@ class CModules
    if(_isroot())
     switch($str)
      {
-     case "user_menu": include "root/menu.php";  return;
-     case "user_page": include "root/page.php"; return;
+     case "user_menu": include "root/menu.php";  break;
+     case "user_page": include "root/page.php"; break;
      };
 
-/*    if($str=="user_menu" && $this->IsModuleExists('users'))
+    if($str=="user_menu" && $this->IsModuleExists('users'))
     {
     if(_isrootdef())return;
     $_MENU=true;
@@ -431,7 +391,7 @@ class CModules
     if(_isroot())return;
     include($GV["modules_dir"]."/users".$GV["module_ext"]);
     return;
-    }     */
+    }
     
     if(file_exists($GV["modules_dir"]."/".$str.$GV["module_ext"]))
      {
@@ -681,7 +641,7 @@ class CErrors
 /////////////////////////////////////////////////////////////////////////
 class CPageDivider 
  { 
- public $POP;
+ var $POP;
  //-----------------------------------------------------------------------
  function CPageDivider($POP)
    {$this->POP=$POP;}
@@ -691,7 +651,6 @@ class CPageDivider
  //-----------------------------------------------------------------------
  function GetPage($posts,$pnum)
    {
-   if($pnum=="all")return $posts;
    if(!count($posts))return NULL;
    //rsort($posts);
     $ptot=ceil(count($posts)/$this->POP);
@@ -750,25 +709,6 @@ class CFiltration
   $str=ereg_replace(" +"," ",trim(stripslashes(stripslashes(addslashes($str)))));
   return $str;  
   }
- //----------------------------------------------------------------------- 
- function DirectProcessURL($str)
-  {
-  global $GV;        
-  $str=str_replace("&","/amp/",$str);  
-  $str=htmlspecialchars($str);
-  $str=ereg_replace(" +"," ",trim(stripslashes(stripslashes(addslashes($str)))));
-  return $str;  
-  }
- //----------------------------------------------------------------------- 
- function ReverseProcessURL($str)
-  {
-  global $GV;
-  $str=strip_tags($str);
-  $str=str_replace("\"","",$str);
-  $str=str_replace("/amp/","&",$str);  
-  $str=str_replace("\&amp;quot;","\"",$str);  
-  return $str;  
-  }  
  //-----------------------------------------------------------------------   
  function DirectProcessText($str,$nb=1,$kt=1,$ml=0)
   {
@@ -803,14 +743,6 @@ class CFiltration
   $str=str_replace($GV["sep3"],"",$str); 
   return $str;  
   }
- //-----------------------------------------------------------------------   
- function ReverseProcessHTML($str)
-  {
-  $str=str_replace("\r\n","",addslashes($str));
-  $str=str_replace("\r","",$str);
-  $str=str_replace("\n","",$str);   
-  return $str;  
-  }  
  //----------------------------------------------------------------------- 
  function ReverseProcessString($str)
   {
@@ -822,7 +754,7 @@ class CFiltration
  //----------------------------------------------------------------------- 
  function ReverseProcessText($text)
   {
-  //$text=ereg_replace(" +"," ",trim(stripslashes(stripslashes(addslashes($text)))));  
+  $text=ereg_replace(" +"," ",trim(stripslashes(stripslashes(addslashes($text)))));  
   return strip_tags($text);
   }                       
  //----------------------------------------------------------------------- 
@@ -840,15 +772,8 @@ class CFiltration
    };
   return $text;
   }
- //-----------------------------------------------------------------------
-  function ExtractSmallText($text, $length = 255)
-  {
-  	$small_text = substr($text,0,$length);
-  	$i = strlen($small_text);
-  	while($i>0 && ($small_text[$i]!=" " && $small_text[$i]!="\n"))
-  	  $i--;
-  	return substr($small_text,0,$i);
-  }
+  
+     
  }; 
 /////////////////////////////////////////////////////////////////////////////
  
@@ -861,7 +786,7 @@ class CFiltration
 /////////////////////////////////////////////////////
 function _logout()
 { 
-  global $MDL,$DIRS,$GV,$CURRENT_USER,$_SESSION;
+  global $MDL,$DIRS,$GV,$CURRENT_USER,$HTTP_SESSION_VARS;
  if($MDL->IsModuleExists('users') ){
  $MDL->Load("users"); 
  $USR=new CUsers($DIRS["users_data"],$DIRS["users_list"],$DIRS["users_private"],$DIRS["users_groups"],$DIRS["users_online"]);
@@ -869,7 +794,7 @@ function _logout()
  }
  else $USR=NULL;
  
- $_SESSION["login"]="";
+ $HTTP_SESSION_VARS["login"]="";
  session_unregister("login");
  if($USR)
    {
@@ -880,7 +805,7 @@ function _logout()
 /////////////////////////////////////////////////////
 function _login($login,$passwd)
 {
-  global $MDL,$DIRS,$GV,$CURRENT_USER,$_SESSION,$_root_login,$_root_passwd;  
+  global $MDL,$DIRS,$GV,$CURRENT_USER,$HTTP_SESSION_VARS,$_root_login,$_root_passwd;  
  if($MDL->IsModuleExists('users') ){
  $MDL->Load("users"); 
  $USR=new CUsers($DIRS["users_data"],$DIRS["users_list"],$DIRS["users_private"],$DIRS["users_groups"],$DIRS["users_online"]);
@@ -889,14 +814,10 @@ function _login($login,$passwd)
  else $USR=NULL;
    if($_root_login==$login && $_root_passwd==md5($passwd))
      {  
-      session_register("login");
-      session_register("passwd");
-      session_register("defroot");
-      session_register("rootacc");     	
-     $_SESSION["login"]="$login";
-     $_SESSION["passwd"]="$passwd";   
-     $_SESSION["rootacc"]=true;
-     $_SESSION["defroot"]=true;
+     $HTTP_SESSION_VARS["login"]="$login";
+     $HTTP_SESSION_VARS["passwd"]="$passwd";   
+     $HTTP_SESSION_VARS["rootacc"]=true;
+     $HTTP_SESSION_VARS["defroot"]=true;
      $CURRENT_USER["ip"]=get_ip_address();
      $USR->SetOffline($CURRENT_USER);   
      return true;
@@ -905,17 +826,12 @@ function _login($login,$passwd)
      {
      if($USR->CheckAuth($login,$passwd))
        {
-       	session_register("login");
-       	session_register("passwd");
-       	session_register("defroot");
-       	session_register("rootacc");
-       $_SESSION["login"]="$login";
-       $_SESSION["passwd"]="$passwd";
-       $_SESSION["defroot"]=false;       
-       $usr_data=$USR->GetUserData($USR->GetUserId($login));              
+       $HTTP_SESSION_VARS["login"]="$login";
+       $HTTP_SESSION_VARS["passwd"]="$passwd";
+       $HTTP_SESSION_VARS["defroot"]=false;       
+       $usr_data=$USR->GetUserData($USR->GetUserId($login));
        //this user also have root access
-       if($usr_data["level"]>=10)
-       $_SESSION["rootacc"]=true;
+       if($usr_data["level"]>=10)$HTTP_SESSION_VARS["rootacc"]=true;
        $CURRENT_USER["ip"]=get_ip_address();
        $USR->SetOffline($CURRENT_USER);       
        return true;
@@ -926,35 +842,35 @@ function _login($login,$passwd)
 /////////////////////////////////////////////////////
 function _isroot()
  {
- global $_SESSION;
- return (isset($_SESSION["rootacc"]) && $_SESSION["rootacc"]!="");
+ global $HTTP_SESSION_VARS;
+ return (isset($HTTP_SESSION_VARS["rootacc"]) && $HTTP_SESSION_VARS["rootacc"]!="");
  }
 /////////////////////////////////////////////////////
 function _isrootdef()
  {
- global $_SESSION;
- return (isset($_SESSION["defroot"]) && $_SESSION["defroot"]);
+ global $HTTP_SESSION_VARS;
+ return (isset($HTTP_SESSION_VARS["defroot"]) && $HTTP_SESSION_VARS["defroot"]!="");
  }
 /////////////////////////////////////////////////////
 function _logoutroot()
  {
- global $_SESSION,$p;
- $_SESSION["rootacc"]=false;
- $_SESSION["defroot"]=false;
+ global $HTTP_SESSION_VARS,$p;
+ $HTTP_SESSION_VARS["rootacc"]=false;
  _logout();
+ resetpage();
  }
 ///////////////////////////////////////////////////// 
 function check_auth()
  {
- global $_SESSION;
- return(isset($_SESSION["login"]) && $_SESSION["login"]!="");
+ global $HTTP_SESSION_VARS;
+ return(isset($HTTP_SESSION_VARS["login"]) && $HTTP_SESSION_VARS["login"]!="");
  }
 /////////////////////////////////////////////////////
 //}
 // AUTHENTIFICATION CODE
 function authenticate()
 {
- global $MDL,$DIRS,$GV,$CURRENT_USER,$_SESSION,$GV_USERS;
+ global $MDL,$DIRS,$GV,$CURRENT_USER,$HTTP_SESSION_VARS;
  if($MDL->IsModuleExists('users') ){
  $MDL->Load("users"); 
  $USR=new CUsers($DIRS["users_data"],$DIRS["users_list"],$DIRS["users_private"],$DIRS["users_groups"],$DIRS["users_online"]);
@@ -964,23 +880,18 @@ function authenticate()
 
  if(check_auth() && $USR && !_isrootdef())
  {
- $CURRENT_USER["login"]=$_SESSION["login"];
- $CURRENT_USER["passwd"]=$_SESSION["passwd"];
- $CURRENT_USER["id"]=$USR->GetUserId($_SESSION["login"]);
+ $CURRENT_USER["login"]=$HTTP_SESSION_VARS["login"];
+ $CURRENT_USER["passwd"]=$HTTP_SESSION_VARS["passwd"];
+ $CURRENT_USER["id"]=$USR->GetUserId($HTTP_SESSION_VARS["login"]);
  $data=$USR->GetUserData($CURRENT_USER["id"]);
  $CURRENT_USER["nick"]=$data["nick"];
  $CURRENT_USER["email"]=$data["email"];
  $CURRENT_USER["url"]=$data["url"]; 
  $CURRENT_USER["level"]=$USR->GetUserLevel($CURRENT_USER["id"]);
- if($CURRENT_USER["level"]>=8)$_SESSION["rootacc"]=true;
- else $_SESSION["rootacc"]=false;
- if(isset($GV_USERS["allow_changeskin"]) && $GV_USERS["allow_changeskin"] && $data["skin"] && file_exists($GV["skins_dir"]."/".$data["skin"])){
-   $GV["skin"]=$data["skin"];
-   $GV["skin_dir"]=$GV["skins_dir"]."/".$GV["skin"];
-   define("SK_DIR",$GV["skin_dir"]);
-   }         
+ if($CURRENT_USER["level"]>=8)$HTTP_SESSION_VARS["rootacc"]=true;
+ else $HTTP_SESSION_VARS["rootacc"]=false;         
  }
- elseif(_isrootdef() && check_auth() && _isroot())
+ elseif(_isrootdef())
   {
   $CURRENT_USER["level"]=10;
   $CURRENT_USER["nick"]=$GV["site_owner"];
