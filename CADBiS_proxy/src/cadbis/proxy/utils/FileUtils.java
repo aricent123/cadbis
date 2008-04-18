@@ -10,15 +10,16 @@ public class FileUtils {
 
 	public static String readFileAsStream(InputStream is) throws IOException
 	{    	
-		StringBuffer res = new StringBuffer();
+		StringBuffer res = new StringBuffer();		
 		InputStreamReader rdr= new InputStreamReader(is);
     	BufferedReader bufRead = new BufferedReader(rdr);
-    	String line =null;
+    	int sAvail = 0;
     	do{
-    		line = bufRead.readLine();
-    		if(line != null)
-    			res.append(line + "\r\n");
-    	}while(line != null);
+    		sAvail = is.available();
+    		char[] buf = new char[sAvail];
+    		bufRead.read(buf);
+   			res.append(buf);
+    	}while(sAvail > 0);
     	return res.toString();
 	}
 }
