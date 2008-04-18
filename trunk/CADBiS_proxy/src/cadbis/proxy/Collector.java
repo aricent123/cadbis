@@ -59,7 +59,7 @@ public class Collector {
 			actions.get(i).getDeniedUrls().clear();
 			List<UrlDenied> durls = dao.getItemsByQuery("select * from url_denied where gid="+actions.get(i).getGid());			
 			for(int j=0;j<durls.size();++j){
-				logger.info("Read denied urls for '" + actions.get(i).getUser()+"'... " + durls.get(j));
+				logger.info("Read denied urls for '" + actions.get(i).getUser()+"'... " + durls.get(j).getUrl());
 				actions.get(i).getDeniedUrls().add(durls.get(j));
 			}
 		}
@@ -79,19 +79,12 @@ public class Collector {
 	public boolean CheckAccessToUrl(String userIp, String url)
 	{
 		Action action = getActionByUserIp(userIp);
-		UrlDenied key = new UrlDenied();
-		key.setUrl(url);
-		int durlid = Collections.binarySearch(action.getDeniedUrls(), key, new Comparator<UrlDenied>(){
-			public int compare(UrlDenied row1, UrlDenied row2) {
-				if (row2!=null && row2.getUrl()!= null && row1!= null && row1.getUrl()!= null)
-				{
-					logger.info("Matching urls " + row2.getUrl().toString()+" matches "+row1.getUrl().toString()+"");
-					if(row2.getUrl().toString().matches(row1.getUrl().toString()))
-							return 0;
-				}
-				return 1;
-			}});
-		return durlid==-1;
+		for(int i=0;i<action.getDeniedUrls().size();++i)
+		{
+			if(url.matches(action.getDeniedUrls().get(i).getUrl().toString()))
+				return true;			
+		}
+		return false;
 	}
 	
 	
