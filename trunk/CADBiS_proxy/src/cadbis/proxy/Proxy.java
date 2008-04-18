@@ -21,7 +21,7 @@ public void run(String bindhost, int bindport, String fwdhost, int fwdport,long 
 		 catch(UnknownHostException e)
 		 {
 			 logger.error("Unknown host: " + e.getMessage());
-		 }
+		 }		 
 		
 
 		while(true) 
