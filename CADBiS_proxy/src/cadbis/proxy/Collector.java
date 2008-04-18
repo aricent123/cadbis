@@ -81,6 +81,7 @@ public class Collector {
 		Action action = getActionByUserIp(userIp);
 		for(int i=0;i<action.getDeniedUrls().size();++i)
 		{
+			if(action.getDeniedUrls() != null && action.getDeniedUrls().get(i) != null)
 			if(url.matches(action.getDeniedUrls().get(i).getUrl().toString()))
 				return false;			
 		}
