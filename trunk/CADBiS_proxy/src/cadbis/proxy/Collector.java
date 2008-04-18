@@ -82,9 +82,9 @@ public class Collector {
 		for(int i=0;i<action.getDeniedUrls().size();++i)
 		{
 			if(url.matches(action.getDeniedUrls().get(i).getUrl().toString()))
-				return true;			
+				return false;			
 		}
-		return false;
+		return true;
 	}
 	
 	
