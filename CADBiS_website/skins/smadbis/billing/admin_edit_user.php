@@ -263,11 +263,8 @@ elseif($search!="user")
                         Время:
                         </td><td width=50%><? OUT(gethours($adata["time"]).":".getmins($adata["time"]).":".getsecs($adata["time"])) ?></td></tr>                        
                       </table>
-<<<<<<< .mine
                     </td>
-=======
-                    </td></tr>
->>>>>>> .r53
+                    </tr>
                   </table>                
                   <table width=100%><td width=35% class=tbl1 align=left>
                   <td align=center class=tbl1 width=32%>
