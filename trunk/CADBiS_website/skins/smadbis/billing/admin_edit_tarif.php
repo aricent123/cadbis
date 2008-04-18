@@ -108,14 +108,11 @@ if($BILLEVEL<3) return;
    $ucount=$BILL->GetCountUsersOfTarif($data["gid"]);
    ?>
                   <div align=center><b><? OUT($data["gid"]) ?></b></div>
-<<<<<<< .mine
                   <table width=100% align=center class=tbl2>
                   <tr>
                     <td width=100%>
-=======
                   <table width=100% align=center class=tbl2>
                     <td width=100%>
->>>>>>> .r53
                       <table  width=100%>
                         <tr><td width=50%>
                         Название тарифа:
@@ -130,11 +127,6 @@ if($BILLEVEL<3) return;
                         Время:
                         </td><td width=50%><? OUT(gethours($tdata["time"]).":".getmins($tdata["time"]).":".getsecs($tdata["time"])) ?></td></tr>
                         </table>
-<<<<<<< .mine
-                    </td></tr>
-=======
-                    </td>
->>>>>>> .r53
                   </table>
                   <table width=100%>
                   <td width=25% class=tbl1 align=center>

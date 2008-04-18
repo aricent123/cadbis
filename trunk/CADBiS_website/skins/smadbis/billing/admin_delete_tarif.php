@@ -34,14 +34,11 @@ if(isset($mod)  && $mod=="delete")
                ?>                   
                <input type=hidden name=ids[] value="<? OUT($ids[$i]) ?>">
                   <div align=center><b><? OUT($ids[$i]) ?></b></div>               
-<<<<<<< .mine
                   <table width=100% align=center class=tbl2>
                    <tr>
                     <td width=100%>
-=======
                   <table width=100% align=center class=tbl2>
                     <tr><td width=100%>
->>>>>>> .r53
                       <table  width=100%>
                         <tr><td width=50%>
                         Название тарифа:
@@ -93,14 +90,11 @@ if($form)
    $tdata=$BILL->GetTarifTotalAccts($data["gid"]);
    ?>
                   <div align=center><b><? OUT($data["gid"]) ?></b></div>
-<<<<<<< .mine
                   <table width=100% align=center class=tbl2>
                   <tr>
                     <td width=100%>
-=======
                   <table width=100% align=center class=tbl2>
                     <tr><td width=100%>
->>>>>>> .r53
                       <table  width=100%>
                         <tr><td width=50%>
                         Название тарифа:
