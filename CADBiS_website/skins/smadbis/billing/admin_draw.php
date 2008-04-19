@@ -140,7 +140,6 @@ switch($action)
 		}
 		break;
 	case "tarifs":
-	case "tarifs":
 		if(!isset($fdate))$fdate="";
 		if(!isset($tdate))$tdate="";
 		if(!isset($tarif))$tarif="!all!";
