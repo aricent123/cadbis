@@ -66,7 +66,7 @@ public void run(String bindhost, int bindport, String fwdhost, int fwdport,long 
 			}
 			catch(Exception e)
 			{
-				logger.error("");
+				logger.error(e.getMessage());
 			}
 	}
 }

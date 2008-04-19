@@ -1,16 +1,21 @@
 package cadbis.proxy;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import cadbis.proxy.utils.IOUtils;
 
 
 
@@ -88,27 +93,20 @@ class ProxyConnection extends Thread {
 		 boolean isAccessDenied = false;
 		 while(isReadWrite || endTime - startTime < timeout) 
 		 {
+			 logger.debug("one more packet processing iteration...");
 			 long rcvdBytes = 0;
 			 isReadWrite = false;
 			 // trying to recieve data from client
 			 try{
 				 String cRcvdData = "";
-				 // while available some data
-				 while((cAvail=clientIn.available())>0) 
-				 {
-					 isReadWrite = true;
-				     for(int i=0; i<cAvail; i++) 
-				     {
-				    	 chBuf = clientIn.read();
-				    	 if(chBuf!=-1) 
-				    		 cRcvdData += (char)chBuf;
-				     }
-				     startTime = new Date().getTime();				     
-			    }	
-				
+				List<byte[]> buffer = new ArrayList<byte[]>();
+				cRcvdData = IOUtils.readStreamAsArray(clientIn, buffer); 
+				logger.debug("read from clientIn completed " + buffer.size()+" blocks read");
 				// parsing and fixing headers
 				if(!cRcvdData.equals(""))
 				{
+					startTime = new Date().getTime();
+					isReadWrite = true;
 					httpParser.ClearHeaders();
 					httpParser.ParseHeaders(cRcvdData);
 					// check if url is denied
@@ -116,10 +114,10 @@ class ProxyConnection extends Thread {
 					if(!isAccessDenied)
 					{
 						cRcvdData = httpParser.GetFixedFullRequestHeader();
-						byte[] RcvdBytes = cRcvdData.getBytes();
-						for(int i=0;i<RcvdBytes.length;++i)
-							serverOut.write(RcvdBytes[i]);
-						serverOut.flush();
+						logger.debug("writing to serverOut "+buffer.size()+" blocks...");
+						IOUtils.writeArrayToStream(serverOut, buffer);
+						logger.debug("write to serverOut completed...");
+						startTime = new Date().getTime();
 					}
 				}
 				

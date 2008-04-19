@@ -8,8 +8,27 @@ public class Daemon extends Thread{
 	private static Daemon instance = null;
 	private static Object dLock = new Object();
 	
+	@SuppressWarnings("static-access")
 	private Daemon()
 	{
+		new Thread(){
+			@Override
+			public void run() {
+				while(true)
+				{
+					try{
+						logger.info("GC run...");
+						System.gc();
+						logger.info("GC completed...");
+						int gcPeriod = Integer.valueOf(Configurator.getInstance().getProperty("gcperiod"));
+						Thread.currentThread().sleep(gcPeriod);
+					}
+					catch (InterruptedException e) {
+						logger.error("Daemon GC thread terminated! " +e.getMessage());
+					}
+				}
+			}
+		}.start();
 	}
 	
 	public static Daemon getInstance()
@@ -38,7 +57,7 @@ public class Daemon extends Thread{
 				catch (NumberFormatException e) {
 					logger.error("Configuration error! " + e.getMessage());
 				}
-				logger.debug("Waking up, flushing info.");
+				logger.debug("Waking up, flushing info.");				
 				Collector.getInstance().FlushCollected();
 			}	
 		}

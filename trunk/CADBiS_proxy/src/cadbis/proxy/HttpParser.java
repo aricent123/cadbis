@@ -44,7 +44,7 @@ public class HttpParser {
 	{
 		if(Headers.containsKey(Header.hashCode()))
 			return Headers.get(Header.hashCode()); 
-		return null;
+		return "";
 	}	
 	
 	public String GetRequestString()
@@ -59,7 +59,7 @@ public class HttpParser {
 	
 	public String GetFixedFullRequestHeader()
 	{
-		if(!RequestString.matches("^" + RequestMethod + " http:\\/\\/.+"))
+		if(!GetHeader("Host").equals("") && !RequestString.matches("^" + RequestMethod + " http:\\/\\/.+"))
 		{
 			String fixedReq = FullRequestHeader.replace(RequestMethod + " ", RequestMethod + " http://" + GetHeader("Host")); 
 			logger.debug("Request String is wrong, fixing... Fixed value='"+fixedReq+"'");
