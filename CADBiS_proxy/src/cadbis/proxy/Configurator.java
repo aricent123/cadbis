@@ -6,7 +6,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cadbis.proxy.utils.FileUtils;
+import cadbis.proxy.utils.IOUtils;
 
 public class Configurator {
 	private final String FILE_PROPERTIES = "cadbis_proxy.properties";
@@ -20,7 +20,7 @@ public class Configurator {
 		properties = new Properties();
 	    try {
 	    	properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_PROPERTIES));
-	    	file_denied_access = FileUtils.readFileAsStream(
+	    	file_denied_access = IOUtils.readStreamAsString(
 	    			Thread.currentThread().getContextClassLoader().getResourceAsStream(
 	    					properties.getProperty(PROP_DENIED_ACCESS_FILE)));
 	    	
