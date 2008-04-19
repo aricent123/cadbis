@@ -11,10 +11,10 @@
 		g++ cadbisaggr.cpp -o cadbisaggr -lmysqlclient -L/usr/local/lib/mysql/ -lm
 */
 
+#include <mysql.h>
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
-#include <mysql.h>
 #include <vector>
 #include <string>
 #include <fstream>
