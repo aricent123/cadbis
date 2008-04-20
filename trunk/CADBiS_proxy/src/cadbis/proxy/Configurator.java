@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cadbis.CADBiSThread;
+import cadbis.proxy.db.DBConnection;
 import cadbis.proxy.utils.IOUtils;
 
 public class Configurator {
@@ -44,6 +45,8 @@ public class Configurator {
 	public void reloadData() throws IOException 
 	{
 		properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_PROPERTIES));
+		if(getProperty("db_reconnect").equals("enabled"))
+			DBConnection.getInstance().Reconnect();
 	}
 	
 	public String getProperty(String key)

@@ -60,6 +60,22 @@ public class DBConnection {
         return result;
 	}
 
+	
+	public boolean Reconnect()
+	{
+		boolean res = false;
+		try{
+			if(connection != null)
+				connection.close();
+			connection = null;
+			res = Connect();
+		}
+		catch (SQLException e) {
+			logger.error("Reconnect failed: " + e.getMessage());
+			return false;
+		}
+		return res;
+	}
 
 	public void Disconnect()
 	{

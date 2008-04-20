@@ -108,7 +108,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		}
 		catch(SQLException e)
 		{
-			logger.error("Query execution error: " + e.getMessage());
+			logger.error("Query '"+query+"' execution error: " + e.getMessage());
 		}		
 		
 		return list;
@@ -119,19 +119,19 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	 * Execute sql query
 	 * @param sql
 	 */
-	public void execSql(String sql)
+	public void execSql(String query)
 	{
-		logger.debug(sql);
+		logger.debug(query);
 		if(dataAccess==null || dataAccess.getConnection()==null)
 			return;
 		try
 		{		
 			Statement s = dataAccess.getConnection().createStatement();
-			s.executeUpdate (sql);
+			s.executeUpdate (query);
 		}
 		catch(SQLException e)
 		{
-			logger.error("Query execution error: " + e.getMessage());
+			logger.error("Query '"+query+"' execution error: " + e.getMessage());
 		}			
 	}
 	
@@ -139,7 +139,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	 * Returns the instances count
 	 * @return count
 	 */
-	public int getCountByQuery(String query)
+	public int getCountByQuery(String query, String key)
 	{
 		logger.debug(query);
 		int count = 0;
@@ -151,18 +151,48 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		   s.executeQuery (query);
 		   ResultSet rs = s.getResultSet ();
 		   rs.next ();
-		   count = rs.getInt ("count");
+		   count = rs.getInt (key);
 		   rs.close ();
 		   s.close ();
 	
 		}
 		catch(SQLException e)
 		{
-			logger.error("Query execution error: " + e.getMessage());
+			logger.error("Query '"+query+"' execution error: " + e.getMessage());
 		}
 		
 		return count;
 	}	
+	
+	
+	/**
+	 * Returns the instances count
+	 * @return count
+	 */
+	public Object getSingleValueByQuery(String query, String key)
+	{
+		logger.debug(query);
+		Object value = null;
+		if(dataAccess==null)
+			return 0;
+		try
+		{
+		   Statement s = dataAccess.getConnection().createStatement();
+		   s.executeQuery (query);
+		   ResultSet rs = s.getResultSet ();
+		   rs.next ();
+		   value = rs.getObject(key);
+		   rs.close ();
+		   s.close ();
+	
+		}
+		catch(SQLException e)
+		{
+			logger.error("Query '"+query+"' execution error: " + e.getMessage());
+		}
+		
+		return value;
+	}		
 	
 	/**
 	 * Returns the instances count

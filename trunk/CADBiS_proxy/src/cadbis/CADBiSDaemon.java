@@ -18,7 +18,7 @@ public abstract class CADBiSDaemon extends CADBiSThread {
 
 	
 	protected void prerun(){}	
-	protected void daemonize(){}
+	abstract protected void daemonize();
 	
 	
 	@SuppressWarnings("static-access")
