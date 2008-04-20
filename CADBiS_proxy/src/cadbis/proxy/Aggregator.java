@@ -99,9 +99,10 @@ public class Aggregator extends CADBiSDaemon {
 		for(String key : protocols.keySet())
 		{
 			if(dao.getCountByQuery("select count(*) as count from `protocols` where unique_id = '"+protocols.get(key).getUnique_id()+"'", "count")>0)
-				dao.execSql(String.format("update `protocols` set data=CONCAT(data,'%s'), length=length+%d", 
+				dao.execSql(String.format("update `protocols` set data=CONCAT(data,'%s'), length=length+%d where unique_id='%s'", 
 						protocols.get(key).getData(),
-						protocols.get(key).getLength()));			
+						protocols.get(key).getLength(),
+						protocols.get(key).getUnique_id()));			
 			else
 				dao.execSql(String.format("insert into `protocols`(unique_id,data,length) values" +
 					" ('%s','%s', %d)", 
@@ -129,19 +130,22 @@ public class Aggregator extends CADBiSDaemon {
 			int uid = userUids.get(logs.get(i).getUser().toString());
 			String ctry = (String)dao.getSingleValueByQuery("select ctry from `ip2country` where " +
 					"sip<"+ip+" and eip>"+ip+" limit 1", "ctry");
-			if(dao.getCountByQuery("select count(*) as count from `ctry_popularity` where " +
-					"ctry = '"+ctry+"' and " +
-					"uid = "+uid+" " +
-					"and `year`=YEAR(CURDATE()) and `month`=MONTH(CURDATE())", "count")>0)
-				dao.execSql("update `ctry_popularity` set count = count + "+logs.get(i).getCount().toString()+", " +
-						"length = length + "+logs.get(i).getLength().toString()+" " +
-						"where ctry = '"+ctry+"' and uid = "+uid+" and month=MONTH(CURDATE()) and year=YEAR(CURDATE())");
-			else
-				dao.execSql("insert into `ctry_popularity`(ctry,count,length,uid,year,month) " +
-						"values('"+ctry+"'," +
-						""+logs.get(i).getCount().toString()+"," +
-						""+logs.get(i).getLength().toString()+"," +
-						""+uid+",YEAR(CURDATE()),MONTH(CURDATE()))");
+			if(ctry!=null)
+			{
+				if(dao.getCountByQuery("select count(*) as count from `ctry_popularity` where " +
+						"ctry = '"+ctry+"' and " +
+						"uid = "+uid+" " +
+						"and `year`=YEAR(CURDATE()) and `month`=MONTH(CURDATE())", "count")>0)
+					dao.execSql("update `ctry_popularity` set count = count + "+logs.get(i).getCount().toString()+", " +
+							"length = length + "+logs.get(i).getLength().toString()+" " +
+							"where ctry = '"+ctry+"' and uid = "+uid+" and month=MONTH(CURDATE()) and year=YEAR(CURDATE())");
+				else
+					dao.execSql("insert into `ctry_popularity`(ctry,count,length,uid,year,month) " +
+							"values('"+ctry+"'," +
+							""+logs.get(i).getCount().toString()+"," +
+							""+logs.get(i).getLength().toString()+"," +
+							""+uid+",YEAR(CURDATE()),MONTH(CURDATE()))");
+			}
 		}		
 	}
 	
@@ -152,15 +156,17 @@ public class Aggregator extends CADBiSDaemon {
 		HashMap<String, Integer> userUids = null;
 		logs = urllogDAO.getItemsByQuery("select unique_id,url,SUM(length) as length, date,COUNT(*) as 'count',user,ip,content_type from url_log group by unique_id,url,content_type order by unique_id,date,url,length");
 		String format = Configurator.getInstance().getProperty("urllog_format");
-		
-		userUids = DefineUsersUids(logs, urllogDAO);
-		UpdateProtocols(makeProtocols(format, logs), urllogDAO);
-		UpdatePopularity(logs, urllogDAO, userUids);
-		UpdateCtryPopularity(logs,urllogDAO,userUids);
-		
-		synchronized (Collector.getWLock()) {
-			urllogDAO.execSql("delete from `url_log`");	
-		}			
+		if(logs!= null)
+		{
+			userUids = DefineUsersUids(logs, urllogDAO);
+			UpdateProtocols(makeProtocols(format, logs), urllogDAO);
+			UpdatePopularity(logs, urllogDAO, userUids);
+			UpdateCtryPopularity(logs,urllogDAO,userUids);
+			
+			synchronized (Collector.getWLock()) {
+				urllogDAO.execSql("delete from `url_log`");	
+			}
+		}
 	}
 	
 	@Override

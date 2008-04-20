@@ -22,7 +22,7 @@ public class Configurator {
 		properties = new Properties();
 	    try {
 	    	reloadData();
-	    	file_denied_access = new String(new IOUtils().readStreamAsString(
+	    	file_denied_access = new String(IOUtils.readStreamAsString(
 	    			Thread.currentThread().getContextClassLoader().getResourceAsStream(
 	    					properties.getProperty(PROP_DENIED_ACCESS_FILE))));
 	    	CADBiSThread.setCompleteGC(getProperty("thread_execgc").equals("enabled"));

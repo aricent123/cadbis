@@ -127,17 +127,17 @@ class ProxyConnection extends CADBiSThread {
 			  *******************************/
 			 if(toServer == null && buffer.size()>0)
 			 {				 
+				 HostIp = "";
+				 String hostTo=this.host;
+				 int portTo=this.port;
+				 if(trueproxy)
+				 {
+					 hostTo = HttpHost;
+					 portTo = HttpPort;
+					 logger.debug("True proxying enabled: client->"+hostTo+":"+portTo);
+				 }
 				 try
 				 {
-					 HostIp = "";
-					 String hostTo=this.host;
-					 int portTo=this.port;
-					 if(trueproxy)
-					 {
-						 hostTo = HttpHost;
-						 portTo = HttpPort;
-						 logger.debug("True proxying enabled: client->"+hostTo+":"+portTo);
-					 }
 					 logger.debug("Opening connection to server " + hostTo + ":" + portTo);
 					 toServer = new Socket(hostTo,portTo);
 					 if(trueproxy){
@@ -149,12 +149,12 @@ class ProxyConnection extends CADBiSThread {
 				 catch(UnknownHostException e)
 				 {
 					 ErrorsCount++;
-					 logger.error("Connecting proxy->squid error: unknown host: " + e.getMessage());
+					 logger.error("Connecting proxy->squid("+hostTo+":"+portTo+") error: unknown host: " + e.getMessage());
 				 }		 
 				 catch(IOException e)
 				 {
 					 ErrorsCount++;
-					 logger.error("Connecting proxy->squid error: "+e.getMessage());
+					 logger.error("Connecting proxy->squid("+hostTo+":"+portTo+") error: "+e.getMessage());
 				 }
 			 }
 			 
@@ -182,7 +182,7 @@ class ProxyConnection extends CADBiSThread {
 			 catch(IOException e)
 			 {
 				 ErrorsCount++;
-				 logger.error("Sending data proxy->squid error: " + e.getMessage());
+				 logger.error("Sending data proxy->squid("+toServer.getInetAddress().getHostName()+":"+toServer.getPort()+") error: " + e.getMessage());
 			 }			 
 			 
 			 
@@ -190,7 +190,8 @@ class ProxyConnection extends CADBiSThread {
 			 /*******************************
 			  * Receiving data squid->proxy
 			  *******************************/	 
-			 try{
+			 try
+			 {
 				buffer.clear();
 				if(!isAccessDenied && toServer!=null)
 					RcvdAmount = IOUtils.readStreamAsArray(serverIn, buffer);
@@ -220,13 +221,21 @@ class ProxyConnection extends CADBiSThread {
 								complete();
 							}
 					 }.start();
-						
-				}
+					}
+			 }
+			 catch(IOException e)
+			 {
+				 ErrorsCount++;
+				 logger.error("Receiving data  squid("+toServer.getInetAddress().getHostName()+":"+toServer.getPort()+")->proxy error: " + e.getMessage());
+			 }
+								
 
 
-				/*******************************
-				 * Sending proxy->client
-				 *******************************/					
+			/*******************************
+			 * Sending proxy->client
+			 *******************************/	
+			 try
+			 {
 				 // if we have read smthg
 				 if(buffer.size()>0 && toServer!=null)
 				 {
@@ -250,14 +259,12 @@ class ProxyConnection extends CADBiSThread {
 					 String ContentType = ResponseParser.GetHeader("Content-Type");
 					 new PreCollector(fHttpHost,HttpPort,RcvdAmount,UserIp,ContentType,HostIp)
 					 	.start();
-					 
-					 
 				 }
 			 }
 			 catch(IOException e)
 			 {
 				 ErrorsCount++;
-				 logger.error(e.getMessage());
+				 logger.error("Sending proxy->client("+fromClient.getInetAddress().getHostName()+":"+fromClient.getPort()+") error: " + e.getMessage());
 			 }
 			
 

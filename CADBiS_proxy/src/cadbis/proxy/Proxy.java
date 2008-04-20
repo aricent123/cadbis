@@ -24,10 +24,9 @@ public void run(String bindhost, int bindport, String fwdhost, int fwdport,long 
 			 logger.error("Unknown host: " + e.getMessage());
 		 }		 
 		
-
+		 logger.info("listening to " + String.valueOf(bindport)+"...");
 		while(true) 
-		{
-			logger.info("listening to " + String.valueOf(bindport)+"...");
+		{			
 			Socket cSocket=null;
 			try 
 			{
