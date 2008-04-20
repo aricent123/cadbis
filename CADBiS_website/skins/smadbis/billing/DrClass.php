@@ -1580,7 +1580,7 @@ function GetSessionData($unique_id)
 	  $result=mysql_query($query);
           while($row=mysql_fetch_array($result))
             {
-			$tmp_res = mysql_query("select * from protocols where unique_id = '$unique_id_p';");
+			$tmp_res = mysql_query("select * from protocols where unique_id like '%$unique_id_p';");
 			$protocol = null;
 			while($p = mysql_fetch_array($tmp_res))
 			  {
@@ -1605,7 +1605,7 @@ foreach($cids as $url=>$cid)
 function IsProtocolExists($unique_id)
  {
  $unique_id = $this->NormalUniqueID($unique_id);
-	return (mysql_result(mysql_query("Select count(*) from protocols where unique_id='$unique_id'"),0)>0);
+	return (mysql_result(mysql_query("Select count(*) from protocols where unique_id like '%$unique_id'"),0)>0);
  }
 
 
