@@ -26,10 +26,11 @@ public class HttpParser {
 		String[] HeadStrings = FullHeader.split("\r\n");
 		RequestString = "";
 		this.FullHeader = FullHeader;
-		for(String HeadString : HeadStrings)
+		if(RequestString.equals(""))
+			RequestString = HeadStrings[0];		
+		for(int i=1;i<HeadStrings.length;++i)
 		{
-			if(RequestString.equals(""))
-				RequestString = HeadString;
+			String HeadString = HeadStrings[i];
 			String[] HeadVal = HeadString.split(": ");
 			if(HeadVal.length > 1)
 				Headers.put(HeadVal[0].hashCode(), HeadVal[1]);			
@@ -88,9 +89,10 @@ public class HttpParser {
 	
 	public String GetFixedFullHeader()
 	{
-		if(!HttpHost.equals("") && !RequestString.matches("^" + RequestMethod + " http:\\/\\/.+"))
+		if(!HttpHost.equals("") && !RequestString.matches("^" + RequestMethod + " https?:\\/\\/.+"))
 		{
-			String fixedReq = FullHeader.replace(RequestMethod + " ", RequestMethod + " http://" + HttpHost); 
+			String Protocol = RequestString.matches("https:\\/\\/")?"https://":"http://";
+			String fixedReq = FullHeader.replace(RequestMethod + " ", RequestMethod + " "+Protocol + HttpHost); 
 			logger.debug("Request String is wrong, fixing... Fixed value='"+fixedReq+"'");
 			return fixedReq;
 		}

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class IOUtils {
 
-	public char[] readStreamAsString(InputStream is) throws IOException
+	public static String readStreamAsString(InputStream is) throws IOException
 	{    	
 		StringBuffer res = new StringBuffer();		
 		InputStreamReader rdr= new InputStreamReader(is);
@@ -21,26 +21,28 @@ public class IOUtils {
     		bufRead.read(buf);
    			res.append(buf);
     	}while(sAvail > 0);
-    	return res.toString().toCharArray();
+    	return res.toString();
 	}
 	
-	public char[] readStreamAsArray(InputStream is, List<byte[]> buffer) throws IOException
+	//public static String readStreamAsArray(InputStream is, List<byte[]> buffer) throws IOException
+	public static int readStreamAsArray(InputStream is, List<byte[]> buffer) throws IOException
 	{		
-		StringBuffer res = new StringBuffer();	
-//		 InputStreamReader rdr= new InputStreamReader(is);
-//		 BufferedReader bufRead = new BufferedReader(rdr);
+		//StringBuffer res = new StringBuffer();
+		int rcvd = 0;
 	     int sAvail = 0;
 	    	while((sAvail = is.available())>0)
 	    	{
 	    		byte[] buf = new byte[sAvail];
 	    		is.read(buf);
-	    		res.append(new StringUtils().getChars(buf));
+	    		//res.append(StringUtils.getChars(buf));
+	    		rcvd += sAvail;
 	    		buffer.add(buf);
 	    	}		 
-		 return res.toString().toCharArray();	
+	    return rcvd;
+		 //return res.toString();	
 	}	
 	
-	public void writeArrayToStream(OutputStream os, List<byte[]> buffer) throws IOException
+	public static void writeArrayToStream(OutputStream os, List<byte[]> buffer) throws IOException
 	{		
 		 for(int i=0;i<buffer.size();++i)
 		 {

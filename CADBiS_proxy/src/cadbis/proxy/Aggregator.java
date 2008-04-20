@@ -119,7 +119,8 @@ public class Aggregator extends CADBiSDaemon {
 		{
 			long ip = 0;
 			try{
-				ip = new StringUtils().ip2value(logs.get(i).getIp().toString());
+				ip = StringUtils.ip2value(logs.get(i).getIp().toString());
+				logger.debug("ip parsed successfully: " +logs.get(i).getIp().toString()+"->"+ip);
 			}
 			catch(NumberFormatException e)
 			{
