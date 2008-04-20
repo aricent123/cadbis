@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import cadbis.CADBiSThread;
 import cadbis.proxy.utils.IOUtils;
+import cadbis.proxy.utils.StringUtils;
 
 
 
@@ -81,7 +82,8 @@ class ProxyConnection extends CADBiSThread {
 		 {
 			 //logger.debug("new packet processing iteration, timeout: " + (endTime-startTime) +" ms");
 			 isReadWrite = false;			 
-			 String cRcvdData = new String(""),sRcvdData= new String("");
+			 String cRcvdData = new String("");
+			 int RcvdAmount = 0;
 			 List<byte[]> buffer = new ArrayList<byte[]>();		
 			 final HttpParser 
 	 			RequestParser= new HttpParser(), 
@@ -92,7 +94,8 @@ class ProxyConnection extends CADBiSThread {
 			  *******************************/			 
 			 try{
 				buffer.clear();
-				cRcvdData = new String(new IOUtils().readStreamAsArray(clientIn, buffer));
+				//cRcvdData = new IOUtils().readStreamAsArray(clientIn, buffer);
+				IOUtils.readStreamAsArray(clientIn, buffer);
 				if(buffer.size()>0)
 					logger.debug("read from clientIn completed " + buffer.size()+" blocks read");	
 			 }
@@ -106,8 +109,9 @@ class ProxyConnection extends CADBiSThread {
 			 /*******************************
 			  * Parsing request
 			  *******************************/	
-			 if(!cRcvdData.isEmpty())
+			 if(buffer.size()>0)
 			 {
+				cRcvdData = new String(StringUtils.getChars(buffer.get(0)));
 				startTime = new Date().getTime();
 				isReadWrite = true;
 				RequestParser.ClearHeaders();
@@ -121,7 +125,7 @@ class ProxyConnection extends CADBiSThread {
 			 /*******************************
 			  * Connecting proxy->squid
 			  *******************************/
-			 if(toServer == null && !cRcvdData.isEmpty())
+			 if(toServer == null && buffer.size()>0)
 			 {				 
 				 try
 				 {
@@ -160,7 +164,7 @@ class ProxyConnection extends CADBiSThread {
 			 * Sending data proxy->squid
 			 ******************************/
 			 try{
-				if(toServer!=null && !cRcvdData.isEmpty())
+				if(toServer!=null && buffer.size()>0)
 				{
 					// check if url is denied
 					isAccessDenied = !Collector.getInstance().CheckAccessToUrl(UserIp,HttpHost);
@@ -168,7 +172,7 @@ class ProxyConnection extends CADBiSThread {
 					{
 						cRcvdData = RequestParser.GetFixedFullHeader();
 						logger.debug("writing to serverOut "+buffer.size()+" blocks...");
-						new IOUtils().writeArrayToStream(serverOut, buffer);
+						IOUtils.writeArrayToStream(serverOut, buffer);
 						logger.debug("write to serverOut completed...");
 						startTime = new Date().getTime();
 					}
@@ -189,7 +193,7 @@ class ProxyConnection extends CADBiSThread {
 			 try{
 				buffer.clear();
 				if(!isAccessDenied && toServer!=null)
-					 sRcvdData = new String(new IOUtils().readStreamAsArray(serverIn, buffer));
+					RcvdAmount = IOUtils.readStreamAsArray(serverIn, buffer);
 				else if(toServer!=null)
 				{
 					isAccessDenied = false;
@@ -226,7 +230,7 @@ class ProxyConnection extends CADBiSThread {
 				 // if we have read smthg
 				 if(buffer.size()>0 && toServer!=null)
 				 {
-					 ResponseParser.ParseHeaders(sRcvdData);
+					 ResponseParser.ParseHeaders(new String(StringUtils.getChars(buffer.get(0))));
 					 logger.debug("Response.type = "+ResponseParser.GetHeader("Content-Type"));
 					 logger.debug("buffer, blocks count = " + buffer.size());
 					 isReadWrite = true;
@@ -244,7 +248,7 @@ class ProxyConnection extends CADBiSThread {
 					  *******************************/	
 					 String fHttpHost = HttpHost;
 					 String ContentType = ResponseParser.GetHeader("Content-Type");
-					 new PreCollector(fHttpHost,HttpPort,sRcvdData.length(),UserIp,ContentType,HostIp)
+					 new PreCollector(fHttpHost,HttpPort,RcvdAmount,UserIp,ContentType,HostIp)
 					 	.start();
 					 
 					 
