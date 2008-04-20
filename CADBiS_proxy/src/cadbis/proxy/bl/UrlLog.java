@@ -7,6 +7,7 @@ public class UrlLog implements BusinessObject {
 	private long length;
 	private String date;
 	private String ip;
+	private String content_type;
 	
 	public String[][] getPerstistenceFields() {
 		String[][] fields = {
@@ -16,6 +17,7 @@ public class UrlLog implements BusinessObject {
 				{"length",		"Long"},
 				{"date",		"String"},
 				{"ip",			"String"},
+				{"content_type","String"},
 		};
 		return fields;
 	}
@@ -66,6 +68,14 @@ public class UrlLog implements BusinessObject {
 
 	public void setIp(Object ip) {
 		this.ip = (String)ip;
+	}
+
+	public String getContent_type() {
+		return content_type;
+	}
+
+	public void setContent_type(String content_type) {
+		this.content_type = content_type;
 	}
 
 

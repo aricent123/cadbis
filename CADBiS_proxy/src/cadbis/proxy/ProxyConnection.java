@@ -90,6 +90,7 @@ class ProxyConnection extends CADBiSThread {
 		 {
 			 //logger.debug("new packet processing iteration, timeout: " + (endTime-startTime) +" ms");
 			 isReadWrite = false;
+			 String HostIp = "";
 			 String cRcvdData = new String(""),sRcvdData= new String("");
 			 List<byte[]> buffer = new ArrayList<byte[]>();		
 			 final HttpParser 
@@ -134,6 +135,7 @@ class ProxyConnection extends CADBiSThread {
 			 {				 
 				 try
 				 {
+					 HostIp = "";
 					 String hostTo=this.host;
 					 int portTo=this.port;
 					 if(trueproxy)
@@ -144,6 +146,8 @@ class ProxyConnection extends CADBiSThread {
 					 }
 					 logger.debug("Opening connection to server " + hostTo + ":" + portTo);
 					 toServer = new Socket(hostTo,portTo);
+					 if(trueproxy)
+						 HostIp = toServer.getInetAddress().getHostAddress();
 					 serverIn = toServer.getInputStream();
 					 serverOut = new BufferedOutputStream(toServer.getOutputStream());
 				 }
@@ -218,6 +222,7 @@ class ProxyConnection extends CADBiSThread {
 							public void run()
 							{	
 								Collector.getInstance().AddDeniedAccessAttempt(UserIp, fHttpHost);
+								complete();
 							}
 					 }.start();
 						
@@ -247,7 +252,8 @@ class ProxyConnection extends CADBiSThread {
 					  * Sending the data to collector in a separate thread
 					  *******************************/	
 					 final String fHttpHost = HttpHost;
-					 new PreCollector(fHttpHost,HttpPort,sRcvdData.length(),UserIp)
+					 final String ContentType = ResponseParser.GetHeader("Content-Type");
+					 new PreCollector(fHttpHost,HttpPort,sRcvdData.length(),UserIp,ContentType,HostIp)
 					 	.start();
 					 
 					 
@@ -299,14 +305,13 @@ class ProxyConnection extends CADBiSThread {
 			 e.printStackTrace(System.err);
 		 }
 		 finally
-		 {
-			if(Configurator.getInstance().getProperty("execgc").equals("true"))
-				 System.gc();
+		 {			 
 			 synchronized (getClass()) {
 				threadCount--;
 				logger.info("ThreadCount=" + threadCount);
 			 }
-			 
+			 // complete our thread
+			 complete();
 		 }
 	}
 	 

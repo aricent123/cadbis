@@ -66,8 +66,19 @@ public void run(String bindhost, int bindport, String fwdhost, int fwdport,long 
 				String fwdhost = Configurator.getInstance().getProperty("fwdhost");
 				int fwdport = Integer.parseInt(Configurator.getInstance().getProperty("fwdport"));
 				int timeout = Integer.parseInt(Configurator.getInstance().getProperty("timeout"));
-				Daemon.getInstance().start();
-				Aggregator.getInstance().start();
+				
+				if(Configurator.getInstance().getProperty("collector").equals("enabled"))
+					Collector.getInstance().start();
+				
+				if(Configurator.getInstance().getProperty("gcrunner").equals("enabled"))
+					GCRunner.getInstance().start();
+					
+				if(Configurator.getInstance().getProperty("reconfigurer").equals("enabled"))	
+					Reconfigurer.getInstance().start();
+				
+				if(Configurator.getInstance().getProperty("aggregator").equals("enabled"))	
+					Aggregator.getInstance().start();				
+				
 				self.run(bindhost,bindport,fwdhost,fwdport,timeout);							
 			}
 			catch(Exception e)

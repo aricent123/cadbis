@@ -12,29 +12,33 @@ public class PreCollector extends CADBiSThread {
  	private String HostIp = "";
  	private long RcvBytes = 0;
  	private String UserIp = "";
+ 	private String ContentType = "";
  	
- 	public PreCollector(String HttpHost,int HttpPort, long RcvBytes, String UserIp)
+ 	public PreCollector(String HttpHost,int HttpPort, long RcvBytes, String UserIp, String ContentType, String HostIp)
  	{
  	 	this.HttpHost = HttpHost;
  	 	this.HttpPort = HttpPort;
  	 	this.RcvBytes = RcvBytes;
- 	 	this.UserIp = UserIp; 
+ 	 	this.UserIp = UserIp;
+ 	 	this.ContentType = ContentType;
+ 	 	this.HostIp = HostIp;
  	}
 	public void run()
 	{	
-			if(HttpHost!= null)
-			{										
-				try
-				{
-					Socket dnsQuery = new Socket(HttpHost,HttpPort);
-					HostIp = dnsQuery.getInetAddress().getHostAddress();
-					dnsQuery.close();
-				}
-				catch(IOException e)
-				{
-					logger.error("PreCollector fails to recognize the host's ip address of '"+HttpHost+"': " + e.getMessage());
-				}
-				Collector.getInstance().Collect(UserIp, HttpHost, RcvBytes, new Date(), HostIp);
+		if(HttpHost!= null && HostIp.length()==0)
+		{										
+			try
+			{
+				Socket dnsQuery = new Socket(HttpHost,HttpPort);
+				HostIp = dnsQuery.getInetAddress().getHostAddress();
+				dnsQuery.close();
+			}
+			catch(IOException e)
+			{
+				logger.error("PreCollector fails to recognize the host's ip address of '"+HttpHost+"': " + e.getMessage());
+			}
+			Collector.getInstance().Collect(UserIp, HttpHost, RcvBytes, new Date(), HostIp, ContentType);
+			complete();
 		}
 	}
 	

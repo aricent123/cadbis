@@ -6,20 +6,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import cadbis.CADBiSDaemon;
 import cadbis.proxy.bl.Action;
 import cadbis.proxy.bl.CollectedData;
 import cadbis.proxy.bl.UrlDenied;
 import cadbis.proxy.db.ActionDAO;
 import cadbis.proxy.db.DeniedUrlDAO;
 
-public class Collector {
+public class Collector extends CADBiSDaemon{
+	private static Collector instance = null;
 	private List<Action> actions = null;
 	private ActionDAO actionDAO = null;
-	private static Collector instance = null;
-	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private HashMap<Integer, Action> actionsOfIps;
 	private static Object wLock = null;
 	
@@ -31,6 +29,7 @@ public class Collector {
 	}
 	
 	private Collector(){
+		super("Collector",Integer.valueOf(Configurator.getInstance().getProperty("collector_period")));
 		createObjects();
 		wLock = new Object();
 	}
@@ -40,6 +39,16 @@ public class Collector {
 			instance = new Collector();
 		return instance;
 	}
+	
+	@Override
+	protected void daemonize() {
+		logger.info("waking up, flushing info.");				
+		FlushCollected();		
+		logger.debug("refreshing the sessions info.");
+		RefreshInfo();
+	}	
+	
+	
 	
 	public Action getActionByUserIp(String ip)
 	{
@@ -53,29 +62,30 @@ public class Collector {
 	
 	public void RefreshInfo()
 	{
-		actions.clear();
-		actionsOfIps.clear();
-		if(Configurator.getInstance().getProperty("execgc").equals("true"))
-			 System.gc();
-		actions = getActiveSessions();		
-		for(int i=0;i<actions.size();++i){
-			actionsOfIps.put(actions.get(i).getIp().toString().hashCode(), actions.get(i));
-			DeniedUrlDAO dao = new DeniedUrlDAO();
-			actions.get(i).getDeniedUrls().clear();
-			List<UrlDenied> durls = dao.getItemsByQuery("select * from url_denied where gid="+actions.get(i).getGid());			
-			for(int j=0;j<durls.size();++j){
-				logger.info("Read denied urls for '" + actions.get(i).getUser()+"'... " + durls.get(j).getUrl());
-				actions.get(i).getDeniedUrls().add(durls.get(j));
+		synchronized (wLock) 
+		{
+			actions.clear();
+			actionsOfIps.clear();
+			actions = getActiveSessions();		
+			for(int i=0;i<actions.size();++i){
+				actionsOfIps.put(actions.get(i).getIp().toString().hashCode(), actions.get(i));
+				DeniedUrlDAO dao = new DeniedUrlDAO();
+				actions.get(i).getDeniedUrls().clear();
+				List<UrlDenied> durls = dao.getItemsByQuery("select * from url_denied where gid="+actions.get(i).getGid());			
+				for(int j=0;j<durls.size();++j){
+					logger.info("Read denied urls for '" + actions.get(i).getUser()+"'... " + durls.get(j).getUrl());
+					actions.get(i).getDeniedUrls().add(durls.get(j));
+				}
 			}
 		}
 	}
 	
-	public void Collect(String userIp, String hostUrl, long rcvdBytes, Date date, String hostIp)
+	public void Collect(String userIp, String hostUrl, long rcvdBytes, Date date, String hostIp, String content_type)
 	{
 		synchronized (wLock) {
 			Action action = getActionByUserIp(userIp);
 			if(action!=null){
-				action.getCollectedUrls().add(new CollectedData(hostUrl,rcvdBytes,date, hostIp));
+				action.getCollectedUrls().add(new CollectedData(hostUrl,rcvdBytes,date, hostIp,content_type));
 				logger.debug("Collecting data... ip="+hostIp+", url="+hostUrl+", bytes="+rcvdBytes);
 			}
 		}
@@ -103,7 +113,7 @@ public class Collector {
 	
 	public void FlushCollected()
 	{
-		synchronized (wLock) {		
+		synchronized (wLock) {
 			for(int i=0;i<actions.size();++i)
 			{
 				List<CollectedData> col = actions.get(i).getCollectedUrls();
@@ -116,15 +126,18 @@ public class Collector {
 							col.get(j).url+"',"+
 							col.get(j).bytes+",'"+
 							new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(col.get(j).date)+"','"+
-							col.get(j).ip+"')");
+							col.get(j).ip+"','" +
+							col.get(j).content_type+"')");
 				}
 				actions.get(i).getCollectedUrls().clear();
 			}			
 			actions.clear();
 			createObjects();
-			if(Configurator.getInstance().getProperty("execgc").equals("true"))
-				System.gc();
 		}
+	}
+
+	public static Object getWLock() {
+		return wLock;
 	}
 	
 

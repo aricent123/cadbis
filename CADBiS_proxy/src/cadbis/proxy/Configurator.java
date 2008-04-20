@@ -25,7 +25,7 @@ public class Configurator {
 	    	file_denied_access = new String(new IOUtils().readStreamAsString(
 	    			Thread.currentThread().getContextClassLoader().getResourceAsStream(
 	    					properties.getProperty(PROP_DENIED_ACCESS_FILE))));
-	    	CADBiSThread.setCompleteGC(getProperty("execgc").equals("true"));
+	    	CADBiSThread.setCompleteGC(getProperty("thread_execgc").equals("true"));
 	    } 
 	    catch (IOException e) 
 	    {
@@ -48,7 +48,9 @@ public class Configurator {
 	
 	public String getProperty(String key)
 	{
-		return properties.getProperty(key);
+		if(properties.containsKey(key))
+			return properties.getProperty(key);
+		return "";
 	}
 	
 	public InputStream getFileDeniedAccessAsStream()
