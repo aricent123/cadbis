@@ -53,11 +53,7 @@ if($BILLEVEL<3)return;
                         </td><td width=50%><? OUT(norm_date(strtotime($onlinedata["stop_time"]))) ?></td></tr>
 						<? }?>
                       </table>
-<<<<<<< .mine
                     </td>
-=======
-                    </td></tr>
->>>>>>> .r53
                   </table>
     <?
 
