@@ -15,7 +15,7 @@ import cadbis.proxy.bl.BusinessObject;
 
 
 public abstract class AbstractDAO<objT extends BusinessObject> {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 	protected DBConnection dataAccess = null;
 	protected String tableName;
 	
@@ -43,6 +43,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	@SuppressWarnings("unchecked")
 	public List<objT> getItemsByQuery(String query)
 	{
+		logger.debug(query);
 		ArrayList<objT> list = new ArrayList<objT>();
 		if(dataAccess==null || dataAccess.getConnection()==null)
 			return null;
@@ -79,6 +80,8 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 							   mthd.invoke(row, rs.getString(persistFields[i][0]));
 						   else if(persistFields[i][1] == "Integer")
 							   mthd.invoke(row, rs.getInt(persistFields[i][0]));
+						   else if(persistFields[i][1] == "Long")
+							   mthd.invoke(row, rs.getLong(persistFields[i][0]));						   
 						   else if(persistFields[i][1] == "Date")
 							   mthd.invoke(row, rs.getDate(persistFields[i][0]));
 					   }
@@ -118,6 +121,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	 */
 	public void execSql(String sql)
 	{
+		logger.debug(sql);
 		if(dataAccess==null || dataAccess.getConnection()==null)
 			return;
 		try
@@ -130,6 +134,35 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 			logger.error("Query execution error: " + e.getMessage());
 		}			
 	}
+	
+	/**
+	 * Returns the instances count
+	 * @return count
+	 */
+	public int getCountByQuery(String query)
+	{
+		logger.debug(query);
+		int count = 0;
+		if(dataAccess==null)
+			return 0;
+		try
+		{
+		   Statement s = dataAccess.getConnection().createStatement();
+		   s.executeQuery (query);
+		   ResultSet rs = s.getResultSet ();
+		   rs.next ();
+		   count = rs.getInt ("count");
+		   rs.close ();
+		   s.close ();
+	
+		}
+		catch(SQLException e)
+		{
+			logger.error("Query execution error: " + e.getMessage());
+		}
+		
+		return count;
+	}	
 	
 	/**
 	 * Returns the instances count

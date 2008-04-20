@@ -2,8 +2,6 @@ package cadbis.proxy;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,11 +23,15 @@ public class Collector {
 	private HashMap<Integer, Action> actionsOfIps;
 	private static Object wLock = null;
 	
-	
-	private Collector(){
+	private void createObjects()
+	{
 		actionDAO = new ActionDAO();
 		actionsOfIps = new HashMap<Integer, Action>();
 		actions = new ArrayList<Action>();
+	}
+	
+	private Collector(){
+		createObjects();
 		wLock = new Object();
 	}
 
@@ -51,8 +53,11 @@ public class Collector {
 	
 	public void RefreshInfo()
 	{
-		actions = getActiveSessions();
+		actions.clear();
 		actionsOfIps.clear();
+		if(Configurator.getInstance().getProperty("execgc").equals("true"))
+			 System.gc();
+		actions = getActiveSessions();		
 		for(int i=0;i<actions.size();++i){
 			actionsOfIps.put(actions.get(i).getIp().toString().hashCode(), actions.get(i));
 			DeniedUrlDAO dao = new DeniedUrlDAO();
@@ -65,7 +70,7 @@ public class Collector {
 		}
 	}
 	
-	public void Collect(String userIp, String hostUrl, Long rcvdBytes, Date date, String hostIp)
+	public void Collect(String userIp, String hostUrl, long rcvdBytes, Date date, String hostIp)
 	{
 		synchronized (wLock) {
 			Action action = getActionByUserIp(userIp);
@@ -79,6 +84,7 @@ public class Collector {
 	public boolean CheckAccessToUrl(String userIp, String url)
 	{
 		Action action = getActionByUserIp(userIp);
+		if(action!=null && action.getDeniedUrls()!=null)
 		for(int i=0;i<action.getDeniedUrls().size();++i)
 		{
 			if(action.getDeniedUrls() != null && action.getDeniedUrls().get(i) != null)
@@ -112,8 +118,12 @@ public class Collector {
 							new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(col.get(j).date)+"','"+
 							col.get(j).ip+"')");
 				}
-			}
+				actions.get(i).getCollectedUrls().clear();
+			}			
 			actions.clear();
+			createObjects();
+			if(Configurator.getInstance().getProperty("execgc").equals("true"))
+				System.gc();
 		}
 	}
 	

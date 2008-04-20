@@ -8,8 +8,10 @@ import org.slf4j.LoggerFactory;
 public class HttpParser {
 	private HashMap<Integer, String> Headers;
 	private String RequestString;
-	private String FullRequestHeader;
+	private String FullHeader;
 	private String RequestMethod;
+	private int HttpPort = 80;
+	private String HttpHost = "";
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	public HttpParser()
@@ -17,11 +19,13 @@ public class HttpParser {
 		Headers = new HashMap<Integer, String>();
 	}
 	
-	public void ParseHeaders(String FullReqHeader)
+	public void ParseHeaders(String FullHeader)
 	{
-		String[] HeadStrings =FullReqHeader.split("\r\n");
+		String[] HeadBody = FullHeader.split("\r\n\r\n");
+		FullHeader = HeadBody[0];
+		String[] HeadStrings = FullHeader.split("\r\n");
 		RequestString = "";
-		FullRequestHeader = FullReqHeader;
+		this.FullHeader = FullHeader;
 		for(String HeadString : HeadStrings)
 		{
 			if(RequestString.equals(""))
@@ -33,6 +37,31 @@ public class HttpParser {
 		
 		String[] ReqMethString = RequestString.split(" ");
 		RequestMethod = ReqMethString[0];
+		HttpHost = GetHeader("Host");
+		
+		try{
+			if(HttpHost.indexOf(":")>0){
+				String[] buf = HttpHost.split(":");
+				HttpHost = buf[0];
+				if(buf.length > 1)
+					HttpPort = Integer.valueOf(buf[1]);
+			}
+		}
+		catch(NumberFormatException e)
+		{
+			logger.debug("Port recognition failed: " + e.getMessage());
+		}
+		
+		
+	}
+	public String getHttpHost()
+	{
+		return HttpHost;
+	}
+	
+	public int getHttpPort()
+	{
+		return HttpPort;
 	}
 	
 	public void ClearHeaders()
@@ -52,20 +81,20 @@ public class HttpParser {
 		return RequestString;
 	}
 		
-	public String GetFullRequestHeader()
+	public String GetFullHeader()
 	{
-		return FullRequestHeader;
+		return FullHeader;
 	}
 	
-	public String GetFixedFullRequestHeader()
+	public String GetFixedFullHeader()
 	{
-		if(!GetHeader("Host").equals("") && !RequestString.matches("^" + RequestMethod + " http:\\/\\/.+"))
+		if(!HttpHost.equals("") && !RequestString.matches("^" + RequestMethod + " http:\\/\\/.+"))
 		{
-			String fixedReq = FullRequestHeader.replace(RequestMethod + " ", RequestMethod + " http://" + GetHeader("Host")); 
+			String fixedReq = FullHeader.replace(RequestMethod + " ", RequestMethod + " http://" + HttpHost); 
 			logger.debug("Request String is wrong, fixing... Fixed value='"+fixedReq+"'");
 			return fixedReq;
 		}
 		logger.debug("Request String is OK");
-		return FullRequestHeader;
+		return FullHeader;
 	}
 }

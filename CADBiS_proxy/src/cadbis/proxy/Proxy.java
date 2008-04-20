@@ -12,6 +12,7 @@ public class Proxy {
 public void run(String bindhost, int bindport, String fwdhost, int fwdport,long timeout) {
 	try 
 	{		
+		boolean trueProxy = (Configurator.getInstance().getProperty("trueproxy").equals("true"));
 		ServerSocket sSocket = null;
 		 try
 		 {
@@ -35,7 +36,11 @@ public void run(String bindhost, int bindport, String fwdhost, int fwdport,long 
 				{
 					logger.debug("accepted as #"+clientCount+":"+cSocket);
 					clientCount++;
-					ProxyConnection c = new ProxyConnection(cSocket,fwdhost,fwdport,timeout);
+					ProxyConnection c = null;
+					if(trueProxy)
+						c = new ProxyConnection(cSocket,timeout);
+					else
+						c = new ProxyConnection(cSocket,fwdhost,fwdport,timeout);
 					c.start();
 				}
 			} 
@@ -62,6 +67,7 @@ public void run(String bindhost, int bindport, String fwdhost, int fwdport,long 
 				int fwdport = Integer.parseInt(Configurator.getInstance().getProperty("fwdport"));
 				int timeout = Integer.parseInt(Configurator.getInstance().getProperty("timeout"));
 				Daemon.getInstance().start();
+				Aggregator.getInstance().start();
 				self.run(bindhost,bindport,fwdhost,fwdport,timeout);							
 			}
 			catch(Exception e)
