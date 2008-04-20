@@ -37,8 +37,7 @@ if(isset($mod)  && $mod=="delete")
                   <table width=100% align=center class=tbl2>
                    <tr>
                     <td width=100%>
-                  <table width=100% align=center class=tbl2>
-                    <tr><td width=100%>
+
                       <table  width=100%>
                         <tr><td width=50%>
                         Название тарифа:
@@ -93,8 +92,6 @@ if($form)
                   <table width=100% align=center class=tbl2>
                   <tr>
                     <td width=100%>
-                  <table width=100% align=center class=tbl2>
-                    <tr><td width=100%>
                       <table  width=100%>
                         <tr><td width=50%>
                         Название тарифа:
