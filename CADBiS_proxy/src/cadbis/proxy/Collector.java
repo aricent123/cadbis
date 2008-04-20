@@ -16,14 +16,12 @@ import cadbis.proxy.db.DeniedUrlDAO;
 
 public class Collector extends CADBiSDaemon{
 	private static Collector instance = null;
-	private List<Action> actions = null;
-	private ActionDAO actionDAO = null;
+	private List<Action> actions = null;	
 	private HashMap<Integer, Action> actionsOfIps;
 	private static Object wLock = null;
 	
 	private void createObjects()
 	{
-		actionDAO = new ActionDAO();
 		actionsOfIps = new HashMap<Integer, Action>();
 		actions = new ArrayList<Action>();
 	}
@@ -56,7 +54,8 @@ public class Collector extends CADBiSDaemon{
 	}
 	
 	public List<Action> getActiveSessions()
-	{		
+	{	
+		ActionDAO actionDAO = new ActionDAO();		
 		return actionDAO.getItemsByQuery("select * from actions where terminate_cause='Online'");
 	}	
 	
@@ -108,14 +107,16 @@ public class Collector extends CADBiSDaemon{
 	public void AddDeniedAccessAttempt(String userIp, String url)
 	{
 		Action action = getActionByUserIp(userIp);
+		ActionDAO actionDAO = new ActionDAO();
 		actionDAO.execSql(String.format("insert into url_denied_log(url,unique_id,date) values('%s','%s',NOW())",action.getUnique_id(),url));
 	}
 	
 	public void FlushCollected()
-	{
+	{		
 		synchronized (wLock) {
 			for(int i=0;i<actions.size();++i)
 			{
+				ActionDAO actionDAO = new ActionDAO();
 				List<CollectedData> col = actions.get(i).getCollectedUrls();
 				for(int j=0; j<col.size(); ++j)
 				{

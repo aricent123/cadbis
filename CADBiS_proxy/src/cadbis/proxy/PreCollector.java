@@ -25,8 +25,9 @@ public class PreCollector extends CADBiSThread {
  	}
 	public void run()
 	{	
-		if(HttpHost!= null && HostIp.length()==0)
-		{										
+		if(HttpHost!= null && HostIp.isEmpty())
+		{	
+			logger.info("PreCollector doesn't know the host's ip... :" + HttpHost);
 			try
 			{
 				Socket dnsQuery = new Socket(HttpHost,HttpPort);
@@ -37,9 +38,9 @@ public class PreCollector extends CADBiSThread {
 			{
 				logger.error("PreCollector fails to recognize the host's ip address of '"+HttpHost+"': " + e.getMessage());
 			}
-			Collector.getInstance().Collect(UserIp, HttpHost, RcvBytes, new Date(), HostIp, ContentType);
-			complete();
 		}
+		Collector.getInstance().Collect(UserIp, HttpHost, RcvBytes, new Date(), HostIp, ContentType);
+		complete();
 	}
 	
 

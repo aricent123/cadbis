@@ -15,9 +15,9 @@ public class CADBiSThread extends Thread {
 	
 	private void created(){
  	 	synchronized (getClass()) {
- 	 		thrCount++;
- 	 		logger.debug("Thread "+this.getClass().getName()+".new, total = "+thrCount); 	 		
+ 	 		thrCount++; 	 		
 		}
+	 		logger.info("Thread "+this.getClass().getName()+".new, total = "+thrCount); 	 	
 	}
 	public CADBiSThread() {
 		created();
@@ -25,16 +25,11 @@ public class CADBiSThread extends Thread {
 	
 	protected void complete()
 	{
-		if(completegc)
-			System.gc();
-	}
-	
-	@Override
-	protected void finalize() throws Throwable {
 	 	synchronized (getClass()) {
 	 		thrCount--;
-	 		logger.debug("Thread "+this.getClass().getName()+".finalize, total="+thrCount); 	 		
 		}
-		super.finalize();
-	}	
+	 	logger.info("Thread "+this.getClass().getName()+".complete, total="+thrCount);
+		if(completegc)
+			System.gc();	 	
+	}
 }

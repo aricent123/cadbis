@@ -23,25 +23,16 @@ class ProxyConnection extends CADBiSThread {
 	 private Socket fromClient;
 	 private String host;
 	 private int port;
-	 private static int threadCount = 0;
 	 private long timeout;
 	 private final Logger logger = LoggerFactory.getLogger(getClass());
 	 private static final int MAX_BLOCK_SIZE = 4096;
 	 private boolean trueproxy = false;
 	 
-	 private void incTcount()
-	 {
-		 synchronized (getClass()) {
-				threadCount++;
-				logger.info("ThreadCount=" + threadCount);
-			 }	  
-	 }
 	 ProxyConnection(Socket s, long timeout)
 	 {
 		 fromClient=s;
 		 trueproxy = true;
 		 this.timeout=timeout;
-		 incTcount();
 	 }
 	 
 	 ProxyConnection(Socket s, String fwdhost, int fwdport, long timeout) 
@@ -50,7 +41,6 @@ class ProxyConnection extends CADBiSThread {
 		  this.host = fwdhost;
 		  this.port = fwdport;
 		  this.timeout=timeout;
-		  incTcount();
 	 }
 
 	 public void run() 
@@ -85,12 +75,12 @@ class ProxyConnection extends CADBiSThread {
 	 	 int ErrorsCount = 0;
 		 String HttpHost = "";
 		 int HttpPort = 80;
-	 	 
+		 String HostIp = "";
+		 
 		 while(endTime - startTime < timeout && ErrorsCount<MaxErrorsCount) 
 		 {
 			 //logger.debug("new packet processing iteration, timeout: " + (endTime-startTime) +" ms");
-			 isReadWrite = false;
-			 String HostIp = "";
+			 isReadWrite = false;			 
 			 String cRcvdData = new String(""),sRcvdData= new String("");
 			 List<byte[]> buffer = new ArrayList<byte[]>();		
 			 final HttpParser 
@@ -146,8 +136,9 @@ class ProxyConnection extends CADBiSThread {
 					 }
 					 logger.debug("Opening connection to server " + hostTo + ":" + portTo);
 					 toServer = new Socket(hostTo,portTo);
-					 if(trueproxy)
-						 HostIp = toServer.getInetAddress().getHostAddress();
+					 if(trueproxy){
+						 HostIp = toServer.getInetAddress().getHostAddress();						 
+					 }
 					 serverIn = toServer.getInputStream();
 					 serverOut = new BufferedOutputStream(toServer.getOutputStream());
 				 }
@@ -251,8 +242,8 @@ class ProxyConnection extends CADBiSThread {
 					 /*******************************
 					  * Sending the data to collector in a separate thread
 					  *******************************/	
-					 final String fHttpHost = HttpHost;
-					 final String ContentType = ResponseParser.GetHeader("Content-Type");
+					 String fHttpHost = HttpHost;
+					 String ContentType = ResponseParser.GetHeader("Content-Type");
 					 new PreCollector(fHttpHost,HttpPort,sRcvdData.length(),UserIp,ContentType,HostIp)
 					 	.start();
 					 
@@ -306,10 +297,6 @@ class ProxyConnection extends CADBiSThread {
 		 }
 		 finally
 		 {			 
-			 synchronized (getClass()) {
-				threadCount--;
-				logger.info("ThreadCount=" + threadCount);
-			 }
 			 // complete our thread
 			 complete();
 		 }
