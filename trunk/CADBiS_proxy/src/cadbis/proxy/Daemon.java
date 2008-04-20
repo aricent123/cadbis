@@ -1,30 +1,53 @@
 package cadbis.proxy;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
 
-public class Daemon extends Thread{
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+import cadbis.CADBiSThread;
+
+public class Daemon extends CADBiSThread{
 	private static Daemon instance = null;
 	private static Object dLock = new Object();
-	
 	@SuppressWarnings("static-access")
 	private Daemon()
 	{
-		new Thread(){
+	if(Configurator.getInstance().getProperty("execgc").equals("true"))
+		new CADBiSThread(){
 			@Override
 			public void run() {
+				this.setName("GCRunner");
+				int gcPeriod = Integer.valueOf(Configurator.getInstance().getProperty("gcperiod"));				
 				while(true)
 				{
 					try{
-						logger.info("GC run...");
 						System.gc();
-						logger.info("GC completed...");
-						int gcPeriod = Integer.valueOf(Configurator.getInstance().getProperty("gcperiod"));
+						logger.info("GCRunner: GC run completed.");
 						Thread.currentThread().sleep(gcPeriod);
 					}
 					catch (InterruptedException e) {
 						logger.error("Daemon GC thread terminated! " +e.getMessage());
+					}
+				}
+			}
+		}.start();
+		
+	if(Configurator.getInstance().getProperty("reconfigure").equals("true"))	
+		new CADBiSThread(){
+			 @Override
+			public void run() {
+				this.setName("Reconfigurer");
+				int confPeriod = Integer.valueOf(Configurator.getInstance().getProperty("confperiod"));				 
+				while(true)
+				{
+					try{
+						Thread.currentThread().sleep(confPeriod);
+						Configurator.getInstance().reloadData();
+						logger.info("Reconfigurer: Config reloaded.");
+					}
+					catch (IOException e) {
+						logger.error("Failed to load config: " + e.getMessage());
+					}
+					catch (InterruptedException e) {
+						logger.error("Daemon Conf thread terminated! " +e.getMessage());
 					}
 				}
 			}
@@ -40,14 +63,15 @@ public class Daemon extends Thread{
 	
 	@SuppressWarnings("static-access")
 	@Override
-	public void run() {	
+	public void run() {
+		this.setName("Daemon");
 		synchronized (dLock) {
 			while(true)
 			{
 				logger.debug("Refreshing the sessions info.");
 				Collector.getInstance().RefreshInfo();
 				try{					
-					Integer dPeriod = Integer.valueOf(Configurator.getInstance().getProperty("daemonperiod"));
+					Integer dPeriod = Integer.valueOf(Configurator.getInstance().getProperty("daemon_period"));
 					logger.debug("Sleep for " + dPeriod +" ms");
 					Thread.currentThread().sleep(dPeriod);
 				}
@@ -57,7 +81,7 @@ public class Daemon extends Thread{
 				catch (NumberFormatException e) {
 					logger.error("Configuration error! " + e.getMessage());
 				}
-				logger.debug("Waking up, flushing info.");				
+				logger.info("Waking up, flushing info.");				
 				Collector.getInstance().FlushCollected();
 			}	
 		}

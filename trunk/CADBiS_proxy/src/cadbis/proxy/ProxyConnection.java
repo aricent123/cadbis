@@ -1,10 +1,8 @@
 package cadbis.proxy;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -15,30 +13,44 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cadbis.CADBiSThread;
 import cadbis.proxy.utils.IOUtils;
 
 
 
-class ProxyConnection extends Thread {
+class ProxyConnection extends CADBiSThread {
 
 	 private Socket fromClient;
 	 private String host;
 	 private int port;
-	 private static Integer threadCount = 0;
+	 private static int threadCount = 0;
 	 private long timeout;
 	 private final Logger logger = LoggerFactory.getLogger(getClass());
 	 private static final int MAX_BLOCK_SIZE = 4096;
+	 private boolean trueproxy = false;
 	 
-	 ProxyConnection(Socket s, String host, int port, long timeout) 
+	 private void incTcount()
 	 {
-	  fromClient=s;
-	  this.host = host;
-	  this.port = port;
-	  this.timeout=timeout;
 		 synchronized (getClass()) {
 				threadCount++;
 				logger.info("ThreadCount=" + threadCount);
-			 }	  	  
+			 }	  
+	 }
+	 ProxyConnection(Socket s, long timeout)
+	 {
+		 fromClient=s;
+		 trueproxy = true;
+		 this.timeout=timeout;
+		 incTcount();
+	 }
+	 
+	 ProxyConnection(Socket s, String fwdhost, int fwdport, long timeout) 
+	 {
+		  fromClient=s;
+		  this.host = fwdhost;
+		  this.port = fwdport;
+		  this.timeout=timeout;
+		  incTcount();
 	 }
 
 	 public void run() 
@@ -49,36 +61,15 @@ class ProxyConnection extends Thread {
 		 OutputStream serverOut = null;
 		 
 	  
-		 int cAvail=-1,sAvail=-1,chBuf=-1;
 		 long startTime = new Date().getTime();
 		 long endTime = new Date().getTime();
-		 final HttpParser httpParser = new HttpParser();
 		 Socket toServer = null;
-		 
-		 // opening the connection to server
-		 try
-		 {
-			 toServer = new Socket(host,port);
-		 }
-		 catch(UnknownHostException e)
-		 {
-			 logger.error("Unknown host: " + e.getMessage());
-		 }
-		 catch(IOException e)
-		 {
-			 logger.error(e.getMessage());
-		 }
-		 
-		 
-		 logger.debug("open connection to:"+toServer+"(timeout="+timeout+" ms)");		 
 		 
 		 // defining the streams
 		 try
 		 {			 
 			 clientIn = fromClient.getInputStream();
 			 clientOut = new BufferedOutputStream(fromClient.getOutputStream());
-			 serverIn = toServer.getInputStream();
-			 serverOut = new BufferedOutputStream(toServer.getOutputStream());
 		 }
 		 catch(IOException e)
 		 {
@@ -86,36 +77,103 @@ class ProxyConnection extends Thread {
 		 }
 
 		 // current user IP
-		 final String userIp = fromClient.getInetAddress().getHostAddress();
-		 // next proxy (squid) IP
-		 final String toServerIp = toServer.getInetAddress().getHostAddress();
+		 final String UserIp = fromClient.getInetAddress().getHostAddress();
 		 boolean isReadWrite = true;
 		 boolean isAccessDenied = false;
-		 while(isReadWrite || endTime - startTime < timeout) 
+		 final int WaitRWPeriod = Integer.parseInt(Configurator.getInstance().getProperty("waitrwtime"));
+		 final int MaxErrorsCount = Integer.parseInt(Configurator.getInstance().getProperty("maxerrorscount"));
+	 	 int ErrorsCount = 0;
+		 String HttpHost = "";
+		 int HttpPort = 80;
+	 	 
+		 while(endTime - startTime < timeout && ErrorsCount<MaxErrorsCount) 
 		 {
-			 logger.debug("one more packet processing iteration...");
-			 long rcvdBytes = 0;
+			 //logger.debug("new packet processing iteration, timeout: " + (endTime-startTime) +" ms");
 			 isReadWrite = false;
-			 // trying to recieve data from client
+			 String cRcvdData = new String(""),sRcvdData= new String("");
+			 List<byte[]> buffer = new ArrayList<byte[]>();		
+			 final HttpParser 
+	 			RequestParser= new HttpParser(), 
+	 			ResponseParser= new HttpParser();			 
+			 
+			 /*******************************
+			  * Recieving data client->proxy
+			  *******************************/			 
 			 try{
-				 String cRcvdData = "";
-				List<byte[]> buffer = new ArrayList<byte[]>();
-				cRcvdData = IOUtils.readStreamAsArray(clientIn, buffer); 
-				logger.debug("read from clientIn completed " + buffer.size()+" blocks read");
-				// parsing and fixing headers
-				if(!cRcvdData.equals(""))
+				buffer.clear();
+				cRcvdData = new String(new IOUtils().readStreamAsArray(clientIn, buffer));
+				if(buffer.size()>0)
+					logger.debug("read from clientIn completed " + buffer.size()+" blocks read");	
+			 }
+			 catch(IOException e)
+			 {
+				 ErrorsCount++;
+				 logger.error("Recieving data client->proxy error: "+e.getMessage());
+			 }
+			 
+			 
+			 /*******************************
+			  * Parsing request
+			  *******************************/	
+			 if(!cRcvdData.isEmpty())
+			 {
+				startTime = new Date().getTime();
+				isReadWrite = true;
+				RequestParser.ClearHeaders();
+				RequestParser.ParseHeaders(cRcvdData);
+				HttpHost = RequestParser.getHttpHost();
+				HttpPort = RequestParser.getHttpPort();				
+			 }
+
+			 
+			 
+			 /*******************************
+			  * Connecting proxy->squid
+			  *******************************/
+			 if(toServer == null && !cRcvdData.isEmpty())
+			 {				 
+				 try
+				 {
+					 String hostTo=this.host;
+					 int portTo=this.port;
+					 if(trueproxy)
+					 {
+						 hostTo = HttpHost;
+						 portTo = HttpPort;
+						 logger.debug("True proxying enabled: client->"+hostTo+":"+portTo);
+					 }
+					 logger.debug("Opening connection to server " + hostTo + ":" + portTo);
+					 toServer = new Socket(hostTo,portTo);
+					 serverIn = toServer.getInputStream();
+					 serverOut = new BufferedOutputStream(toServer.getOutputStream());
+				 }
+				 catch(UnknownHostException e)
+				 {
+					 ErrorsCount++;
+					 logger.error("Connecting proxy->squid error: unknown host: " + e.getMessage());
+				 }		 
+				 catch(IOException e)
+				 {
+					 ErrorsCount++;
+					 logger.error("Connecting proxy->squid error: "+e.getMessage());
+				 }
+			 }
+			 
+			 
+			 
+			/*******************************
+			 * Sending data proxy->squid
+			 ******************************/
+			 try{
+				if(toServer!=null && !cRcvdData.isEmpty())
 				{
-					startTime = new Date().getTime();
-					isReadWrite = true;
-					httpParser.ClearHeaders();
-					httpParser.ParseHeaders(cRcvdData);
 					// check if url is denied
-					isAccessDenied = !Collector.getInstance().CheckAccessToUrl(userIp,httpParser.GetHeader("Host"));
+					isAccessDenied = !Collector.getInstance().CheckAccessToUrl(UserIp,HttpHost);
 					if(!isAccessDenied)
 					{
-						cRcvdData = httpParser.GetFixedFullRequestHeader();
+						cRcvdData = RequestParser.GetFixedFullHeader();
 						logger.debug("writing to serverOut "+buffer.size()+" blocks...");
-						IOUtils.writeArrayToStream(serverOut, buffer);
+						new IOUtils().writeArrayToStream(serverOut, buffer);
 						logger.debug("write to serverOut completed...");
 						startTime = new Date().getTime();
 					}
@@ -124,61 +182,60 @@ class ProxyConnection extends Thread {
 			 }
 			 catch(IOException e)
 			 {
-				 logger.error(e.getMessage());
-			 }
+				 ErrorsCount++;
+				 logger.error("Sending data proxy->squid error: " + e.getMessage());
+			 }			 
 			 
 			 
-			 final String HeaderHost = httpParser.GetHeader("Host");
-			 // trying to send data to server
+			 
+			 /*******************************
+			  * Receiving data squid->proxy
+			  *******************************/	 
 			 try{
-				 // creating the buffer for the readed data
-				 ArrayList<byte[]> buffer = new ArrayList<byte[]>();				 
-				if(!isAccessDenied)
-				{					
-					 while((sAvail=serverIn.available())>0) 
-					 {	
-						 // we can recieve sAvail bytes
-						 rcvdBytes += sAvail;
-						 // indicate that we have read smthg
-						 isReadWrite = true;
-						 // indicate the last read time
-						 startTime = new Date().getTime();
-						 byte[] charBuf = new byte[sAvail];
-						 serverIn.read(charBuf);
-						 // adding the data to buffer
-						 buffer.add(charBuf);				     
-					 }
-				}
-				else
+				buffer.clear();
+				if(!isAccessDenied && toServer!=null)
+					 sRcvdData = new String(new IOUtils().readStreamAsArray(serverIn, buffer));
+				else if(toServer!=null)
 				{
 					isAccessDenied = false;
 					String accDenied = Configurator.getInstance().getFile_denied_access();
-					accDenied = accDenied.replace("%U",httpParser.GetHeader("Host"));
+					accDenied = accDenied.replace("%U",RequestParser.GetHeader("Host"));
 					accDenied = accDenied.replace("%T",new Date().toString());
 					for(int i=0;i<accDenied.length();i+=MAX_BLOCK_SIZE)
 					{
+						int sAvail = 0;
 						if(i+MAX_BLOCK_SIZE<accDenied.length())
 							sAvail = MAX_BLOCK_SIZE;
 						else
-							sAvail = accDenied.length() - sAvail - 1;													
+							sAvail = accDenied.length() - sAvail - 1;												
 						buffer.add(accDenied.substring(i,sAvail).getBytes());
-						sAvail = 0;
 					}
-					// log this action
-					 new Thread(){
+					 /*******************************
+					  * log the attempt in a separate thread
+					  *******************************/
+					final String fHttpHost = HttpHost;
+					 new CADBiSThread(){
 							public void run()
 							{	
-								Collector.getInstance().AddDeniedAccessAttempt(userIp, HeaderHost);
+								Collector.getInstance().AddDeniedAccessAttempt(UserIp, fHttpHost);
 							}
 					 }.start();
 						
 				}
-				
-				 
+
+
+				/*******************************
+				 * Sending proxy->client
+				 *******************************/					
 				 // if we have read smthg
-				 if(buffer.size()>0)
+				 if(buffer.size()>0 && toServer!=null)
 				 {
-					 logger.debug("buffer, blocks count = " + buffer.size());					 
+					 ResponseParser.ParseHeaders(sRcvdData);
+					 logger.debug("Response.type = "+ResponseParser.GetHeader("Content-Type"));
+					 logger.debug("buffer, blocks count = " + buffer.size());
+					 isReadWrite = true;
+					 // indicate the last rw time
+					 startTime = new Date().getTime();				 
 					 for(int i=0;i<buffer.size();++i)
 					 {
 						 logger.debug("block["+i+"].size=" + buffer.get(i).length);
@@ -186,51 +243,19 @@ class ProxyConnection extends Thread {
 						 clientOut.flush();
 					 }
 					 
-					 
-					 // collecting (preCollector)
-					 // bytes recieved
-					 final long bytes = rcvdBytes;
-					 final String toServerHostName = toServer.getInetAddress().getHostName();
-					 // creating the closure and the separate thread					 
-					 new Thread(){
-							public void run()
-							{	
-								Integer hostPort = 80;
-								String hostName = httpParser.GetHeader("Host");
-								String hostIp = toServerIp;
-								synchronized (getClass()) {
-									if(hostName!= null)
-									{
-										if(hostName.indexOf(":")>0){
-											String[] buf = hostName.split(":");
-											if(buf.length > 1)
-											{
-												hostName = buf[0];
-												hostPort = Integer.valueOf(buf[1]);
-											}
-										}
-										
-										try
-										{
-											Socket dnsQuery = new Socket(hostName,hostPort);
-											hostIp = dnsQuery.getInetAddress().getHostAddress();
-											dnsQuery.close();
-										}
-										catch(IOException e)
-										{
-											logger.error("PreCollector fails to recognize the host's ip address of '"+hostName+"': " + e.getMessage());
-										}
-										Collector.getInstance().Collect(userIp, hostName, bytes, new Date(), hostIp);
-									}
-								}
-							}
-					 }.start();
+					 /*******************************
+					  * Sending the data to collector in a separate thread
+					  *******************************/	
+					 final String fHttpHost = HttpHost;
+					 new PreCollector(fHttpHost,HttpPort,sRcvdData.length(),UserIp)
+					 	.start();
 					 
 					 
 				 }
 			 }
 			 catch(IOException e)
 			 {
+				 ErrorsCount++;
 				 logger.error(e.getMessage());
 			 }
 			
@@ -241,24 +266,31 @@ class ProxyConnection extends Thread {
 				 if(!isReadWrite) 
 				 {
 					 endTime = new Date().getTime();
-					 Thread.sleep(100);
+					 Thread.sleep(WaitRWPeriod);
 				 }				 
 			 }
 			 catch(InterruptedException e)
 			 {
-				 logger.error(e.getMessage());
+				 ErrorsCount++;
+				 logger.error("Processing error: " + e.getMessage());
 			 }
 		 }
 			 
 		 // closing connections
 		 try 
 		 {
-			 clientIn.close();
-			 clientOut.close();
-			 serverIn.close();
-			 serverOut.close();
-			 fromClient.close();
-			 toServer.close();
+			 if(clientIn!=null)
+				 clientIn.close();
+			 if(clientOut!=null)
+				 clientOut.close();
+			 if(fromClient!=null)
+				 fromClient.close();
+			 if(serverIn!=null)
+				 serverIn.close();
+			 if(serverOut!=null)
+				 serverOut.close();
+			 if(toServer!=null)
+				 toServer.close();
 			 logger.debug("Connections closed successfully...");
 		 }
 		 catch(Exception e) 
@@ -268,12 +300,20 @@ class ProxyConnection extends Thread {
 		 }
 		 finally
 		 {
-			 
+			if(Configurator.getInstance().getProperty("execgc").equals("true"))
+				 System.gc();
 			 synchronized (getClass()) {
 				threadCount--;
 				logger.info("ThreadCount=" + threadCount);
 			 }
 			 
 		 }
+	}
+	 
+	 @Override
+	protected void finalize() throws Throwable {
+		logger.debug("ProxyConnection thread garbage collected");
+		super.finalize();
+		
 	}
 }

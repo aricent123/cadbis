@@ -1,11 +1,13 @@
 package cadbis.proxy;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cadbis.CADBiSThread;
 import cadbis.proxy.utils.IOUtils;
 
 public class Configurator {
@@ -19,12 +21,11 @@ public class Configurator {
 	{
 		properties = new Properties();
 	    try {
-	    	properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_PROPERTIES));
-	    	file_denied_access = IOUtils.readStreamAsString(
+	    	reloadData();
+	    	file_denied_access = new String(new IOUtils().readStreamAsString(
 	    			Thread.currentThread().getContextClassLoader().getResourceAsStream(
-	    					properties.getProperty(PROP_DENIED_ACCESS_FILE)));
-	    	
-	    	
+	    					properties.getProperty(PROP_DENIED_ACCESS_FILE))));
+	    	CADBiSThread.setCompleteGC(getProperty("execgc").equals("true"));
 	    } 
 	    catch (IOException e) 
 	    {
@@ -40,9 +41,19 @@ public class Configurator {
 	}
 	
 	
+	public void reloadData() throws IOException 
+	{
+		properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_PROPERTIES));
+	}
+	
 	public String getProperty(String key)
 	{
 		return properties.getProperty(key);
+	}
+	
+	public InputStream getFileDeniedAccessAsStream()
+	{
+		return Thread.currentThread().getContextClassLoader().getResourceAsStream(properties.getProperty(PROP_DENIED_ACCESS_FILE));
 	}
 
 	public String getFile_denied_access() {
