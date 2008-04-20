@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cadbis.CADBiSThread;
-import cadbis.proxy.db.DBConnection;
 import cadbis.proxy.utils.IOUtils;
 
 public class Configurator {
@@ -26,7 +25,7 @@ public class Configurator {
 	    	file_denied_access = new String(new IOUtils().readStreamAsString(
 	    			Thread.currentThread().getContextClassLoader().getResourceAsStream(
 	    					properties.getProperty(PROP_DENIED_ACCESS_FILE))));
-	    	CADBiSThread.setCompleteGC(getProperty("thread_execgc").equals("true"));
+	    	CADBiSThread.setCompleteGC(getProperty("thread_execgc").equals("enabled"));
 	    } 
 	    catch (IOException e) 
 	    {

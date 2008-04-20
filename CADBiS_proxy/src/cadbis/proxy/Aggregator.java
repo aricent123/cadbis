@@ -153,8 +153,8 @@ public class Aggregator extends CADBiSDaemon {
 		String format = Configurator.getInstance().getProperty("urllog_format");
 		
 		userUids = DefineUsersUids(logs, urllogDAO);
-		UpdatePopularity(logs, urllogDAO, userUids);
 		UpdateProtocols(makeProtocols(format, logs), urllogDAO);
+		UpdatePopularity(logs, urllogDAO, userUids);
 		UpdateCtryPopularity(logs,urllogDAO,userUids);
 		
 		synchronized (Collector.getWLock()) {
