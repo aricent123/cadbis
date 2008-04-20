@@ -45,8 +45,6 @@ public class Configurator {
 	public void reloadData() throws IOException 
 	{
 		properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_PROPERTIES));
-		if(getProperty("db_reconnect").equals("enabled"))
-			DBConnection.getInstance().Reconnect();
 	}
 	
 	public String getProperty(String key)
