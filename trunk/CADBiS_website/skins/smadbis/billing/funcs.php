@@ -311,7 +311,7 @@ function getmonthsel($month,$monthsof)
 
 function format_ctry($ctry){
   $ctry = strtolower($ctry);
-  return "<img src=\"test/flags/".$ctry.".gif\"/ alt=\"".$ctry."\"> ($ctry)";
+  return "<img src=\"img/flags/".$ctry.".gif\"/ alt=\"".$ctry."\"> ($ctry)";
 }
 
 

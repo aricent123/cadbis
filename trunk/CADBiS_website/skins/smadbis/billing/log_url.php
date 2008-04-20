@@ -101,7 +101,7 @@ if($BILLEVEL<3)return;
    	$total += $urls[$i]['length'];
    	
       if($country=$BILL->GetCountry($urls[$i]['ip']))
-       $country = "<img src=\"test/flags/".$country['ctry'].".gif\"/ alt=\"".$country['country']."\"> ".$urls[$i]['ip'];
+       $country = "<img src=\"img/flags/".$country['ctry'].".gif\"/ alt=\"".$country['country']."\"> ".$urls[$i]['ip'];
        else 
         $country = $urls[$i]['ip'];   	
      ?>
@@ -176,7 +176,7 @@ if($BILLEVEL<3)return;
  foreach($ips as  $ip){
  
     if($cntry=$BILL->GetCountry($ip))
-       $country = "<img src=\"test/flags/".$cntry['ctry'].".gif\"/ alt=\"".$cntry['country']."\"> ";
+       $country = "<img src=\"img/flags/".$cntry['ctry'].".gif\"/ alt=\"".$cntry['country']."\"> ";
        else 
         $country = $ip;
   
