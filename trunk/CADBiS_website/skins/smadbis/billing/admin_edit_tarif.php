@@ -111,8 +111,6 @@ if($BILLEVEL<3) return;
                   <table width=100% align=center class=tbl2>
                   <tr>
                     <td width=100%>
-                  <table width=100% align=center class=tbl2>
-                    <td width=100%>
                       <table  width=100%>
                         <tr><td width=50%>
                         Название тарифа:
@@ -127,6 +125,7 @@ if($BILLEVEL<3) return;
                         Время:
                         </td><td width=50%><? OUT(gethours($tdata["time"]).":".getmins($tdata["time"]).":".getsecs($tdata["time"])) ?></td></tr>
                         </table>
+                    </td></tr>
                   </table>
                   <table width=100%>
                   <td width=25% class=tbl1 align=center>
