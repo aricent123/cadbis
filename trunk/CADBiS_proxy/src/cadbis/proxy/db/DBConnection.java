@@ -31,9 +31,9 @@ public class DBConnection {
 	
 	public static DBConnection getInstance()
 	{
-		if(instance == null)
-			instance = new DBConnection();
-		return instance;
+		if(DBConnection.instance == null)
+			DBConnection.instance = new DBConnection();
+		return DBConnection.instance;
 	}
 	
 	public boolean Connect()
