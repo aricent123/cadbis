@@ -65,7 +65,8 @@ public class Collector extends CADBiSDaemon{
 		{
 			actions.clear();
 			actionsOfIps.clear();
-			actions = getActiveSessions();		
+			actions = getActiveSessions();
+			if(actions!=null)
 			for(int i=0;i<actions.size();++i){
 				actionsOfIps.put(actions.get(i).getIp().toString().hashCode(), actions.get(i));
 				DeniedUrlDAO dao = new DeniedUrlDAO();
@@ -73,7 +74,7 @@ public class Collector extends CADBiSDaemon{
 				List<UrlDenied> durls = dao.getItemsByQuery("select * from url_denied where gid="+actions.get(i).getGid());
 				if(durls!=null)
 					for(int j=0;j<durls.size();++j){
-						logger.info("Read denied urls for '" + actions.get(i).getUser()+"'... " + durls.get(j).getUrl());
+						logger.debug("Read denied urls for '" + actions.get(i).getUser()+"'... " + durls.get(j).getUrl());
 						actions.get(i).getDeniedUrls().add(durls.get(j));
 					}
 			}

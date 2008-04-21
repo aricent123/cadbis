@@ -25,7 +25,7 @@ public class PreCollector extends CADBiSThread {
  	}
 	public void run()
 	{	
-		if(HttpHost!= null && HostIp.isEmpty())
+		if(HttpHost!= null && HostIp.length()==0)
 		{	
 			logger.info("PreCollector doesn't know the host's ip... :" + HttpHost);
 			try
