@@ -18,6 +18,7 @@ public class DBConnection {
     private String jdbcUrl;
     private String jdbcDriver;    
     
+    private static Object dcLock = new Object();
     private static DBConnection instance = null;
 	
 	private DBConnection()
@@ -31,8 +32,10 @@ public class DBConnection {
 	
 	public static DBConnection getInstance()
 	{
+		synchronized (dcLock) {
 		if(DBConnection.instance == null)
 			DBConnection.instance = new DBConnection();
+		}
 		return DBConnection.instance;
 	}
 	
