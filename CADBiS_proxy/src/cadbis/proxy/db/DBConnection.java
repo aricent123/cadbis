@@ -43,6 +43,7 @@ public class DBConnection {
         {
             Class.forName (jdbcDriver).newInstance ();
             connection = DriverManager.getConnection (jdbcUrl, userName, password);
+            logger.info("Database connected: " + jdbcUrl);
             result = true;
         }
         catch (SQLException e)
@@ -85,6 +86,7 @@ public class DBConnection {
                 {
                 	connection.close ();
                 	connection = null;
+                	instance = null;
                 	logger.info("Database connection terminated");
                 }
                 catch (Exception e) { /* ignore close errors */ }
