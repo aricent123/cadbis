@@ -12,7 +12,7 @@ public class Proxy {
 public void run(String bindhost, int bindport, String fwdhost, int fwdport,long timeout) {
 	try 
 	{		
-		boolean trueProxy = (Configurator.getInstance().getProperty("trueproxy").equals("true"));
+		boolean trueProxy = (Configurator.getInstance().getProperty("trueproxy").equals("enabled"));
 		ServerSocket sSocket = null;
 		 try
 		 {

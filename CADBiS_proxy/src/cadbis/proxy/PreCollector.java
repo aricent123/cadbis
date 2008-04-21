@@ -27,7 +27,7 @@ public class PreCollector extends CADBiSThread {
 	{	
 		if(HttpHost!= null && HostIp.length()==0)
 		{	
-			logger.info("PreCollector doesn't know the host's ip... :" + HttpHost);
+			logger.debug("PreCollector doesn't know the host's ip... :" + HttpHost);
 			try
 			{
 				Socket dnsQuery = new Socket(HttpHost,HttpPort);

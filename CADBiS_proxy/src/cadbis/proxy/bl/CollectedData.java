@@ -8,7 +8,7 @@ public class CollectedData {
 	public Date date;
 	public String ip;
 	public String content_type;
-	
+		
 	public CollectedData(String url, Long bytes, Date date, String ip, String content_type)
 	{
 		this.url = url;
