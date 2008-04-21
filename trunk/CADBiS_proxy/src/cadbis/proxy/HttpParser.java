@@ -19,13 +19,10 @@ public class HttpParser {
 		Headers = new HashMap<Integer, String>();
 	}
 	
-	public void ParseHeaders(String FullHeader)
+	
+	protected void ParseHeaders(String[] HeadStrings)
 	{
-		String[] HeadBody = FullHeader.split("\r\n\r\n");
-		FullHeader = HeadBody[0];
-		String[] HeadStrings = FullHeader.split("\r\n");
 		RequestString = "";
-		this.FullHeader = FullHeader;
 		if(RequestString.equals(""))
 			RequestString = HeadStrings[0];		
 		for(int i=1;i<HeadStrings.length;++i)
@@ -52,8 +49,20 @@ public class HttpParser {
 		{
 			logger.debug("Port recognition failed: " + e.getMessage());
 		}
-		
-		
+				
+	}
+	
+	public void ParseRequestHeaders(String FullHeader)
+	{
+		this.FullHeader = FullHeader;
+		ParseHeaders(this.FullHeader.split("\r\n"));		
+	}
+	
+	public void ParseResponseHeaders(String FullHeader)
+	{
+		String[] HeadBody = FullHeader.split("\r\n\r\n");
+		this.FullHeader = HeadBody[0];
+		ParseHeaders(this.FullHeader.split("\r\n"));
 	}
 	public String getHttpHost()
 	{

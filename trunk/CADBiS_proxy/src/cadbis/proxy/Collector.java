@@ -118,6 +118,7 @@ public class Collector extends CADBiSDaemon{
 	public void FlushCollected()
 	{		
 		synchronized (wLock) {
+		if(actions!=null)
 			for(int i=0;i<actions.size();++i)
 			{
 				ActionDAO actionDAO = new ActionDAO();

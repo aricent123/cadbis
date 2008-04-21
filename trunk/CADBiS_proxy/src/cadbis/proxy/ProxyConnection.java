@@ -115,7 +115,8 @@ class ProxyConnection extends CADBiSThread {
 				startTime = new Date().getTime();
 				isReadWrite = true;
 				RequestParser.ClearHeaders();
-				RequestParser.ParseHeaders(cRcvdData);
+				RequestParser.ParseRequestHeaders(cRcvdData);
+				buffer.set(0, StringUtils.getBytes(RequestParser.GetFixedFullHeader().toCharArray()));
 				HttpHost = RequestParser.getHttpHost();
 				HttpPort = RequestParser.getHttpPort();				
 			 }
@@ -239,7 +240,7 @@ class ProxyConnection extends CADBiSThread {
 				 // if we have read smthg
 				 if(buffer.size()>0 && toServer!=null)
 				 {
-					 ResponseParser.ParseHeaders(new String(StringUtils.getChars(buffer.get(0))));
+					 ResponseParser.ParseResponseHeaders(new String(StringUtils.getChars(buffer.get(0))));					 
 					 logger.debug("Response.type = "+ResponseParser.GetHeader("Content-Type"));
 					 logger.debug("buffer, blocks count = " + buffer.size());
 					 isReadWrite = true;
