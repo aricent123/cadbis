@@ -7,6 +7,7 @@ import cadbis.CADBiSDaemon;
 import cadbis.proxy.bl.Protocol;
 import cadbis.proxy.bl.UrlLogProtocol;
 import cadbis.proxy.db.AbstractDAO;
+import cadbis.proxy.db.ProtocolDAO;
 import cadbis.proxy.db.UrlLogProtocolDAO;
 import cadbis.proxy.utils.StringUtils;
 
@@ -65,30 +66,109 @@ public class Aggregator extends CADBiSDaemon {
 
 	}
 	
-	
-	protected HashMap<String, Protocol> makeProtocols(String format, List<UrlLogProtocol> logs)
-	{
-		HashMap<String, Protocol> protocols = new HashMap<String, Protocol>();
-		for(int i=0;i<logs.size();++i)
-		{
-			String data= format;
-			data = data.replace("{DATE}",logs.get(i).getDate().toString());
-			data = data.replace("{URL}",logs.get(i).getUrl().toString());
-			data = data.replace("{COUNT}",logs.get(i).getCount().toString());
-			data = data.replace("{LENGTH}",logs.get(i).getLength().toString());
-			data = data.replace("{IP}",logs.get(i).getIp().toString());
-			data = data.replace("{CONTENT-TYPE}",logs.get(i).getContent_type().toString());
-			if(!protocols.containsKey(logs.get(i).getUnique_id()))
+	protected void parseAppendProtocolLog(String data, String unique_id, String sep1,String sep2, HashMap<Integer, UrlLogProtocol> proto_logs){
+		String[] cproto_items = data.split(StringUtils.escapeRE(sep1));
+		logger.info("parseAppendProtocolLog.length= "+data.length());
+		for(String cproto_item : cproto_items){
+			String[] cif = cproto_item.split(StringUtils.escapeRE(sep2));
+			String ctype = (cif.length > 5)?cif[5]:"";
+			Integer cif_key = new String(cif[1]+ctype).hashCode();
+			long cif_len = Long.valueOf(cif[3]);
+			int cif_count = Integer.parseInt(cif[2]);			
+			if(proto_logs.containsKey(cif_key))
 			{
-				Protocol row = new Protocol(0,
-						logs.get(i).getUnique_id().toString(),
-						data,
-					((Long)logs.get(i).getLength()));
-				protocols.put(logs.get(i).getUnique_id().toString(), row);
+				if(cif[1].equals("maps.google.ru") && ctype.equals(""))
+					logger.info(proto_logs.get(cif_key).getLength()+"+"+cif_len);				
+				proto_logs.get(cif_key).setDate(cif[0]);
+				proto_logs.get(cif_key).addCount(cif_count);
+				proto_logs.get(cif_key).addLength(cif_len);
 			}
 			else
-				protocols.get(logs.get(i).getUnique_id().toString()).appendData(data);
+			{
+				proto_logs.put(cif_key, new UrlLogProtocol(unique_id,cif[1],cif_len,cif[0],cif_count,"",cif[4],ctype));
+			}
 		}
+	}
+	
+	
+	protected void appendProtocolItem(HashMap<String, Protocol> protocols, String sep1, String sep2, 
+			String unique_id, String date, String url, int count, long length, 
+			String ip, String content_type, boolean appendLength)
+	{
+		String data = "";
+		data += date 			+	sep2;
+		data += url				+	sep2;
+		data += count			+	sep2;
+		data += length			+	sep2;
+		data += ip				+	sep2;
+		data += content_type	+	sep1;		
+		if(!protocols.containsKey(unique_id))
+		{
+			Protocol row = new Protocol(0,
+					unique_id,
+					data,
+				((Long)length));
+			protocols.put(unique_id, row);
+		}
+		else
+			{
+				protocols.get(unique_id).appendData(data);
+				if(appendLength)				
+					protocols.get(unique_id).appendLength(Long.valueOf(length));
+			}
+	}
+	
+	protected HashMap<String, Protocol> makeProtocols(String sep1, String sep2, List<UrlLogProtocol> logs)
+	{
+		HashMap<String, Protocol> protocols = new HashMap<String, Protocol>();		
+		try
+		{
+			for(int i=0;i<logs.size();++i)
+				appendProtocolItem(protocols,sep1,sep2,
+						logs.get(i).getUnique_id().toString(),
+						logs.get(i).getDate().toString(),
+						logs.get(i).getUrl().toString(),
+						Integer.valueOf((Integer)logs.get(i).getCount()),
+						Long.valueOf((Long)logs.get(i).getLength()),
+						logs.get(i).getIp().toString(),
+						logs.get(i).getContent_type().toString(), false);
+			
+			
+			if(Configurator.getInstance().getProperty("aggregate_protocols").equals("enabled"))
+			{
+				HashMap<Integer, UrlLogProtocol> proto_logs = new HashMap<Integer, UrlLogProtocol>();
+				ProtocolDAO dao = new ProtocolDAO();
+				for(String key : protocols.keySet())
+				{
+					String unique_id = protocols.get(key).getUnique_id().toString();
+					List<Protocol> eproto = dao.getItemsByQuery(String.format("select * from `protocols` where " +
+							"unique_id='%s'",protocols.get(key).getUnique_id()));
+					
+					parseAppendProtocolLog(protocols.get(key).getData().toString(),unique_id,sep1,sep2,proto_logs);
+					for(Protocol ep : eproto)
+						parseAppendProtocolLog(ep.getData().toString().toString(),unique_id,sep1,sep2,proto_logs);
+				}
+				protocols.clear();
+				for(Integer key : proto_logs.keySet())
+					appendProtocolItem(protocols,sep1,sep2,
+							proto_logs.get(key).getUnique_id().toString(),
+							proto_logs.get(key).getDate().toString(),
+							proto_logs.get(key).getUrl().toString(),
+							Integer.valueOf((Integer)proto_logs.get(key).getCount()),
+							Long.valueOf((Long)proto_logs.get(key).getLength()),
+							proto_logs.get(key).getIp().toString(),
+							proto_logs.get(key).getContent_type().toString(), true);
+				
+				for(String key : protocols.keySet())
+					dao.execSql(String.format("update `protocols` set data='' where " +
+						"unique_id='%s'",protocols.get(key).getUnique_id()));				
+			}
+		}
+		catch(Exception e)
+		{
+			logger.error("Parsing the protocols error:" + e.getMessage());
+		}
+		
 		return protocols;
 	}
 	
@@ -129,7 +209,7 @@ public class Aggregator extends CADBiSDaemon {
 			}
 			int uid = userUids.get(logs.get(i).getUser().toString());
 			String ctry = (String)dao.getSingleValueByQuery("select ctry from `ip2country` where " +
-					"sip<"+ip+" and eip>"+ip+" limit 1", "ctry");
+					"sip<"+ip+" and eip>"+ip+"", "ctry");
 			if(ctry!=null)
 			{
 				if(dao.getCountByQuery("select count(*) as count from `ctry_popularity` where " +
@@ -151,28 +231,40 @@ public class Aggregator extends CADBiSDaemon {
 	
 	protected void Aggregate()
 	{
-		UrlLogProtocolDAO urllogDAO = new UrlLogProtocolDAO();	
-		List<UrlLogProtocol> logs = null;
-		HashMap<String, Integer> userUids = null;
-		logs = urllogDAO.getItemsByQuery("select unique_id,url,SUM(length) as length, date,COUNT(*) as 'count',user,ip,content_type from url_log group by unique_id,url,content_type order by unique_id,date,url,length");
-		String format = Configurator.getInstance().getProperty("urllog_format");
-		if(logs!= null)
-		{
-			userUids = DefineUsersUids(logs, urllogDAO);
-			UpdateProtocols(makeProtocols(format, logs), urllogDAO);
-			UpdatePopularity(logs, urllogDAO, userUids);
-			UpdateCtryPopularity(logs,urllogDAO,userUids);
-			
-			synchronized (Collector.getWLock()) {
-				urllogDAO.execSql("delete from `url_log`");	
+		synchronized (Collector.getWLock()) {			
+			try
+			{
+				UrlLogProtocolDAO urllogDAO = new UrlLogProtocolDAO();	
+				List<UrlLogProtocol> logs = null;
+				HashMap<String, Integer> userUids = null;
+				logs = urllogDAO.getItemsByQuery("select unique_id,url,SUM(length) as length, date,COUNT(*) as 'count',user,ip,content_type from url_log group by unique_id,url,content_type order by unique_id,date,url,length");
+				if(logs!= null)
+				{
+					userUids = DefineUsersUids(logs, urllogDAO);
+					String sep1 = Configurator.getInstance().getProperty("urllog_sep1");
+					String sep2 = Configurator.getInstance().getProperty("urllog_sep2");				
+					UpdateProtocols(makeProtocols(sep1, sep2, logs), urllogDAO);
+					UpdatePopularity(logs, urllogDAO, userUids);
+					UpdateCtryPopularity(logs,urllogDAO,userUids);			
+					urllogDAO.execSql("delete from `url_log`");	
+				}
+			}
+			catch(Exception e)
+			{
+				logger.error("aggregation error:"+e.getMessage());
 			}
 		}
+	}
+	
+	@Override
+	protected void postdaemonize() {
+
 	}
 	
 	@Override
 	protected void daemonize() {
 		logger.info("aggregate info");
 		Aggregate();
-		logger.info("aggregation completed");
+		logger.info("aggregation completed");			
 	}
 }

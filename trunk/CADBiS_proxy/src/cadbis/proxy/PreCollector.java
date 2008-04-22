@@ -1,23 +1,21 @@
 package cadbis.proxy;
 
 import java.io.IOException;
-import java.net.Socket;
+import java.net.InetAddress;
 import java.util.Date;
 
 import cadbis.CADBiSThread;
 
 public class PreCollector extends CADBiSThread {
  	private String HttpHost = "";
- 	private int HttpPort = 80;
  	private String HostIp = "";
  	private long RcvBytes = 0;
  	private String UserIp = "";
  	private String ContentType = "";
  	
- 	public PreCollector(String HttpHost,int HttpPort, long RcvBytes, String UserIp, String ContentType, String HostIp)
+ 	public PreCollector(String HttpHost, long RcvBytes, String UserIp, String ContentType, String HostIp)
  	{
  	 	this.HttpHost = HttpHost;
- 	 	this.HttpPort = HttpPort;
  	 	this.RcvBytes = RcvBytes;
  	 	this.UserIp = UserIp;
  	 	this.ContentType = ContentType;
@@ -30,9 +28,8 @@ public class PreCollector extends CADBiSThread {
 			logger.debug("PreCollector doesn't know the host's ip... :" + HttpHost);
 			try
 			{
-				Socket dnsQuery = new Socket(HttpHost,HttpPort);
-				HostIp = dnsQuery.getInetAddress().getHostAddress();
-				dnsQuery.close();
+				InetAddress addr = InetAddress.getByName(HttpHost);
+				HostIp = addr.getHostAddress(); 
 			}
 			catch(IOException e)
 			{

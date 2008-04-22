@@ -4,8 +4,14 @@ package cadbis.proxy.utils;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.util.regex.Pattern;
 
-public class StringUtils {
+public class StringUtils {	
+	// Returns a pattern where all punctuation characters are escaped.
+    static Pattern escaper = Pattern.compile("([^a-zA-z0-9])");
+    public static String escapeRE(String str) {
+        return escaper.matcher(str).replaceAll("\\\\$1");
+    }	
 	
 	public static long ip2value(String ip) throws NumberFormatException
 	  {

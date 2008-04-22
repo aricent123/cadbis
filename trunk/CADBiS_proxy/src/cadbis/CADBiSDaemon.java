@@ -18,8 +18,8 @@ public abstract class CADBiSDaemon extends CADBiSThread {
 
 	
 	protected void prerun(){}	
-	abstract protected void daemonize();
-	
+	protected void daemonize(){};
+	protected void postdaemonize(){};
 	
 	@SuppressWarnings("static-access")
 	protected void sleep(int time){
@@ -41,6 +41,7 @@ public abstract class CADBiSDaemon extends CADBiSThread {
 				logger.debug("daemonize...");				
 				daemonize();
 				sleep(this.delay);
+				postdaemonize();
 			}	
 		}		
 	}

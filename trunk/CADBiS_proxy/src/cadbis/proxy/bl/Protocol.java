@@ -6,6 +6,7 @@ public class Protocol implements BusinessObject {
 	private String data;
 	private long length;
 	
+	public Protocol(){};
 	
 	public Protocol(int pid, String unique_id, String data, long length) {
 		super();
@@ -56,7 +57,9 @@ public class Protocol implements BusinessObject {
 	public void appendData(String value) {
 		data+=value;
 	}
-	
+	public void appendLength(long appendLength){
+		this.length += appendLength;
+	}
 
 	public void setData(Object data) {
 		this.data = (String)data;

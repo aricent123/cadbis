@@ -18,11 +18,15 @@ public class Reconfigurer extends CADBiSDaemon{
 	}	
 	
 	@Override
+	protected void postdaemonize() {
+		if(Configurator.getInstance().getProperty("db_reconnect").equals("enabled"))
+			DBConnection.getInstance().Reconnect();
+	}
+	
+	@Override
 	protected void daemonize() {
 		try{
 			Configurator.getInstance().reloadData();
-			if(Configurator.getInstance().getProperty("db_reconnect").equals("enabled"))
-				DBConnection.getInstance().Reconnect();			
 			logger.info("Reconfigurer: Config reloaded.");
 		}
 		catch (IOException e) {
