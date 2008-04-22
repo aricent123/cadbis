@@ -68,7 +68,6 @@ public class Aggregator extends CADBiSDaemon {
 	
 	protected void parseAppendProtocolLog(String data, String unique_id, String sep1,String sep2, HashMap<Integer, UrlLogProtocol> proto_logs){
 		String[] cproto_items = data.split(StringUtils.escapeRE(sep1));
-		logger.info("parseAppendProtocolLog.length= "+data.length());
 		for(String cproto_item : cproto_items){
 			String[] cif = cproto_item.split(StringUtils.escapeRE(sep2));
 			String ctype = (cif.length > 5)?cif[5]:"";
@@ -77,8 +76,6 @@ public class Aggregator extends CADBiSDaemon {
 			int cif_count = Integer.parseInt(cif[2]);			
 			if(proto_logs.containsKey(cif_key))
 			{
-				if(cif[1].equals("maps.google.ru") && ctype.equals(""))
-					logger.info(proto_logs.get(cif_key).getLength()+"+"+cif_len);				
 				proto_logs.get(cif_key).setDate(cif[0]);
 				proto_logs.get(cif_key).addCount(cif_count);
 				proto_logs.get(cif_key).addLength(cif_len);
