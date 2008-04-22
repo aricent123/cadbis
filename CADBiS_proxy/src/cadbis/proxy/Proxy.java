@@ -42,7 +42,7 @@ public void run(String bindhost, int bindport, String fwdhost, int fwdport,long 
 						c = new ProxyConnection(cSocket,fwdhost,fwdport,timeout);
 					c.start();
 				}
-				logger.debug("Memory usage: "+(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())+"");
+				logger.debug("Memory usage: "+((Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024)+"Kb");
 			} 
 			catch(Exception e) 
 			{
