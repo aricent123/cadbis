@@ -23,7 +23,7 @@ public class HttpParser {
 	protected void ParseHeaders(String[] HeadStrings)
 	{
 		RequestString = "";
-		if(RequestString.equals(""))
+		if(RequestString.equals("") && HeadStrings.length>0)
 			RequestString = HeadStrings[0];		
 		for(int i=1;i<HeadStrings.length;++i)
 		{
@@ -34,7 +34,7 @@ public class HttpParser {
 		}		
 		
 		String[] ReqMethString = RequestString.split(" ");
-		RequestMethod = ReqMethString[0];
+		RequestMethod = (ReqMethString.length>0)?ReqMethString[0]:"";
 		HttpHost = GetHeader("Host");
 		
 		try{

@@ -1,60 +1,42 @@
 package cadbis.proxy;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+class Test {
+	private static long MAX_TIMES = 9999;
+	private static int SLEEP_TIME = 10;
+	
+  private static class MyThread extends Thread {
+    public void run()
+    {
+    	try{
+    		sleep(SLEEP_TIME);
+    	}
+    	catch(InterruptedException e)
+    	{
+    		
+    	}
+    }
+  }
 
-final class TestThread extends Thread
-{
-	private static Integer var=0;
-	private static Integer ThreadsCount =0;
-	private static Object testObj = new Object();
-	@SuppressWarnings("static-access")
-	@Override
-	public void run() {		
-		synchronized (testObj) {
-			ThreadsCount++;
-		}
-		System.out.println("Before synchronized... thread"+ThreadsCount+", var="+var);
-		synchronized (getClass()) {
-			System.out.println("Inside synchronized... var="+var);
-			var++;
-			try{
-				Thread.currentThread().sleep(100);
-			}
-			catch (InterruptedException e) {
-				System.out.println("Thread interrupted: " + e.getMessage());
-			}			
-			
-		}		
-	}
-}
-
-public class Test {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		System.out.print(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-		System.out.print(new String("GET http://test.ru/http://asdkhaskjd").matches("^GET http:\\/\\/.+"));
-		TestThread[] pool;
-		pool = new TestThread[5];
-		for(int i=0;i<pool.length;++i)
-		{
-			pool[i] = new TestThread();
-			pool[i].start();
-		}
-		
-		try{
-			for(int i=0;i<pool.length;++i)
-				pool[i].join();
-		}
-		catch(InterruptedException e)
-		{
-			System.out.println("Thread interrupted: " + e.getMessage());
-		}
-		
-	}
-
+  public static void main (String[] args)
+  {
+	  try{
+	  if(args.length>1){
+		  SLEEP_TIME = Integer.valueOf(args[1]);
+		  MAX_TIMES = Long.valueOf(args[0]);
+	  }
+	  for(long i=0;i<MAX_TIMES;++i) 
+	  {
+		  new MyThread().start();
+		  try{
+		  Thread.sleep(SLEEP_TIME);
+		  }catch(InterruptedException e)
+		  {
+			  
+		  }
+	  }
+	  }catch(Exception e)
+	  {
+		  System.out.println("error " + e.getMessage());
+	  }
+  }
 }
