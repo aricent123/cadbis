@@ -19,6 +19,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	protected DBConnection dataAccess = null;
 	protected String tableName;
 	
+	protected Statement state = null;
 	protected Class<objT> paramClass;
 
 	@SuppressWarnings("unchecked")
@@ -34,6 +35,50 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		return paramClass;
 	}
 	
+	protected void closeRsState(ResultSet rs, Statement s )
+	{
+		try{
+			if(rs!=null)
+				rs.close();
+			if(s!=null)
+				s.close();
+			if(this.state!=null)
+				this.state.close();
+			
+			}catch(SQLException e){}		
+	}
+	
+	
+	protected void closeRs(ResultSet rs)
+	{
+		closeRsState(rs,null);
+	}
+
+	protected void closeState(Statement s)
+	{
+		closeRsState(null,s);
+	}
+	
+	
+	protected ResultSet getResultSet(String query)
+	{
+		if(dataAccess==null || dataAccess.getConnection()==null)
+			return null;
+		ResultSet rs = null;
+		try
+		{			
+			this.state = dataAccess.getConnection().createStatement();
+			this.state.executeQuery (query);
+			rs = this.state.getResultSet ();
+			
+		}
+		catch(SQLException e)
+		{
+			closeRsState(rs, this.state);
+		}
+		return rs;
+	}
+	
 	
 	/**
 	 * Returns the items by any query
@@ -45,13 +90,13 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	{
 		logger.debug(query);
 		ArrayList<objT> list = new ArrayList<objT>();
-		if(dataAccess==null || dataAccess.getConnection()==null)
-			return null;
+
+		
+		
+		ResultSet rs = null;
 		try
 		{
-		   Statement s = dataAccess.getConnection().createStatement();
-		   s.executeQuery (query);
-		   ResultSet rs = s.getResultSet ();
+		   rs = getResultSet(query);
 		   while (rs.next ())
 		   {
 			   objT row = null;
@@ -103,13 +148,15 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 			   }
 			   list.add(row);
 		   }
-		   rs.close ();
-		   s.close ();
 		}
 		catch(SQLException e)
 		{
 			logger.error("Query '"+query+"' execution error: " + e.getMessage());
-		}		
+		}	
+		finally
+		{
+			closeRs(rs);
+		}				
 		
 		return list;
 	}
@@ -124,15 +171,21 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		logger.debug(query);
 		if(dataAccess==null || dataAccess.getConnection()==null)
 			return;
+		
+		Statement s = null;				
 		try
 		{		
-			Statement s = dataAccess.getConnection().createStatement();
+			s = dataAccess.getConnection().createStatement();
 			s.executeUpdate (query);
 		}
 		catch(SQLException e)
 		{
 			logger.error("Query '"+query+"' execution error: " + e.getMessage());
-		}			
+		}
+		finally
+		{
+			closeState(s);
+		}		
 	}
 	
 	/**
@@ -145,21 +198,22 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		int count = 0;
 		if(dataAccess==null)
 			return 0;
+		
+		ResultSet rs = null;
 		try
 		{
-		   Statement s = dataAccess.getConnection().createStatement();
-		   s.executeQuery (query);
-		   ResultSet rs = s.getResultSet ();
+		   rs = getResultSet(query);
 		   rs.next ();
 		   count = rs.getInt (key);
-		   rs.close ();
-		   s.close ();
-	
 		}
 		catch(SQLException e)
 		{
 			logger.error("Query '"+query+"' execution error: " + e.getMessage());
 		}
+		finally
+		{
+			closeRs(rs);
+		}		
 		
 		return count;
 	}	
@@ -175,19 +229,21 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		Object value = null;
 		if(dataAccess==null)
 			return 0;
+		
+		ResultSet rs = null;
 		try
 		{
-		   Statement s = dataAccess.getConnection().createStatement();
-		   s.executeQuery (query);
-		   ResultSet rs = s.getResultSet();
+		   rs = getResultSet(query);
 		   if(rs.next ())
 			   value = rs.getObject(key);
-		   rs.close ();
-		   s.close ();
 		}
 		catch(SQLException e)
 		{
 			logger.error("Query '"+query+"' execution error: " + e.getMessage());
+		}
+		finally
+		{
+			closeRs(rs);
 		}
 		
 		return value;
@@ -202,20 +258,21 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		int count = 0;
 		if(dataAccess==null)
 			return 0;
+		
+		ResultSet rs = null;
 		try
 		{
-		   Statement s = dataAccess.getConnection().createStatement();
-		   s.executeQuery ("SELECT count(1) as count FROM " + tableName);
-		   ResultSet rs = s.getResultSet ();
+		   rs = getResultSet("SELECT count(1) as count FROM " + tableName);
 		   rs.next ();
 		   count = rs.getInt ("count");
-		   rs.close ();
-		   s.close ();
-	
 		}
 		catch(SQLException e)
 		{
 			logger.error("Query execution error: " + e.getMessage());
+		}
+		finally
+		{
+			closeRs(rs);
 		}
 		
 		return count;
