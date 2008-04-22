@@ -42,25 +42,27 @@ public class DBConnection {
 	public boolean Connect()
 	{
 		boolean result = false; 
-        try
-        {
-            Class.forName (jdbcDriver).newInstance ();
-            connection = DriverManager.getConnection (jdbcUrl, userName, password);
-            logger.info("Database connected: " + jdbcUrl);
-            result = true;
-        }
-        catch (SQLException e)
-        {
-        	logger.error("Cannot connect to database server " + e.getMessage());
-        }        
-        catch(ClassNotFoundException e)
-        {
-        	logger.error("Cannot connect to database server. Class not found: " + e.getMessage());
-        }
-        catch(Exception e)
-        {
-        	logger.error("Unknown error while connecting to database server. " + e.getMessage());
-        }
+		synchronized (dcLock) {		
+	        try
+	        {
+	            Class.forName (jdbcDriver).newInstance ();
+	            connection = DriverManager.getConnection (jdbcUrl, userName, password);
+	            logger.info("Database connected: " + jdbcUrl);
+	            result = true;
+	        }
+	        catch (SQLException e)
+	        {
+	        	logger.error("Cannot connect to database server " + e.getMessage());
+	        }        
+	        catch(ClassNotFoundException e)
+	        {
+	        	logger.error("Cannot connect to database server. Class not found: " + e.getMessage());
+	        }
+	        catch(Exception e)
+	        {
+	        	logger.error("Unknown error while connecting to database server. " + e.getMessage());
+	        }
+		}
         return result;
 	}
 
@@ -68,21 +70,24 @@ public class DBConnection {
 	public boolean Reconnect()
 	{
 		boolean res = false;
-		try{
-			if(connection != null)
-				connection.close();
-			connection = null;
-			res = Connect();
-		}
-		catch (SQLException e) {
-			logger.error("Reconnect failed: " + e.getMessage());
-			return false;
+		synchronized (dcLock) {	
+			try{
+				if(connection != null)
+					connection.close();
+				connection = null;
+				res = Connect();
+			}
+			catch (SQLException e) {
+				logger.error("Reconnect failed: " + e.getMessage());
+				return false;
+			}
 		}
 		return res;
 	}
 
 	public void Disconnect()
 	{
+		synchronized (dcLock) {			
             if (connection != null)
             {
                 try
@@ -94,6 +99,7 @@ public class DBConnection {
                 }
                 catch (Exception e) { /* ignore close errors */ }
             }
+		}
 	}
 	
 	

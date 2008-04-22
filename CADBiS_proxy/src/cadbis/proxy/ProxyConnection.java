@@ -116,7 +116,7 @@ class ProxyConnection extends CADBiSThread {
 				isReadWrite = true;
 				RequestParser.ClearHeaders();
 				RequestParser.ParseRequestHeaders(cRcvdData);
-				buffer.set(0, StringUtils.getBytes(RequestParser.GetFixedFullHeader().toCharArray()));
+				buffer.set(0, RequestParser.GetFixedFullHeader().getBytes());
 				HttpHost = RequestParser.getHttpHost();
 				HttpPort = RequestParser.getHttpPort();				
 			 }
@@ -258,7 +258,7 @@ class ProxyConnection extends CADBiSThread {
 					  *******************************/	
 					 String fHttpHost = HttpHost;
 					 String ContentType = ResponseParser.GetHeader("Content-Type");
-					 new PreCollector(fHttpHost,HttpPort,RcvdAmount,UserIp,ContentType,HostIp)
+					 new PreCollector(fHttpHost,RcvdAmount,UserIp,ContentType,HostIp)
 					 	.start();
 				 }
 			 }

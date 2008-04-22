@@ -100,7 +100,7 @@ public class HttpParser {
 	{
 		if(!HttpHost.equals("") && !RequestString.matches("^" + RequestMethod + " https?:\\/\\/.+"))
 		{
-			String Protocol = RequestString.matches("https:\\/\\/")?"https://":"http://";
+			String Protocol = RequestString.matches(".+https:\\/\\/.+")?"https://":"http://";
 			String fixedReq = FullHeader.replace(RequestMethod + " ", RequestMethod + " "+Protocol + HttpHost); 
 			logger.debug("Request String is wrong, fixing... Fixed value='"+fixedReq+"'");
 			return fixedReq;

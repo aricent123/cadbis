@@ -20,6 +20,7 @@ public class CADBiSThread extends Thread {
 	 		logger.debug("Thread "+this.getClass().getName()+".new, total = "+thrCount); 	 	
 	}
 	public CADBiSThread() {
+		setName(this.getClass().getSimpleName());
 		created();
 	}
 	

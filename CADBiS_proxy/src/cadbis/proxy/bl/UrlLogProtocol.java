@@ -10,6 +10,24 @@ public class UrlLogProtocol implements BusinessObject {
 	private String ip;
 	private String content_type;	
 	
+	
+	public UrlLogProtocol(){
+		
+	}
+	
+	public UrlLogProtocol(String unique_id, String url, long length,
+			String date, int count, String user, String ip, String content_type) {
+		super();
+		this.unique_id = unique_id;
+		this.url = url;
+		this.length = length;
+		this.date = date;
+		this.count = count;
+		this.user = user;
+		this.ip = ip;
+		this.content_type = content_type;
+	}
+
 	public String[][] getPerstistenceFields() {
 		String[][] fields = {
 				{"unique_id",	"String"},				
@@ -89,4 +107,13 @@ public class UrlLogProtocol implements BusinessObject {
 	}
 
 
+	public void addCount(int count)
+	{
+		this.count += count;
+	}
+	
+	public void addLength(long length)
+	{
+		this.length += length;
+	}
 }

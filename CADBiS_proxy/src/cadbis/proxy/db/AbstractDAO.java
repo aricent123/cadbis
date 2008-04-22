@@ -32,7 +32,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	
 	public Class<objT> getParamClass() {
 		return paramClass;
-	}	
+	}
 	
 	
 	/**
@@ -179,12 +179,11 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		{
 		   Statement s = dataAccess.getConnection().createStatement();
 		   s.executeQuery (query);
-		   ResultSet rs = s.getResultSet ();
-		   rs.next ();
-		   value = rs.getObject(key);
+		   ResultSet rs = s.getResultSet();
+		   if(rs.next ())
+			   value = rs.getObject(key);
 		   rs.close ();
 		   s.close ();
-	
 		}
 		catch(SQLException e)
 		{
