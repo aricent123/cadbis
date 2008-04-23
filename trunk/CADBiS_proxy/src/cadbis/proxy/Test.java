@@ -19,24 +19,26 @@ class Test {
 
   public static void main (String[] args)
   {
-	  try{
-	  if(args.length>1){
-		  SLEEP_TIME = Integer.valueOf(args[1]);
-		  MAX_TIMES = Long.valueOf(args[0]);
-	  }
-	  for(long i=0;i<MAX_TIMES;++i) 
-	  {
-		  new MyThread().start();
-		  try{
-		  Thread.sleep(SLEEP_TIME);
-		  }catch(InterruptedException e)
-		  {
-			  
-		  }
-	  }
-	  }catch(Exception e)
-	  {
-		  System.out.println("error " + e.getMessage());
-	  }
+	  
+	  System.out.println(new String("vkontakte.com").matches("^.*(\\.)?vkontakte\\.[a-zA-Z]*$"));
+//	  try{
+//	  if(args.length>1){
+//		  SLEEP_TIME = Integer.valueOf(args[1]);
+//		  MAX_TIMES = Long.valueOf(args[0]);
+//	  }
+//	  for(long i=0;i<MAX_TIMES;++i) 
+//	  {
+//		  new MyThread().start();
+//		  try{
+//		  Thread.sleep(SLEEP_TIME);
+//		  }catch(InterruptedException e)
+//		  {
+//			  
+//		  }
+//	  }
+//	  }catch(Exception e)
+//	  {
+//		  System.out.println("error " + e.getMessage());
+//	  }
   }
 }
