@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+		The Example JRadius Configuration File.
+		For more information, see http://jradius.net/
+-->
+
+<jradius-config debug="true">
+
+	<!-- 
+		General Configurations
+		
+		debug: set to true to get extra debuggin messages
+		timeout: how long to wait for packets, 0 indicated indefinately
+	-->
+    
+	<debug>true</debug>
+	<timeout>0</timeout>
+
+    
+	<!-- 
+		Loading a JRadius Dictionary
+	-->
+
+	<dictionary name="jradius-dictionary">
+		<description>RADIUS Dictionary</description>
+		<class>net.jradius.dictionary.AttributeDictionaryImpl</class>
+	</dictionary>
+
+	
+	<!-- 
+		Configuring Packet Handlers
+
+		Handlers can be defined in two ways. First, they can be
+		fully defined within the context of this file, as shown
+		below in the <packet-handlers>...</packet-handlers>
+		configuration block.
+
+		Alternatively, and preferably, handlers can be chained
+		together using Apache Chains and external configuration
+		files. With the <chain-catalog/> configuraiton below, we
+		load the exmaple FreeRADIUS packet handler chains.
+	-->
+    
+	<packet-handlers>
+		<packet-handler name="LocalUsers">
+			<description>Generic FreeRADIUS Local Users Handler</description>
+			<class>net.jradius.example.LocalUsersHandler</class>
+			<users>
+				<user username="test" password="test">
+				      Reply-Message = Hello test user!
+				      Session-Timeout = 3600
+				      Idle-Timeout = 300
+				      User-Name = test
+				</user>
+			</users>
+		</packet-handler>
+	</packet-handlers>
+
+
+	<!-- 
+		Loading Packet Handler Chains
+	--> 
+
+	<!--  <chain-catalog name="net/jradius/handler/catalog.xml"/> -->
+	<chain-catalog name="net/jradius/example/catalog.xml"/>
+ 
+ 
+	<!-- 
+		Configuring the JRadius Listeners
+	--> 
+	
+	<listeners>
+
+		<listener name="FreeRadiusListener">
+			<description>FreeRADIUS rlm_jradius module listener (TCP)</description>
+            
+	    		<!-- The class must be a subclass of
+			net.jradius.server.Listener.  The listener object
+			listens for packets and stores them in a request
+			queue.  -->
+                 
+			<class>net.jradius.freeradius.FreeRadiusListener</class>
+            
+			<!-- A processor object fetches packets from the
+			request queue and processes them. The threads
+			element determines the number of objects that are
+			instantiated. The processor must be a subclass of
+			net.jradius.server.Processor -->
+                 
+			<processor-class>net.jradius.freeradius.FreeRadiusProcessor</processor-class>
+			<processor-threads>4</processor-threads>
+            
+			<!-- If the processor's process method calls the
+			runPackethandlers method, the packet handlers
+			referenced below are called, in the order specified
+			(more than one packet handler can be defined). -->
+                 
+			<packet-handler type="authorize" handler="LocalUsers"/>
+			<packet-handler type="post_auth" handler="LocalUsers"/>
+            
+			<packet-handler catalog="example"/>
+			<event-handler handler="event-handler"/>
+            
+			<!-- key/value pairs that are stored as a Map in the
+			listener's configuration -->
+            
+			<property><name>port</name><value>1814</value></property>
+			<property><name>backlog</name><value>1024</value></property>
+			<property name="keepAlive" value="true" />
+		</listener>
+
+        <listener name="OTPProxyListener">
+			<description>JRadius OTP Proxy Listener</description>
+			<class>net.jradius.webservice.WebServiceListener</class>
+			<processor-class>net.jradius.webservice.OTPProxyProcessor</processor-class>
+			<processor-threads>2</processor-threads>
+			<property name="port" value="1810"/>
+			<property name="backlog" value="1024"/>
+			<property name="useSSL" value="false"/>
+			<property name="keepAlive" value="false"/>
+         </listener>
+
+		<listener name="GenericWebSerices">
+			<description>JRadius WebServices Listener</description>
+			<class>net.jradius.webservice.WebServiceListener</class>
+			<processor-class>net.jradius.webservice.WebServiceProcessor</processor-class>
+			<processor-threads>2</processor-threads>
+			<property name="port" value="1812"/>
+			<property name="backlog" value="1024"/>
+			<property name="useSSL" value="false"/>
+			<packet-handler name="SSOProxy">
+				<description>SSO Proxy Redirector</description>
+				<class>net.jradius.webservice.SSOProxyService</class>
+			</packet-handler>
+		</listener>
+
+	</listeners>
+
+	<realm-manager realm-factory="net.jradius.realm.StaticRealms">
+		<realm name="coova.org" server="localhost" sharedSecret="coova-anonymous" authPort="1812" acctPort="1813"/>
+	</realm-manager>
+    
+	<!-- 
+		Configuring the JRadiusSession Management Classes
+	--> 
+
+	<session-manager key-provider="net.jradius.session.RadiusSessionKeyProvider"
+			 session-factory="net.jradius.session.RadiusSessionFactory"/>
+
+</jradius-config>
