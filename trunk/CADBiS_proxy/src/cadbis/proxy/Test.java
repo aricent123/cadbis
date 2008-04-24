@@ -1,44 +1,13 @@
 package cadbis.proxy;
 
-class Test {
-	private static long MAX_TIMES = 9999;
-	private static int SLEEP_TIME = 10;
-	
-  private static class MyThread extends Thread {
-    public void run()
-    {
-    	try{
-    		sleep(SLEEP_TIME);
-    	}
-    	catch(InterruptedException e)
-    	{
-    		
-    	}
-    }
-  }
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+
+class Test {
+  protected static final Logger logger = LoggerFactory.getLogger("TestLogger");
   public static void main (String[] args)
   {
-	  
-	  System.out.println(new String("vkontakte.com").matches("^.*(\\.)?vkontakte\\.[a-zA-Z]*$"));
-//	  try{
-//	  if(args.length>1){
-//		  SLEEP_TIME = Integer.valueOf(args[1]);
-//		  MAX_TIMES = Long.valueOf(args[0]);
-//	  }
-//	  for(long i=0;i<MAX_TIMES;++i) 
-//	  {
-//		  new MyThread().start();
-//		  try{
-//		  Thread.sleep(SLEEP_TIME);
-//		  }catch(InterruptedException e)
-//		  {
-//			  
-//		  }
-//	  }
-//	  }catch(Exception e)
-//	  {
-//		  System.out.println("error " + e.getMessage());
-//	  }
+	 logger.info("test"); 
   }
 }
