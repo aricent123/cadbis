@@ -1,5 +1,6 @@
 package cadbis.proxy;
 
+import java.io.IOException;
 import java.net.*;
 
 import org.slf4j.Logger;
@@ -23,7 +24,11 @@ public void run(String bindhost, int bindport, String fwdhost, int fwdport,long 
 		 {
 			 logger.error("Unknown host: " + e.getMessage());
 		 }		 
-		
+		 catch(IOException e)
+		 {
+			 logger.error("Binding to "+bindhost+":"+bindport+" error: "+e.getMessage());
+			 return;
+		 }
 		 logger.info("listening to " + String.valueOf(bindport)+"...");
 		while(true) 
 		{			
