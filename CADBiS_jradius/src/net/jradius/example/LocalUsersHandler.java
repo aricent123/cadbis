@@ -225,6 +225,8 @@ public class LocalUsersHandler extends PacketHandlerBase
     	        RadiusLog.info("Ignoring unknown username: " + username);
     	        return false;
             }
+    	    
+    	    
 
     	    RadiusLog.info("switch("+type+"){"+JRadiusServer.JRADIUS_authorize+","+JRadiusServer.JRADIUS_post_auth+"}");
             switch (type)
