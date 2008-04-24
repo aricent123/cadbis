@@ -25,13 +25,13 @@
 		  		    username="monitoring"
 		  		       nasid="monitoring"
 		  		replyMessage="Monitoring request acknowledged"/>
-    <!--tlstunnel-init			name="authorize-tunnel-init"
-		  		 description="Initialize Possible Tunnel Session"/-->
+    <tlstunnel-init			name="authorize-tunnel-init"
+		  		 description="Initialize Possible Tunnel Session"/>
     <init-session			name="authorize-init-session"
 		  		 description="Initialize The Radius Session"/>
-    <!--tlstunnel-auth			name="authorize-tunnel-auth"
+    <tlstunnel-auth			name="authorize-tunnel-auth"
 				 description="Handle Authorization for Terminated Tunnels"
-				anonUserName="anonymous"/-->
+				anonUserName="anonymous"/>
 	<otp-proxy-auth			name="authorize-otp-proxy-auth"
 				 description="OTP Proxy Authentication"/>
   </chain>
@@ -52,8 +52,8 @@
   </chain>
 
   <chain  				name="preacct">
-    <!--tlstunnel-init			name="authorize-tunnel-init"
-		  		 description="Initialize Possible Tunnel Session"/-->
+    <tlstunnel-init			name="authorize-tunnel-init"
+		  		 description="Initialize Possible Tunnel Session"/>
     <init-session			name="preacct-init-session"
 				 description="Initialize The Radius Session"/>
     <check-standard			name="check-irap-standard"
@@ -61,8 +61,8 @@
 	 		        standardName="net.jradius.standard.IRAPStandard"/>
     <class-preacct			name="preacct-class"
 		  		 description="Accounting Class Attribute Handler"/>
-    <!--tlstunnel-preacct			name="preacct-tunnel-pre-acct"
-   				 description="Handle Pre-Accounting for Terminated Tunnels"/-->
+    <tlstunnel-preacct			name="preacct-tunnel-pre-acct"
+   				 description="Handle Pre-Accounting for Terminated Tunnels"/>
   </chain>
 
   <chain    				name="start_accounting">

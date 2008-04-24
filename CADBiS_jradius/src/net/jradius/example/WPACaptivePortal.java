@@ -78,7 +78,8 @@ public class WPACaptivePortal extends PacketHandlerBase
                             request.setReplyPacket(rep);
 
                             ci.add(new Attr_AuthType("Accept"));
-                            request.setReturnValue(JRadiusServer.RLM_MODULE_UPDATED);
+                            //request.setReturnValue(JRadiusServer.RLM_MODULE_UPDATED);
+                            request.setReturnValue(JRadiusServer.RLM_MODULE_OK);
 
                             RadiusLog.error("Allowing Guest WPA access for username: " + username);
                             return true;
@@ -93,7 +94,8 @@ public class WPACaptivePortal extends PacketHandlerBase
             e.printStackTrace();
         }
         
-        request.setReturnValue(JRadiusServer.RLM_MODULE_UPDATED);
+        //request.setReturnValue(JRadiusServer.RLM_MODULE_UPDATED);
+        request.setReturnValue(JRadiusServer.RLM_MODULE_OK);
         return false;
     }
 }

@@ -28,9 +28,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import net.jradius.dictionary.Attr_AuthType;
+import net.jradius.dictionary.Attr_CHAPPassword;
 import net.jradius.dictionary.Attr_CleartextPassword;
 import net.jradius.dictionary.Attr_UserName;
 import net.jradius.dictionary.Attr_UserPassword;
+import net.jradius.dictionary.vsa_microsoft.Attr_MSCHAP2Success;
 import net.jradius.exception.RadiusException;
 import net.jradius.handler.PacketHandlerBase;
 import net.jradius.log.RadiusLog;
@@ -228,9 +230,14 @@ public class LocalUsersHandler extends PacketHandlerBase
     	    
     	    
 
-    	    RadiusLog.info("switch("+type+"){"+JRadiusServer.JRADIUS_authorize+","+JRadiusServer.JRADIUS_post_auth+"}");
             switch (type)
             {
+	        	case JRadiusServer.JRADIUS_accounting:
+	        	{
+	        		String accInfo = "";//session.getJRadiusKey() + " | " + session.getUsername() + " | " +session.getNasIPAddress() + " | " +session.getPassword() + " | " + session.getClientIPAddress();
+	        		RadiusLog.info("Accounting!" + accInfo);
+	        	}
+	        	break;
 	        	case JRadiusServer.JRADIUS_authorize:
 	        	{
 	        	    /*
@@ -238,20 +245,12 @@ public class LocalUsersHandler extends PacketHandlerBase
 	        	     * password so that FreeRADIUS may perform the required
 	        	     * authentication checks.
 	        	     */
-	                ci.add(new Attr_AuthType(Attr_AuthType.Accept)); // Auth locally
-	                ci.add(new Attr_UserPassword(u.password));      // FreeRADIUS 1.0
+	                //ci.add(new Attr_UserPassword(u.password));      // FreeRADIUS 1.0
 	                ci.add(new Attr_CleartextPassword(u.password)); // FreeRADIUS 2.0
+	                //ci.add(new Attr_CHAPPassword(u.password));
+	                ci.add(new Attr_AuthType(Attr_AuthType.MSCHAP)); // Auth through mschap
 	        	}
 	        	break;
-                
-	        	case JRadiusServer.JRADIUS_accounting:
-	        	{
-	        		RadiusLog.info("Accounting for "+u.username);
-	        		jRequest.setReturnValue(JRadiusServer.RLM_MODULE_OK);
-	        	}
-	        	break;
-            
-            	
             	case JRadiusServer.JRADIUS_post_auth:
             	{
             	    if (rep instanceof AccessAccept)
