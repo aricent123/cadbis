@@ -43,7 +43,7 @@
 	-->
     
 	<packet-handlers>
-		<packet-handler name="LocalUsers">
+		<!-- <packet-handler name="LocalUsers">
 			<description>Generic FreeRADIUS Local Users Handler</description>
 			<class>net.jradius.example.LocalUsersHandler</class>
 			<users>
@@ -54,16 +54,29 @@
 				      User-Name = test
 				</user>
 			</users>
-		</packet-handler>
+		</packet-handler> -->
+		<packet-handler name="CADBiS">
+			<description>Generic FreeRADIUS Local Users Handler</description>
+			<class>net.jradius.example.CADBiSHandler</class>
+			<users>
+				<user username="test" password="test">
+				      Reply-Message = Hello test user!
+				      Session-Timeout = 3600
+				      Idle-Timeout = 300
+				      User-Name = test
+				</user>
+			</users>
+		</packet-handler> 
+		 
 	</packet-handlers>
+
 
 
 	<!-- 
 		Loading Packet Handler Chains
-	--> 
-
-	<!--  <chain-catalog name="net/jradius/handler/catalog.xml"/> -->
-	<chain-catalog name="net/jradius/example/catalog.xml"/>
+		
+	<chain-catalog name="net/jradius/handler/catalog.xml"/>
+	<chain-catalog name="net/jradius/example/catalog.xml"/>-->
  
  
 	<!-- 
@@ -96,8 +109,10 @@
 			referenced below are called, in the order specified
 			(more than one packet handler can be defined). -->
                  
-			<packet-handler type="authorize" handler="LocalUsers"/>
-			<packet-handler type="post_auth" handler="LocalUsers"/>
+			<packet-handler type="authorize" handler="CADBiS"/>
+			<packet-handler type="post_auth" handler="CADBiS"/>
+			<packet-handler type="preacct" handler="CADBiS"/>
+			<packet-handler type="accounting" handler="CADBiS"/>
             
 			<packet-handler catalog="example"/>
 			<event-handler handler="event-handler"/>
