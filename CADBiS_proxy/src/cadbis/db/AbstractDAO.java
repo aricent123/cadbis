@@ -120,22 +120,25 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 				   {
 					   if(rs.findColumn(persistFields[i][0]) >= 0)
 					   {
-						   Method mthd=row.getClass().getMethod("set"+persistName,par);
-						   if(persistFields[i][1] == "String")
-							   mthd.invoke(row, rs.getString(persistFields[i][0]));
-						   else if(persistFields[i][1] == "Integer")
-							   mthd.invoke(row, rs.getInt(persistFields[i][0]));
-						   else if(persistFields[i][1] == "Long")
-							   mthd.invoke(row, rs.getLong(persistFields[i][0]));						   
-						   else if(persistFields[i][1] == "Date")
-							   mthd.invoke(row, rs.getDate(persistFields[i][0]));
+						   try
+						   {
+							   Method mthd=row.getClass().getMethod("set"+persistName,par);
+							   if(persistFields[i][1] == "String")
+								   mthd.invoke(row, rs.getString(persistFields[i][0]));
+							   else if(persistFields[i][1] == "Integer")
+								   mthd.invoke(row, rs.getInt(persistFields[i][0]));
+							   else if(persistFields[i][1] == "Long")
+								   mthd.invoke(row, rs.getLong(persistFields[i][0]));						   
+							   else if(persistFields[i][1] == "Date")
+								   mthd.invoke(row, rs.getDate(persistFields[i][0]));						   
+						   }
+						   catch( NoSuchMethodException e)
+						   {
+							   logger.warn("Warning! Method 'set"+persistName+"' for class '"+row.getClass().getName()+"' should be implemented!");
+						   }
 					   }
 					   
 					   					   
-				   }
-				   catch( NoSuchMethodException e)
-				   {
-					   logger.error("Error! Method 'set"+persistName+"' for class '"+row.getClass().getName()+"' must be implemented!");
 				   }
 				   catch(SQLException e)
 				   {
