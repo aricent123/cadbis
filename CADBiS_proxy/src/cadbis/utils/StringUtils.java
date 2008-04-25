@@ -1,4 +1,4 @@
-package cadbis.proxy.utils;
+package cadbis.utils;
 
 
 import java.nio.ByteBuffer;

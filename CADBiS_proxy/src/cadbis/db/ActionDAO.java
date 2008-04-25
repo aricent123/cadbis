@@ -1,6 +1,6 @@
-package cadbis.proxy.db;
+package cadbis.db;
 
-import cadbis.proxy.bl.Action;
+import cadbis.bl.Action;
 
 public class ActionDAO extends AbstractDAO<Action> {
 

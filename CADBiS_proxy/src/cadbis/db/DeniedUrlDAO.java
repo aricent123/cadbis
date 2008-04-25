@@ -1,6 +1,6 @@
-package cadbis.proxy.db;
+package cadbis.db;
 
-import cadbis.proxy.bl.UrlDenied;
+import cadbis.bl.UrlDenied;
 
 public class DeniedUrlDAO extends AbstractDAO<UrlDenied> {
 

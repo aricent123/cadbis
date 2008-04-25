@@ -1,4 +1,4 @@
-package cadbis.proxy.bl;
+package cadbis.bl;
 
 public class User implements BusinessObject{
 	private String user;

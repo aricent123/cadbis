@@ -1,6 +1,6 @@
-package cadbis.proxy.db;
+package cadbis.db;
 
-import cadbis.proxy.bl.Protocol;
+import cadbis.bl.Protocol;
 
 public class ProtocolDAO extends AbstractDAO<Protocol> {
 

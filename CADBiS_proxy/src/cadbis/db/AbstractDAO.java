@@ -1,4 +1,4 @@
-package cadbis.proxy.db;
+package cadbis.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import java.lang.reflect.ParameterizedType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cadbis.proxy.bl.BusinessObject;
+import cadbis.bl.BusinessObject;
 
 
 public abstract class AbstractDAO<objT extends BusinessObject> {

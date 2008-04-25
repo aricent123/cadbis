@@ -8,11 +8,11 @@ import java.util.List;
 
 
 import cadbis.CADBiSDaemon;
-import cadbis.proxy.bl.Action;
-import cadbis.proxy.bl.CollectedData;
-import cadbis.proxy.bl.UrlDenied;
-import cadbis.proxy.db.ActionDAO;
-import cadbis.proxy.db.DeniedUrlDAO;
+import cadbis.bl.Action;
+import cadbis.bl.CollectedData;
+import cadbis.bl.UrlDenied;
+import cadbis.db.ActionDAO;
+import cadbis.db.DeniedUrlDAO;
 
 public class Collector extends CADBiSDaemon{
 	private static Collector instance = null;

@@ -3,7 +3,7 @@ package cadbis.proxy;
 import java.io.IOException;
 
 import cadbis.CADBiSDaemon;
-import cadbis.proxy.db.DBConnection;
+import cadbis.db.DBConnection;
 
 public class Reconfigurer extends CADBiSDaemon{	
 	private static Reconfigurer instance = null;
