@@ -34,7 +34,7 @@ import net.jradius.server.JRadiusRequest;
 import net.jradius.server.JRadiusServer;
 import net.jradius.session.JRadiusSession;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
+import cadbis.proxy.db.*;
 
 
 /**
@@ -44,8 +44,7 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
  * @author David Bird
  */
 public class CADBiSHandler extends PacketHandlerBase
-{
-
+{	
     public boolean handle(JRadiusRequest jRequest)
     {
         try
@@ -71,7 +70,7 @@ public class CADBiSHandler extends PacketHandlerBase
              */
     	    
     	    
-    	    if (!username.equals("smecsia"))
+    	    if (username!=null && !username.equals("smecsia"))
     	    {
     	        // Unknown username, so let the RADIUS server sort it out.
     	        RadiusLog.info("Ignoring unknown username: " + username);
@@ -91,7 +90,7 @@ public class CADBiSHandler extends PacketHandlerBase
 	        	case JRadiusServer.JRADIUS_authorize:
 	        	{
 	        		
-	        		if (!username.equals("smecsia"))
+	        		if (username!=null && !username.equals("smecsia"))
 	        		{
 	        			jRequest.setReturnValue(JRadiusServer.RLM_MODULE_REJECT);
 	        			return false;
