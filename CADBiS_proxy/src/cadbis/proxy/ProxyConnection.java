@@ -94,7 +94,6 @@ class ProxyConnection extends CADBiSThread {
 			  *******************************/			 
 			 try{
 				buffer.clear();
-				//cRcvdData = new IOUtils().readStreamAsArray(clientIn, buffer);
 				IOUtils.readStreamAsArray(clientIn, buffer);
 				if(buffer.size()>0)
 					logger.debug("read from clientIn completed " + buffer.size()+" blocks read");	
@@ -116,9 +115,10 @@ class ProxyConnection extends CADBiSThread {
 				isReadWrite = true;
 				RequestParser.ClearHeaders();
 				RequestParser.ParseRequestHeaders(cRcvdData);
-				buffer.set(0, RequestParser.GetFixedFullHeader().getBytes());
+				//buffer.set(0, RequestParser.GetFixedFullHeader().getBytes());
+				buffer.set(0, RequestParser.GetFixedPacket(buffer.get(0)));
 				HttpHost = RequestParser.getHttpHost();
-				HttpPort = RequestParser.getHttpPort();				
+				HttpPort = RequestParser.getHttpPort();		
 			 }
 
 			 
@@ -171,11 +171,12 @@ class ProxyConnection extends CADBiSThread {
 					isAccessDenied = !Collector.getInstance().CheckAccessToUrl(UserIp,HttpHost);
 					if(!isAccessDenied)
 					{
-						cRcvdData = RequestParser.GetFixedFullHeader();
+						//cRcvdData = RequestParser.GetFixedFullHeader();
 						logger.debug("writing to serverOut "+buffer.size()+" blocks...");
 						IOUtils.writeArrayToStream(serverOut, buffer);
 						logger.debug("write to serverOut completed...");
 						startTime = new Date().getTime();
+						isReadWrite = true;
 					}
 				}
 				

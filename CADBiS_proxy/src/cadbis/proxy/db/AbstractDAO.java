@@ -97,7 +97,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		try
 		{
 		   rs = getResultSet(query);
-		   while (rs.next ())
+		   while (rs!=null && rs.next ())
 		   {
 			   objT row = null;
 			   try
@@ -203,8 +203,11 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		try
 		{
 		   rs = getResultSet(query);
-		   rs.next ();
-		   count = rs.getInt (key);
+		   if(rs!=null)
+		   {
+			   rs.next ();
+			   count = rs.getInt (key);
+		   }
 		}
 		catch(SQLException e)
 		{
@@ -234,7 +237,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		try
 		{
 		   rs = getResultSet(query);
-		   if(rs.next ())
+		   if(rs!=null && rs.next ())
 			   value = rs.getObject(key);
 		}
 		catch(SQLException e)
@@ -263,8 +266,10 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		try
 		{
 		   rs = getResultSet("SELECT count(1) as count FROM " + tableName);
+		   if(rs!=null){
 		   rs.next ();
 		   count = rs.getInt ("count");
+		   }
 		}
 		catch(SQLException e)
 		{
