@@ -18,7 +18,7 @@
  *
  */
 
-package net.jradius.example;
+package cadbis.jradius;
 
 import net.jradius.dictionary.Attr_AuthType;
 import net.jradius.dictionary.Attr_CleartextPassword;

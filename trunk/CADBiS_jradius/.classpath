@@ -21,6 +21,6 @@
 	<classpathentry kind="lib" path="lib/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-api-1.0.4.jar"/>
 	<classpathentry kind="lib" path="lib/spring-core-2.0-m4.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/CADBiS_proxy"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/CADBiS_proxy"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

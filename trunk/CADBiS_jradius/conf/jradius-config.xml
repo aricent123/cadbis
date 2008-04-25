@@ -57,7 +57,7 @@
 		</packet-handler> -->
 		<packet-handler name="CADBiS">
 			<description>Generic FreeRADIUS Local Users Handler</description>
-			<class>net.jradius.example.CADBiSHandler</class>
+			<class>cadbis.jradius.CADBiSHandler</class>
 			<users>
 				<user username="test" password="test">
 				      Reply-Message = Hello test user!
