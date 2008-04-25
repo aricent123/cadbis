@@ -14,8 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cadbis.CADBiSThread;
-import cadbis.proxy.utils.IOUtils;
-import cadbis.proxy.utils.StringUtils;
+import cadbis.utils.IOUtils;
+import cadbis.utils.StringUtils;
 
 
 

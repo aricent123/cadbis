@@ -1,4 +1,4 @@
-package cadbis.proxy.db;
+package cadbis.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import cadbis.proxy.bl.UrlLogProtocol;
+import cadbis.bl.UrlLogProtocol;
 
 public class UrlLogProtocolDAO extends AbstractDAO<UrlLogProtocol> {
 

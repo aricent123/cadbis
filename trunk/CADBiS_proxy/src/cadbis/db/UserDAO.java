@@ -1,6 +1,6 @@
-package cadbis.proxy.db;
+package cadbis.db;
 
-import cadbis.proxy.bl.User;
+import cadbis.bl.User;
 
 public class UserDAO extends AbstractDAO<User> {
 

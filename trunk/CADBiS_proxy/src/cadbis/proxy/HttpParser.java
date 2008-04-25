@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import cadbis.proxy.utils.StringUtils;
+import cadbis.utils.StringUtils;
 
 public class HttpParser {
 	private HashMap<Integer, String> Headers;

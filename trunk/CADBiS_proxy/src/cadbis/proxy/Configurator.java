@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cadbis.CADBiSThread;
-import cadbis.proxy.utils.IOUtils;
+import cadbis.utils.IOUtils;
 
 public class Configurator {
 	private final String FILE_PROPERTIES = "cadbis_proxy.properties";

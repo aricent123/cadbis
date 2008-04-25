@@ -1,4 +1,4 @@
-package cadbis.proxy.db;
+package cadbis.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

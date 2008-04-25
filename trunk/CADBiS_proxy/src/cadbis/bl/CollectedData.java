@@ -1,4 +1,4 @@
-package cadbis.proxy.bl;
+package cadbis.bl;
 
 import java.util.Date;
 

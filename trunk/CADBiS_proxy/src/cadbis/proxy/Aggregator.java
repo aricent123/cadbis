@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import cadbis.CADBiSDaemon;
-import cadbis.proxy.bl.Protocol;
-import cadbis.proxy.bl.UrlLogProtocol;
-import cadbis.proxy.db.AbstractDAO;
-import cadbis.proxy.db.ProtocolDAO;
-import cadbis.proxy.db.UrlLogProtocolDAO;
-import cadbis.proxy.utils.StringUtils;
+import cadbis.bl.Protocol;
+import cadbis.bl.UrlLogProtocol;
+import cadbis.db.AbstractDAO;
+import cadbis.db.ProtocolDAO;
+import cadbis.db.UrlLogProtocolDAO;
+import cadbis.utils.StringUtils;
 
 public class Aggregator extends CADBiSDaemon {
 	private static Aggregator instance = null;

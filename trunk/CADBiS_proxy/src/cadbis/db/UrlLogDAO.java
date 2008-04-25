@@ -1,6 +1,6 @@
-package cadbis.proxy.db;
+package cadbis.db;
 
-import cadbis.proxy.bl.UrlLog;
+import cadbis.bl.UrlLog;
 
 public class UrlLogDAO extends AbstractDAO<UrlLog> {
 
