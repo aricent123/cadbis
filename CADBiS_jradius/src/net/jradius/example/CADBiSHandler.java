@@ -34,7 +34,7 @@ import net.jradius.server.JRadiusRequest;
 import net.jradius.server.JRadiusServer;
 import net.jradius.session.JRadiusSession;
 
-import cadbis.proxy.db.*;
+import cadbis.db.*;
 
 
 /**
