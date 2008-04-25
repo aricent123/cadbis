@@ -3,6 +3,7 @@
 	<name>CADBiS_jradius</name>
 	<comment></comment>
 	<projects>
+		<project>CADBiS_proxy</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
