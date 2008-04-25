@@ -5,6 +5,9 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+import cadbis.proxy.utils.StringUtils;
+
 public class HttpParser {
 	private HashMap<Integer, String> Headers;
 	private String RequestString;
@@ -98,9 +101,9 @@ public class HttpParser {
 	
 	public String GetFixedFullHeader()
 	{
-		if(!HttpHost.equals("") && !RequestString.matches("^" + RequestMethod + " https?:\\/\\/.+"))
+		if(!HttpHost.equals("") && !RequestString.matches("^(?s)" + RequestMethod + " https?:\\/\\/.+"))
 		{
-			String Protocol = RequestString.matches(".+https:\\/\\/.+")?"https://":"http://";
+			String Protocol = RequestString.matches("(?s).+https:\\/\\/.+")?"https://":"http://";
 			String fixedReq = FullHeader.replace(RequestMethod + " ", RequestMethod + " "+Protocol + HttpHost); 
 			logger.debug("Request String is wrong, fixing... Fixed value='"+fixedReq+"'");
 			return fixedReq;
@@ -108,4 +111,19 @@ public class HttpParser {
 		logger.debug("Request String is OK");
 		return FullHeader;
 	}
+	
+	public byte[] GetFixedPacket(byte[] packet)
+	{
+		String PacketString = new String(StringUtils.getChars(packet));
+		if(!HttpHost.equals("") && !PacketString.matches("^(?s)" + RequestMethod + " https?:\\/\\/.+"))
+		{
+			String Protocol = RequestString.matches("(?s).+https:\\/\\/.+")?"https://":"http://";
+			String fixedPacket = PacketString.replace(RequestMethod + " ", RequestMethod + " "+Protocol + HttpHost); 
+			logger.debug("Request String is wrong, value='"+PacketString+"'");
+			logger.debug("Request String is wrong, fixing... Fixed value='"+fixedPacket+"'");
+			return fixedPacket.getBytes();
+		}
+		logger.debug("Request String is OK");
+		return packet;
+	}	
 }
