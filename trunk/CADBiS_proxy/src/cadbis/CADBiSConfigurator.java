@@ -27,6 +27,7 @@ public abstract class CADBiSConfigurator {
 	
 	public void reloadData() throws IOException 
 	{
+		properties = new Properties();
 		properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(PathToFile));
 	}
 	
