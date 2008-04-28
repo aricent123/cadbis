@@ -114,8 +114,8 @@
 			<packet-handler type="preacct" handler="CADBiS"/>
 			<packet-handler type="accounting" handler="CADBiS"/>
             
-			<packet-handler catalog="example"/>
-			<event-handler handler="event-handler"/>
+			<!-- <packet-handler catalog="example"/>
+			<event-handler handler="event-handler"/> -->
             
 			<!-- key/value pairs that are stored as a Map in the
 			listener's configuration -->
@@ -124,7 +124,7 @@
 			<property><name>backlog</name><value>1024</value></property>
 			<property name="keepAlive" value="true" />
 		</listener>
-
+<!-- 
         <listener name="OTPProxyListener">
 			<description>JRadius OTP Proxy Listener</description>
 			<class>net.jradius.webservice.WebServiceListener</class>
@@ -149,13 +149,13 @@
 				<class>net.jradius.webservice.SSOProxyService</class>
 			</packet-handler>
 		</listener>
-
+-->
 	</listeners>
-
+<!-- 
 	<realm-manager realm-factory="net.jradius.realm.StaticRealms">
 		<realm name="coova.org" server="localhost" sharedSecret="coova-anonymous" authPort="1812" acctPort="1813"/>
 	</realm-manager>
-    
+    -->
 	<!-- 
 		Configuring the JRadiusSession Management Classes
 	--> 

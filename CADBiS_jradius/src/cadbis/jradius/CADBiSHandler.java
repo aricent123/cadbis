@@ -20,6 +20,7 @@
 
 package cadbis.jradius;
 
+
 import net.jradius.dictionary.Attr_AuthType;
 import net.jradius.dictionary.Attr_CleartextPassword;
 import net.jradius.dictionary.Attr_UserName;
@@ -32,9 +33,10 @@ import net.jradius.packet.RadiusPacket;
 import net.jradius.packet.attribute.AttributeList;
 import net.jradius.server.JRadiusRequest;
 import net.jradius.server.JRadiusServer;
-import net.jradius.session.JRadiusSession;
 
-import cadbis.db.*;
+import cadbis.CADBiS;
+import cadbis.bl.User;
+import cadbis.db.UserDAO;
 
 
 /**
@@ -45,6 +47,12 @@ import cadbis.db.*;
  */
 public class CADBiSHandler extends PacketHandlerBase
 {	
+	
+	private final static String ACCT_STATUS_START = "Start";
+	private final static String ACCT_STATUS_STOP = "Stop";
+	private final static String ACCT_STATUS_ALIVE = "Alive";
+	
+	
     public boolean handle(JRadiusRequest jRequest)
     {
         try
@@ -57,7 +65,6 @@ public class CADBiSHandler extends PacketHandlerBase
             RadiusPacket req = jRequest.getRequestPacket();
             RadiusPacket rep = jRequest.getReplyPacket();
 
-            JRadiusSession session = jRequest.getSession();
             
             /*
              * Find the username in the request packet
@@ -70,7 +77,7 @@ public class CADBiSHandler extends PacketHandlerBase
              */
     	    
     	    
-    	    if (username!=null && !username.equals("smecsia"))
+    	    if (!(new UserDAO().isUserExists(username)))
     	    {
     	        // Unknown username, so let the RADIUS server sort it out.
     	        RadiusLog.info("Ignoring unknown username: " + username);
@@ -83,24 +90,52 @@ public class CADBiSHandler extends PacketHandlerBase
             {
 	        	case JRadiusServer.JRADIUS_accounting:
 	        	{
-	        		String accInfo = "";//session.getJRadiusKey() + " | " + session.getUsername() + " | " +session.getNasIPAddress() + " | " +session.getPassword() + " | " + session.getClientIPAddress();
-	        		RadiusLog.info("Accounting!" + accInfo);
+	        		String sessionID = req.getAttributes().get("Acct-Session-Id").getValue().toString();
+	        		String statusType = req.getAttributes().get("Acct-Status-Type").getValue().toString();	        		
+	        		String clientIP = req.getAttributes().get("Client-IP-Address").getValue().toString();
+	        		String framedIP = req.getAttributes().get("Framed-IP-Address").getValue().toString();
+	        		String login = req.getAttributes().get("User-Name").getValue().toString();
+	        		// generate unique session id
+	        		if(statusType.equals(ACCT_STATUS_START))
+	        		{
+	        			CADBiS.getInstance().SessionStart(sessionID,login, clientIP, framedIP);
+	        		}
+	        		else
+	        		{
+		        		String sessionTime = req.getAttributes().get("Acct-Session-Time").getValue().toString();
+		        		String outputOctets = req.getAttributes().get("Acct-Output-Octets").getValue().toString();
+		        		String inputOctets = req.getAttributes().get("Acct-Input-Octets").getValue().toString();
+		        		if(statusType.equals(ACCT_STATUS_ALIVE))
+		        		{
+		        			CADBiS.getInstance().SessionAlive(sessionID, login, Long.valueOf(sessionTime), 
+		        									Long.valueOf(outputOctets), Long.valueOf(inputOctets));
+		        		}		        		
+		        		if(statusType.equals(ACCT_STATUS_STOP))
+		        		{
+			        		String terminateCause = req.getAttributes().get("Acct-Terminate-Cause").getValue().toString();
+			        		CADBiS.getInstance().SessionStop(sessionID, login, Long.valueOf(sessionTime), 
+			        								Long.valueOf(outputOctets), Long.valueOf(inputOctets), terminateCause);
+		        		}
+	        		}
 	        	}
 	        	break;
 	        	case JRadiusServer.JRADIUS_authorize:
 	        	{
 	        		
-	        		if (username!=null && !username.equals("smecsia"))
+	        		if (!CADBiS.getInstance().checkAccessNow(username))
 	        		{
 	        			jRequest.setReturnValue(JRadiusServer.RLM_MODULE_REJECT);
 	        			return false;
 	        		}
 	        		else
 	        		{
-		        		String userpwd = "test";
-		                ci.add(new Attr_UserPassword(userpwd));      // FreeRADIUS 1.0
-		                ci.add(new Attr_CleartextPassword(userpwd)); // FreeRADIUS 2.0
-		                ci.add(new Attr_AuthType(Attr_AuthType.MSCHAP)); // Auth through mschap
+	        			User user = new UserDAO().getByLogin(username);
+	        			if(user != null)
+	        			{
+			                ci.add(new Attr_UserPassword(user.getPassword()));      // FreeRADIUS 1.0
+			                ci.add(new Attr_CleartextPassword(user.getPassword())); // FreeRADIUS 2.0
+			                ci.add(new Attr_AuthType(Attr_AuthType.MSCHAP)); // Auth through mschap
+	        			}
 	        		}
 	                
 	        	}
@@ -115,6 +150,7 @@ public class CADBiSHandler extends PacketHandlerBase
             	         * we will the packet with the attributes configured for the user.
             	         */
             	        //rep.addAttributes(u.getAttributeList());
+            	    	//if(req.getAttributes().get("Acct-Status-Type").getValue().equals("Start"));            	    	
             	        RadiusLog.info("Authentication successful for username: " + username);
             	        
             	    }
