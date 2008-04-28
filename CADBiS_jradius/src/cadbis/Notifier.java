@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import cadbis.jradius.JRadiusConfigurator;
+
 public class Notifier extends CADBiSSubprocess {
 	private String message = "";
 	

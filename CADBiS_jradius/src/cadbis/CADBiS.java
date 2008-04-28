@@ -13,6 +13,7 @@ import cadbis.bl.User;
 import cadbis.db.ActionDAO;
 import cadbis.db.PacketDAO;
 import cadbis.db.UserDAO;
+import cadbis.jradius.JRadiusConfigurator;
 
 public class CADBiS extends CADBiSDaemon{
 	

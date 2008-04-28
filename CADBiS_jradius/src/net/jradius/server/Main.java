@@ -30,7 +30,7 @@ import net.jradius.server.config.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 
 import cadbis.CADBiS;
-import cadbis.JRadiusConfigurator;
+import cadbis.jradius.JRadiusConfigurator;
 
 /**
  * Main for JRadius server. Reads a configuration file and starts

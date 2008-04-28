@@ -1,5 +1,7 @@
 package cadbis;
 
+import cadbis.jradius.JRadiusConfigurator;
+
 public class Killer extends CADBiSSubprocess {
 	private Integer nasPort = 0;	
 	public Killer(String login, String framedIP, String clientIP, Integer nasPort) {
