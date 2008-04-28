@@ -26,31 +26,31 @@ public class Protocol implements BusinessObject {
 		return fields;
 	}
 
-	public Object getUnique_id() {
+	public String getUnique_id() {
 		return unique_id;
 	}
 
-	public void setUnique_id(Object unique_id) {
-		this.unique_id = (String)unique_id;
+	public void setUnique_id(String unique_id) {
+		this.unique_id = unique_id;
 	}
 
-	public Object getLength() {
+	public Long getLength() {
 		return length;
 	}
 
-	public void setLength(Object length) {
-		this.length = (Long)length;
+	public void setLength(Long length) {
+		this.length = length;
 	}
 
 	public Object getPid() {
 		return pid;
 	}
 
-	public void setPid(Object pid) {
-		this.pid = (Integer)pid;
+	public void setPid(Integer pid) {
+		this.pid = pid;
 	}
 
-	public Object getData() {
+	public String getData() {
 		return data;
 	}
 	
@@ -61,8 +61,8 @@ public class Protocol implements BusinessObject {
 		this.length += appendLength;
 	}
 
-	public void setData(Object data) {
-		this.data = (String)data;
+	public void setData(String data) {
+		this.data = data;
 	}
 
 

@@ -114,7 +114,8 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 			   for(int i=0;i<persistFields.length;++i)
 			   {
 				   Class[] par=new Class[1];
-				   par[0]= Object.class;
+				   //par[0]= Object.class;
+				   
 				   String persistName = persistFields[i][0].substring(0,1).toUpperCase()+persistFields[i][0].substring(1);
 				   try
 				   {
@@ -122,6 +123,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 					   {
 						   try
 						   {
+							   par[0] = Class.forName("java.lang."+persistFields[i][1]);
 							   Method mthd=row.getClass().getMethod("set"+persistName,par);
 							   if(persistFields[i][1] == "String")
 								   mthd.invoke(row, rs.getString(persistFields[i][0]));
@@ -146,7 +148,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 				   }
 				   catch(Exception e)
 				   {
-					   logger.error("Reflection error!  " + e.getMessage());
+					   logger.error("Reflection error for query '"+query+"'!  " + e.getMessage());
 				   }
 			   }
 			   list.add(row);
@@ -164,6 +166,18 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		return list;
 	}
 
+	/**
+	 * Get single item by custom query
+	 * @param query
+	 * @return T
+	 */
+	public objT getItemByQuery(String query)
+	{
+		List<objT> tmp = getItemsByQuery(query);
+		if(tmp.size()!=1)
+			return null;
+		return tmp.get(0);
+	}
 	
 	/**
 	 * Execute sql query

@@ -42,68 +42,68 @@ public class UrlLogProtocol implements BusinessObject {
 		return fields;
 	}
 
-	public Object getUnique_id() {
+	public String getUnique_id() {
 		return unique_id;
 	}
 
-	public void setUnique_id(Object unique_id) {
-		this.unique_id = (String)unique_id;
+	public void setUnique_id(String unique_id) {
+		this.unique_id = unique_id;
 	}
 
 	public Object getUser() {
 		return user;
 	}
 
-	public void setUser(Object user) {
-		this.user = (String)user;
+	public void setUser(String user) {
+		this.user = user;
 	}
 
-	public Object getUrl() {
+	public String getUrl() {
 		return url;
 	}
 
-	public void setUrl(Object url) {
-		this.url = (String)url;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
-	public Object getLength() {
+	public Long getLength() {
 		return length;
 	}
 
-	public void setLength(Object length) {
-		this.length = (Long)length;
+	public void setLength(Long length) {
+		this.length = length;
 	}
 
-	public Object getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Object date) {
-		this.date = (String)date;
+	public void setDate(String date) {
+		this.date = date;
 	}
 
-	public Object getIp() {
+	public String getIp() {
 		return ip;
 	}
 
-	public void setIp(Object ip) {
-		this.ip = (String)ip;
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 
-	public Object getCount() {
+	public Integer getCount() {
 		return count;
 	}
 
-	public void setCount(Object count) {
-		this.count = (Integer)count;
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 
-	public Object getContent_type() {
+	public String getContent_type() {
 		return content_type;
 	}
 
-	public void setContent_type(Object content_type) {
-		this.content_type = (String)content_type;
+	public void setContent_type(String content_type) {
+		this.content_type = content_type;
 	}
 
 
