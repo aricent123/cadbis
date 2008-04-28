@@ -228,7 +228,7 @@ public class Packet implements BusinessObject{
 	
 	
 	
-	protected boolean checkAccessByLogintTime(String dow, int fromh, int fromm, int toh, int tom)
+	protected boolean checkAccessByLoginTime(String dow, int fromh, int fromm, int toh, int tom)
 	{
 		String nowdow = new SimpleDateFormat("E", new Locale("US")).format(new Date()).substring(0, 2);
 		if(nowdow.equals(dow))
@@ -243,7 +243,7 @@ public class Packet implements BusinessObject{
 	
 	public boolean checkAccessTime() throws WrongAccessTimeException
 	{
-		boolean access = true;
+		boolean access = false;
 		if(login_time != null && !login_time.isEmpty())
 		{
 			String[] periods = login_time.split(",");			
@@ -251,12 +251,12 @@ public class Packet implements BusinessObject{
 				for(int i=0;i<periods.length;++i)
 				{
 					try{			
-						if(checkAccessByLogintTime(
+						if(checkAccessByLoginTime(
 								periods[i].substring(0,2),
 								Integer.parseInt(periods[i].substring(2,4)),
 								Integer.parseInt(periods[i].substring(4,6)),
-								Integer.parseInt(periods[i].substring(8,10)),
-								Integer.parseInt(periods[i].substring(10,12))))
+								Integer.parseInt(periods[i].substring(7,9)),
+								Integer.parseInt(periods[i].substring(9,11))))
 							access=true;
 					}
 					catch(NumberFormatException e)

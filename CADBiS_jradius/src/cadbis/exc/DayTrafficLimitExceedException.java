@@ -1,6 +1,6 @@
 package cadbis.exc;
 
-public class DayTrafficLimitExceedException extends Exception {
+public class DayTrafficLimitExceedException extends CADBiSException {
 
 	/**
 	 * 

@@ -14,20 +14,41 @@ import cadbis.db.ActionDAO;
 import cadbis.db.PacketDAO;
 import cadbis.db.UserDAO;
 
-public class CADBiS {
+public class CADBiS extends CADBiSDaemon{
 	
-	protected HashMap<String, String> activeSessions = new HashMap<String, String>();
+	protected HashMap<String, String> activeSessions = null;
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	private static CADBiS instance = null;
 	private CADBiS()
 	{
-		
+		super("CADBiS",Integer.valueOf(JRadiusConfigurator.getInstance().getProperty("cadbis_daemon_period")));
+		createObjects();
 	}
 	
 	public static CADBiS getInstance(){
 		if(instance == null)
 			instance = new CADBiS();
 		return instance;
+	}
+	
+	private void createObjects()
+	{
+		activeSessions = new HashMap<String, String>();
+	}
+	
+	@Override
+	protected void daemonize() {
+		logger.info("Waking up, killing inactive users...");
+		KillInactiveUsers();
+	}		
+	
+	protected void KillInactiveUsers()
+	{
+		String sTout = JRadiusConfigurator.getInstance().getProperty("session_maxinacct_time");
+		if(!sTout.isEmpty()){
+			Long timeout = Long.valueOf(sTout);		
+			new ActionDAO().execSql(String.format("update `actions` set `terminate_cause`='Inactive-Request', `stop_time`=NOW() where `terminate_cause`='Online' and `last_change`< UNIX_TIMESTAMP(NOW()) - %d ",timeout));
+		}
 	}
 	
 	public Long getConnectedCount(User user)
@@ -97,7 +118,7 @@ public class CADBiS {
 		return "";
 	}
 	
-	public void SessionStart(String sessionId, String login, String clientIP, String framedIP)
+	public void SessionStart(String sessionId, String login, String clientIP, String framedIP, Integer nasPort)
 	{
 		String uniqueId = generateUniqueId(sessionId);
 		logger.info("Starting session for "+login+" with uniqueid='"+uniqueId+"', clientIP="+clientIP+", framedIp="+framedIP);
@@ -105,8 +126,8 @@ public class CADBiS {
 			activeSessions.remove(uniqueId);
 		activeSessions.put(sessionId, uniqueId);
 		User user = new UserDAO().getByLogin(login);
-		new ActionDAO().execSql(String.format("insert into `actions`(user,gid,unique_id,start_time,ip,call_from,last_change, terminate_cause)" +
-				"values('%s',%d,'%s',NOW(),'%s','%s',UNIX_TIMESTAMP(NOW()),'Online')",user.getUser(),user.getGid(),uniqueId,framedIP,clientIP));
+		new ActionDAO().execSql(String.format("insert into `actions`(user,gid,id,unique_id,start_time,ip,call_from,last_change, terminate_cause, port)" +
+				"values('%s',%d,'%s','%s',NOW(),'%s','%s',UNIX_TIMESTAMP(NOW()),'Online',%d)",user.getUser(),user.getGid(),sessionId,uniqueId,framedIP,clientIP,nasPort));
 	}
 	
 	public void SessionStop(String sessionId, String login, long sessionTime, long outputOctets, long inputOctets, String terminateCause)
@@ -114,23 +135,24 @@ public class CADBiS {
 		String uniqueId = getUniqueId(sessionId);
 		logger.info("Stopping session for "+login+" with uniqueid='"+uniqueId+"', sessiontime="+sessionTime+", outputOctets="+outputOctets+", inputOctets="+inputOctets+", terminateCause="+terminateCause);
 		if(uniqueId.length()>0)
-		{
-			// closing session
-		}
-		new ActionDAO().execSql(String.format("update `actions` set in_bytes=%d, out_bytes=%d," +
-									"time_on=%d,terminate_cause='%s',stop_time=NOW() where unique_id = '%s'",
-									inputOctets, outputOctets, sessionTime, terminateCause, uniqueId));	
+			new ActionDAO().execSql(String.format("update `actions` set in_bytes=%d, out_bytes=%d," +
+					"time_on=%d,terminate_cause='%s',stop_time=NOW() where unique_id = '%s'",
+					inputOctets, outputOctets, sessionTime, terminateCause, uniqueId));	
 		activeSessions.remove(sessionId);
 	}
 	
-	public void SessionAlive(String sessionId, String login, long sessionTime, long outputOctets, long inputOctets)
+	public void SessionAlive(String sessionId, String login, String framedIP, String clientIP, Integer nasPort, long sessionTime, long outputOctets, long inputOctets)
 	{		
 		String uniqueId = getUniqueId(sessionId);
 		logger.info("Alive session for "+login+" with uniqueid='"+uniqueId+"', sessiontime="+sessionTime+", outputOctets="+outputOctets+", inputOctets="+inputOctets);
 		if(uniqueId.length()>0)
 		{
 			new ActionDAO().execSql(String.format("update `actions` set in_bytes=%d, out_bytes=%d,time_on=%d where unique_id = '%s'",
-					inputOctets, outputOctets, sessionTime, uniqueId));	
+					inputOctets, outputOctets, sessionTime, uniqueId));
+			if(!checkAccessNow(login))
+			{
+				new Killer(login,framedIP, clientIP, nasPort).start();
+			}
 		}
 	}	
 	

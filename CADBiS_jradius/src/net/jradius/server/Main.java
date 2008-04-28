@@ -29,6 +29,9 @@ import net.jradius.server.config.Configuration;
 
 import org.apache.commons.configuration.ConfigurationException;
 
+import cadbis.CADBiS;
+import cadbis.JRadiusConfigurator;
+
 /**
  * Main for JRadius server. Reads a configuration file and starts
  * the JRadius server.
@@ -44,6 +47,18 @@ public final class Main
             showUsage();
             System.exit(1);
         }
+
+        /**
+         * CADBiS daemon run
+         * --->
+         */        
+		if(JRadiusConfigurator.getInstance().getProperty("cadbis_daemon").equals("enabled"))	
+			CADBiS.getInstance().start();        
+        /**
+         * <--- eof CADBiS
+         */
+        
+        
         
         String configFilePath = args[0];
 

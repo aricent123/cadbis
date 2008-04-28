@@ -1,6 +1,6 @@
 package cadbis.exc;
 
-public class WeekTimeLimitExceedException extends Exception {
+public class WeekTimeLimitExceedException extends CADBiSException {
 
 	/**
 	 * 

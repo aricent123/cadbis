@@ -1,6 +1,6 @@
 package cadbis.exc;
 
-public class TotalTimeLimitExceedException extends Exception {
+public class TotalTimeLimitExceedException extends CADBiSException {
 
 	/**
 	 * 

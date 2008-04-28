@@ -95,10 +95,11 @@ public class CADBiSHandler extends PacketHandlerBase
 	        		String clientIP = req.getAttributes().get("Client-IP-Address").getValue().toString();
 	        		String framedIP = req.getAttributes().get("Framed-IP-Address").getValue().toString();
 	        		String login = req.getAttributes().get("User-Name").getValue().toString();
+	        		Integer nasPort = Integer.parseInt(req.getAttributes().get("NAS-Port").getValue().toString());
 	        		// generate unique session id
 	        		if(statusType.equals(ACCT_STATUS_START))
 	        		{
-	        			CADBiS.getInstance().SessionStart(sessionID,login, clientIP, framedIP);
+	        			CADBiS.getInstance().SessionStart(sessionID,login, clientIP, framedIP, nasPort);
 	        		}
 	        		else
 	        		{
@@ -107,7 +108,7 @@ public class CADBiSHandler extends PacketHandlerBase
 		        		String inputOctets = req.getAttributes().get("Acct-Input-Octets").getValue().toString();
 		        		if(statusType.equals(ACCT_STATUS_ALIVE))
 		        		{
-		        			CADBiS.getInstance().SessionAlive(sessionID, login, Long.valueOf(sessionTime), 
+		        			CADBiS.getInstance().SessionAlive(sessionID, login, clientIP, framedIP, nasPort, Long.valueOf(sessionTime), 
 		        									Long.valueOf(outputOctets), Long.valueOf(inputOctets));
 		        		}		        		
 		        		if(statusType.equals(ACCT_STATUS_STOP))

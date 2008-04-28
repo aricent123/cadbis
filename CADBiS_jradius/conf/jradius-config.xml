@@ -58,14 +58,6 @@
 		<packet-handler name="CADBiS">
 			<description>Generic FreeRADIUS Local Users Handler</description>
 			<class>cadbis.jradius.CADBiSHandler</class>
-			<users>
-				<user username="test" password="test">
-				      Reply-Message = Hello test user!
-				      Session-Timeout = 3600
-				      Idle-Timeout = 300
-				      User-Name = test
-				</user>
-			</users>
 		</packet-handler> 
 		 
 	</packet-handlers>

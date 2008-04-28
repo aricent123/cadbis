@@ -1,6 +1,6 @@
 package cadbis.exc;
 
-public class SimultaneousUseExceedException extends Exception {
+public class SimultaneousUseExceedException extends CADBiSException {
 
 	/**
 	 * 

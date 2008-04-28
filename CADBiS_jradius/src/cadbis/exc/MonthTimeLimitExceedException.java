@@ -1,6 +1,6 @@
 package cadbis.exc;
 
-public class MonthTimeLimitExceedException extends Exception {
+public class MonthTimeLimitExceedException extends CADBiSException {
 
 	/**
 	 * 

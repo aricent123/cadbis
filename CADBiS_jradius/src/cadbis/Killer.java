@@ -1,8 +1,8 @@
 package cadbis;
 
 public class Killer extends CADBiSSubprocess {
-	private String nasPort = "";	
-	public Killer(String login, String framedIP, String clientIP, String nasPort) {
+	private Integer nasPort = 0;	
+	public Killer(String login, String framedIP, String clientIP, Integer nasPort) {
 		super(login, framedIP, clientIP);
 		this.nasPort = nasPort;
 	}
@@ -22,7 +22,7 @@ public class Killer extends CADBiSSubprocess {
 			 {
 				 try {
 					 String execStr = JRadiusConfigurator.getInstance().getProperty("kill_program");
-					 execStr = String.format(execStr+" %s %s %s %s", forLogin, mpd_host, clientIP, nasPort);
+					 execStr = String.format(execStr+" %s %s %s %d", forLogin, mpd_host, clientIP, nasPort);
 					 Process p = Runtime.getRuntime().exec(execStr);
 					 p.waitFor();
 					 logger.info("Execute kill program result: " + p.exitValue());
