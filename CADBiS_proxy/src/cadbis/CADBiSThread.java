@@ -6,11 +6,11 @@ import org.slf4j.LoggerFactory;
 public class CADBiSThread extends Thread {
 //	protected static int thrCount = 0;
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
-//	protected static boolean completegc = false;
+	protected static boolean completegc = false;
 	
 	public static void setCompleteGC(boolean value )
 	{
-//		completegc = value;
+		completegc = value;
 	}
 	
 	private void created(){
@@ -30,7 +30,7 @@ public class CADBiSThread extends Thread {
 //	 		thrCount--;
 //		}
 //	 	logger.debug("Thread "+this.getClass().getName()+".complete, total="+thrCount);
-//		if(completegc)
-//			System.gc();	 	
+		if(completegc)
+			System.gc();	 	
 	}
 }
