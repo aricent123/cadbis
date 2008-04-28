@@ -40,60 +40,88 @@ public class Collector extends CADBiSDaemon{
 	
 	@Override
 	protected void daemonize() {
-		logger.info("waking up, flushing info.");				
-		FlushCollected();		
-		logger.debug("refreshing the sessions info.");
+		logger.info("waking up, flushing info...");				
+		FlushCollected();
+		logger.info("info flushed, refreshing sessions...");
 		RefreshInfo();
+		logger.info("sessions refreshed.");		
 	}	
 	
-	
-	
-	public Action getActionByUserIp(String ip)
+	//------------------------------------------------------
+	/**
+	 * Refresh sessions information without synchronization
+	 */
+	private void _refreshSessions()
 	{
-		return actionsOfIps.get(ip.hashCode());
-	}
-	
-	public List<Action> getActiveSessions()
-	{	
-		ActionDAO actionDAO = new ActionDAO();		
-		return actionDAO.getItemsByQuery("select * from actions where terminate_cause='Online'");
-	}	
-	
-	public void RefreshInfo()
-	{
-		synchronized (wLock) 
-		{
-			actions.clear();
-			actionsOfIps.clear();
-			actions = getActiveSessions();
-			if(actions!=null)
-			for(int i=0;i<actions.size();++i){
-			if(actions.get(i)!=null){
-				actionsOfIps.put(actions.get(i).getIp().toString().hashCode(), actions.get(i));
-				DeniedUrlDAO dao = new DeniedUrlDAO();
-				actions.get(i).getDeniedUrls().clear();
-				List<UrlDenied> durls = dao.getItemsByQuery("select * from url_denied where gid="+actions.get(i).getGid());
-				if(durls!=null)
-					for(int j=0;j<durls.size();++j){
-						logger.debug("Read denied urls for '" + actions.get(i).getUser()+"'... " + durls.get(j).getUrl());
-						actions.get(i).getDeniedUrls().add(durls.get(j));
-					}
+		createObjects();
+		actions = getActiveSessions();
+		if(actions!=null)
+		for(int i=0;i<actions.size();++i){
+		if(actions.get(i)!=null){
+			actionsOfIps.put(actions.get(i).getIp().toString().hashCode(), actions.get(i));
+			DeniedUrlDAO dao = new DeniedUrlDAO();
+			actions.get(i).getDeniedUrls().clear();
+			List<UrlDenied> durls = dao.getItemsByQuery("select * from url_denied where gid="+actions.get(i).getGid());
+			if(durls!=null)
+				for(int j=0;j<durls.size();++j){
+					logger.debug("Read denied urls for '" + actions.get(i).getUser()+"'... " + durls.get(j).getUrl());
+					actions.get(i).getDeniedUrls().add(durls.get(j));
 				}
 			}
 		}
 	}
-	
+	//------------------------------------------------------
+	/**
+	 * Get session by user IP
+	 * @return
+	 */	
+	public Action getActionByUserIp(String ip)
+	{
+		return actionsOfIps.get(ip.hashCode());
+	}
+	//------------------------------------------------------
+	/**
+	 * Get all active sessions
+	 * @return
+	 */
+	public List<Action> getActiveSessions()
+	{	
+		return new ActionDAO().getItemsByQuery("select * from actions where terminate_cause='Online'");
+	}	
+	//------------------------------------------------------
+	/**
+	 * Refresh info with synchronization
+	 */
+	public void RefreshInfo()
+	{
+		synchronized (wLock) 
+		{
+			_refreshSessions();
+		}
+	}
+	//------------------------------------------------------
+	/**
+	 * Collect the information about packet
+	 */
 	public void Collect(String userIp, String hostUrl, long rcvdBytes, Date date, String hostIp, String content_type)
 	{
 		synchronized (wLock) {
-			Action action = getActionByUserIp(userIp);
+			if(!actionsOfIps.containsKey(userIp.hashCode()))
+			{
+				logger.info("User of ip='"+userIp+"' not found, refreshing sessions info.");
+				_refreshSessions();		
+			}					
+			Action action = getActionByUserIp(userIp);			
 			if(action!=null){
 				action.getCollectedUrls().add(new CollectedData(hostUrl,rcvdBytes,date, hostIp,content_type));
 				logger.debug("Collecting data... ip="+hostIp+", url="+hostUrl+", bytes="+rcvdBytes);
 			}
 		}
 	}
-	
+	//------------------------------------------------------
+	/**
+	 * Collect the information about packet
+	 */	
 	public boolean CheckAccessToUrl(String userIp, String url)
 	{
 		Action action = getActionByUserIp(userIp);
@@ -107,7 +135,11 @@ public class Collector extends CADBiSDaemon{
 		return true;
 	}
 	
-	
+	/**
+	 * Log the denied access attempt
+	 * @param userIp
+	 * @param url
+	 */
 	public void AddDeniedAccessAttempt(String userIp, String url)
 	{
 		Action action = getActionByUserIp(userIp);
@@ -115,6 +147,9 @@ public class Collector extends CADBiSDaemon{
 		actionDAO.execSql(String.format("insert into url_denied_log(url,unique_id,date) values('%s','%s',NOW())",action.getUnique_id(),url));
 	}
 	
+	/**
+	 * Flush all collected data
+	 */
 	public void FlushCollected()
 	{		
 		synchronized (wLock) {
@@ -137,7 +172,6 @@ public class Collector extends CADBiSDaemon{
 				}
 				actions.get(i).getCollectedUrls().clear();
 			}			
-			actions.clear();
 			createObjects();
 		}
 	}
