@@ -18,24 +18,24 @@ public class UrlDenied implements BusinessObject {
 		return duid;
 	}
 
-	public void setDuid(Object duid) {
-		this.duid = (Integer)duid;
+	public void setDuid(Integer duid) {
+		this.duid = duid;
 	}
 
-	public Object getGid() {
+	public Integer getGid() {
 		return gid;
 	}
 
-	public void setGid(Object gid) {
-		this.gid = (Integer)gid;
+	public void setGid(Integer gid) {
+		this.gid = gid;
 	}
 
-	public Object getUrl() {
+	public String getUrl() {
 		return url;
 	}
 
-	public void setUrl(Object url) {
-		this.url = (String)url;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 }

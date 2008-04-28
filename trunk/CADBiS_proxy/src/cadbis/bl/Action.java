@@ -50,104 +50,104 @@ public class Action implements BusinessObject{
 		return user;
 	}
 
-	public void setUser(Object user) {
-		this.user = (String)user;
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	public Object getId() {
 		return id;
 	}
 
-	public void setId(Object id) {
-		this.id = (String)id;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public Integer getGid() {
 		return gid;
 	}
 
-	public void setGid(Object gid) {
-		this.gid = (Integer)gid;
+	public void setGid(Integer gid) {
+		this.gid = gid;
 	}
 
 	public Object getUnique_id() {
 		return unique_id;
 	}
 
-	public void setUnique_id(Object unique_id) {
-		this.unique_id = (String)unique_id;
+	public void setUnique_id(String unique_id) {
+		this.unique_id = unique_id;
 	}
 
 	public Object getTime_on() {
 		return time_on;
 	}
 
-	public void setTime_on(Object time_on) {
-		this.time_on = (Integer)time_on;
+	public void setTime_on(Integer time_on) {
+		this.time_on = time_on;
 	}
 
 	public String getStart_time() {
 		return start_time;
 	}
 
-	public void setStart_time(Object start_time) {
-		this.start_time = (String)start_time;
+	public void setStart_time(String start_time) {
+		this.start_time = start_time;
 	}
 
 	public String getStop_time() {
 		return stop_time;
 	}
 
-	public void setStop_time(Object stop_time) {
-		this.stop_time = (String)stop_time;
+	public void setStop_time(String stop_time) {
+		this.stop_time = stop_time;
 	}
 
 	public Object getIn_bytes() {
 		return in_bytes;
 	}
 
-	public void setIn_bytes(Object in_bytes) {
-		this.in_bytes = (Integer)in_bytes;
+	public void setIn_bytes(Integer in_bytes) {
+		this.in_bytes = in_bytes;
 	}
 
 	public Object getOut_bytes() {
 		return out_bytes;
 	}
 
-	public void setOut_bytes(Object out_bytes) {
-		this.out_bytes = (Integer)out_bytes;
+	public void setOut_bytes(Integer out_bytes) {
+		this.out_bytes = out_bytes;
 	}
 
 	public Object getIp() {
 		return ip;
 	}
 
-	public void setIp(Object ip) {
-		this.ip = (String)ip;
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 
 	public Object getServer() {
 		return server;
 	}
 
-	public void setServer(Object server) {
-		this.server = (String)server;
+	public void setServer(String server) {
+		this.server = server;
 	}
 
 	public Object getClient_ip() {
 		return client_ip;
 	}
 
-	public void setClient_ip(Object client_ip) {
-		this.client_ip = (String)client_ip;
+	public void setClient_ip(String client_ip) {
+		this.client_ip = client_ip;
 	}
 
 	public Object getPort() {
 		return port;
 	}
 
-	public void setPort(Object port) {
-		this.port = (Integer)port;
+	public void setPort(Integer port) {
+		this.port = port;
 	}
 
 

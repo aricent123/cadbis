@@ -2,7 +2,6 @@ package cadbis.proxy;
 
 import java.io.IOException;
 import java.net.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
