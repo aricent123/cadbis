@@ -2,21 +2,14 @@ package cadbis.proxy;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import cadbis.CADBiSThread;
 import cadbis.CADBiSConfigurator;
 import cadbis.utils.IOUtils;
 
 public class ProxyConfigurator extends CADBiSConfigurator{
 	private final String PROP_DENIED_ACCESS_FILE = "denied_access_file";
-	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private String file_denied_access = "";
 	private static ProxyConfigurator instance=null;
-	private Properties properties = null;
 	private ProxyConfigurator()
 	{
 		super("cadbis_proxy.properties");
