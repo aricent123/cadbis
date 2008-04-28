@@ -7,7 +7,7 @@ public class Daemon extends CADBiSDaemon{
 	private static Daemon instance = null;
 	private Daemon()
 	{
-		super("Daemon",Integer.valueOf(Configurator.getInstance().getProperty("daemon_period")));
+		super("Daemon",Integer.valueOf(ProxyConfigurator.getInstance().getProperty("daemon_period")));
 	}
 	
 	public static Daemon getInstance()

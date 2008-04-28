@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cadbis.proxy.Configurator;
+import cadbis.proxy.ProxyConfigurator;
 
 public class DBConnection {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -23,10 +23,10 @@ public class DBConnection {
 	
 	private DBConnection()
 	{
-		this.userName = Configurator.getInstance().getProperty("username");
-		this.password = Configurator.getInstance().getProperty("password");
-		this.jdbcUrl = Configurator.getInstance().getProperty("jdbcurl");
-		this.jdbcDriver = Configurator.getInstance().getProperty("jdbcdriver");
+		this.userName = ProxyConfigurator.getInstance().getProperty("username");
+		this.password = ProxyConfigurator.getInstance().getProperty("password");
+		this.jdbcUrl = ProxyConfigurator.getInstance().getProperty("jdbcurl");
+		this.jdbcDriver = ProxyConfigurator.getInstance().getProperty("jdbcdriver");
 		Connect();
 	}
 	

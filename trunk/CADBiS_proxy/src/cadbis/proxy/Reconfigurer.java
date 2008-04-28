@@ -8,7 +8,7 @@ import cadbis.db.DBConnection;
 public class Reconfigurer extends CADBiSDaemon{	
 	private static Reconfigurer instance = null;
 	protected Reconfigurer() {
-		super("Reconfigurer",Integer.valueOf(Configurator.getInstance().getProperty("reconf_period")));
+		super("Reconfigurer",Integer.valueOf(ProxyConfigurator.getInstance().getProperty("reconf_period")));
 	}
 
 	public static Reconfigurer getInstance(){
@@ -19,14 +19,14 @@ public class Reconfigurer extends CADBiSDaemon{
 	
 	@Override
 	protected void postdaemonize() {
-		if(Configurator.getInstance().getProperty("db_reconnect").equals("enabled"))
+		if(ProxyConfigurator.getInstance().getProperty("db_reconnect").equals("enabled"))
 			DBConnection.getInstance().Reconnect();
 	}
 	
 	@Override
 	protected void daemonize() {
 		try{
-			Configurator.getInstance().reloadData();
+			ProxyConfigurator.getInstance().reloadData();
 			logger.info("Reconfigurer: Config reloaded.");
 		}
 		catch (IOException e) {

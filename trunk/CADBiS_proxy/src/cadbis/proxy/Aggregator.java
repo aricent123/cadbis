@@ -15,7 +15,7 @@ public class Aggregator extends CADBiSDaemon {
 	private static Aggregator instance = null;
 		
 	protected Aggregator() {
-		super("Aggregator",Integer.valueOf(Configurator.getInstance().getProperty("aggregator_period")));
+		super("Aggregator",Integer.valueOf(ProxyConfigurator.getInstance().getProperty("aggregator_period")));
 	}
 
 	public static Aggregator getInstance(){
@@ -131,7 +131,7 @@ public class Aggregator extends CADBiSDaemon {
 						logs.get(i).getContent_type().toString(), false);
 			
 			
-			if(Configurator.getInstance().getProperty("aggregate_protocols").equals("enabled"))
+			if(ProxyConfigurator.getInstance().getProperty("aggregate_protocols").equals("enabled"))
 			{
 				HashMap<Integer, UrlLogProtocol> proto_logs = new HashMap<Integer, UrlLogProtocol>();
 				ProtocolDAO dao = new ProtocolDAO();
@@ -238,8 +238,8 @@ public class Aggregator extends CADBiSDaemon {
 				if(logs!= null)
 				{
 					userUids = DefineUsersUids(logs, urllogDAO);
-					String sep1 = Configurator.getInstance().getProperty("urllog_sep1");
-					String sep2 = Configurator.getInstance().getProperty("urllog_sep2");				
+					String sep1 = ProxyConfigurator.getInstance().getProperty("urllog_sep1");
+					String sep2 = ProxyConfigurator.getInstance().getProperty("urllog_sep2");				
 					UpdateProtocols(makeProtocols(sep1, sep2, logs), urllogDAO);
 					UpdatePopularity(logs, urllogDAO, userUids);
 					UpdateCtryPopularity(logs,urllogDAO,userUids);			

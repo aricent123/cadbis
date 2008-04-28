@@ -71,8 +71,8 @@ class ProxyConnection extends CADBiSThread {
 		 final String UserIp = fromClient.getInetAddress().getHostAddress();
 		 boolean isReadWrite = true;
 		 boolean isAccessDenied = false;
-		 final int WaitRWPeriod = Integer.parseInt(Configurator.getInstance().getProperty("waitrwtime"));
-		 final int MaxErrorsCount = Integer.parseInt(Configurator.getInstance().getProperty("maxerrorscount"));
+		 final int WaitRWPeriod = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("waitrwtime"));
+		 final int MaxErrorsCount = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("maxerrorscount"));
 	 	 int ErrorsCount = 0;
 		 String HttpHost = "";
 		 int HttpPort = 80;
@@ -200,7 +200,7 @@ class ProxyConnection extends CADBiSThread {
 				else if(toServer!=null)
 				{
 					isAccessDenied = false;
-					String accDenied = Configurator.getInstance().getFile_denied_access();
+					String accDenied = ProxyConfigurator.getInstance().getFile_denied_access();
 					accDenied = accDenied.replace("%U",RequestParser.GetHeader("Host"));
 					accDenied = accDenied.replace("%T",new Date().toString());
 					for(int i=0;i<accDenied.length();i+=MAX_BLOCK_SIZE)

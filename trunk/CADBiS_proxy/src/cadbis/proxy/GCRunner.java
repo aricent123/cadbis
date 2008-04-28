@@ -5,7 +5,7 @@ import cadbis.CADBiSDaemon;
 public class GCRunner extends CADBiSDaemon{	
 	private static GCRunner instance = null;
 	protected GCRunner() {
-		super("GCRunner",Integer.valueOf(Configurator.getInstance().getProperty("gcrunner_period")));
+		super("GCRunner",Integer.valueOf(ProxyConfigurator.getInstance().getProperty("gcrunner_period")));
 	}
 
 	public static GCRunner getInstance(){
