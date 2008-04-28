@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 public abstract class CADBiSConfigurator {
 	protected String PathToFile = "cadbis.properties";
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
-	private Properties properties = null;
+	protected Properties properties = null;
 	public CADBiSConfigurator(String path)
 	{
 		PathToFile = path;
