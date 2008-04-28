@@ -27,7 +27,7 @@ public class Collector extends CADBiSDaemon{
 	}
 	
 	private Collector(){
-		super("Collector",Integer.valueOf(Configurator.getInstance().getProperty("collector_period")));
+		super("Collector",Integer.valueOf(ProxyConfigurator.getInstance().getProperty("collector_period")));
 		createObjects();
 		wLock = new Object();
 	}

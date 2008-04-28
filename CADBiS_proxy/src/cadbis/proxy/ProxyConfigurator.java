@@ -8,20 +8,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cadbis.CADBiSThread;
+import cadbis.CADBiSConfigurator;
 import cadbis.utils.IOUtils;
 
-public class Configurator {
-	private final String FILE_PROPERTIES = "cadbis_proxy.properties";
+public class ProxyConfigurator extends CADBiSConfigurator{
 	private final String PROP_DENIED_ACCESS_FILE = "denied_access_file";
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private String file_denied_access = "";
-	private static Configurator instance=null;
+	private static ProxyConfigurator instance=null;
 	private Properties properties = null;
-	private Configurator()
+	private ProxyConfigurator()
 	{
-		properties = new Properties();
+		super("cadbis_proxy.properties");
 	    try {
-	    	reloadData();
 	    	file_denied_access = new String(IOUtils.readStreamAsString(
 	    			Thread.currentThread().getContextClassLoader().getResourceAsStream(
 	    					properties.getProperty(PROP_DENIED_ACCESS_FILE))));
@@ -33,24 +32,11 @@ public class Configurator {
 	    }
 	}
 	
-	public static Configurator getInstance()
+	public static ProxyConfigurator getInstance()
 	{
 		if(instance == null)
-			instance = new Configurator();
+			instance = new ProxyConfigurator();
 		return instance;
-	}
-	
-	
-	public void reloadData() throws IOException 
-	{
-		properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(FILE_PROPERTIES));
-	}
-	
-	public String getProperty(String key)
-	{
-		if(properties.containsKey(key))
-			return properties.getProperty(key);
-		return "";
 	}
 	
 	public InputStream getFileDeniedAccessAsStream()

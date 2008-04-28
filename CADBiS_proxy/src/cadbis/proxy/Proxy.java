@@ -12,7 +12,7 @@ public class Proxy {
 public void run(String bindhost, int bindport, String fwdhost, int fwdport,long timeout) {
 	try 
 	{		
-		boolean trueProxy = (Configurator.getInstance().getProperty("trueproxy").equals("enabled"));
+		boolean trueProxy = (ProxyConfigurator.getInstance().getProperty("trueproxy").equals("enabled"));
 		ServerSocket sSocket = null;
 		 try
 		 {
@@ -65,22 +65,22 @@ public void run(String bindhost, int bindport, String fwdhost, int fwdport,long 
 		Proxy self = new Proxy();
 			try
 			{
-				String bindhost =  Configurator.getInstance().getProperty("bindhost");
-				int bindport = Integer.parseInt(Configurator.getInstance().getProperty("bindport"));
-				String fwdhost = Configurator.getInstance().getProperty("fwdhost");
-				int fwdport = Integer.parseInt(Configurator.getInstance().getProperty("fwdport"));
-				int timeout = Integer.parseInt(Configurator.getInstance().getProperty("timeout"));
+				String bindhost =  ProxyConfigurator.getInstance().getProperty("bindhost");
+				int bindport = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("bindport"));
+				String fwdhost = ProxyConfigurator.getInstance().getProperty("fwdhost");
+				int fwdport = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("fwdport"));
+				int timeout = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("timeout"));
 				
-				if(Configurator.getInstance().getProperty("collector").equals("enabled"))
+				if(ProxyConfigurator.getInstance().getProperty("collector").equals("enabled"))
 					Collector.getInstance().start();
 				
-				if(Configurator.getInstance().getProperty("gcrunner").equals("enabled"))
+				if(ProxyConfigurator.getInstance().getProperty("gcrunner").equals("enabled"))
 					GCRunner.getInstance().start();
 					
-				if(Configurator.getInstance().getProperty("reconfigurer").equals("enabled"))	
+				if(ProxyConfigurator.getInstance().getProperty("reconfigurer").equals("enabled"))	
 					Reconfigurer.getInstance().start();
 				
-				if(Configurator.getInstance().getProperty("aggregator").equals("enabled"))	
+				if(ProxyConfigurator.getInstance().getProperty("aggregator").equals("enabled"))	
 					Aggregator.getInstance().start();				
 				
 				self.run(bindhost,bindport,fwdhost,fwdport,timeout);							
