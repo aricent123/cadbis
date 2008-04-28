@@ -1,7 +1,6 @@
 package cadbis.exc;
 
-public class WrongAccessTimeException extends CADBiSException {
-
+public class CADBiSException extends Exception {
 	private static final long serialVersionUID = 1L;
 
 }

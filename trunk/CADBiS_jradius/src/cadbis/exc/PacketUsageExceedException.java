@@ -1,6 +1,6 @@
 package cadbis.exc;
 
-public class PacketUsageExceedException extends Exception {
+public class PacketUsageExceedException extends CADBiSException {
 
 	/**
 	 * 
