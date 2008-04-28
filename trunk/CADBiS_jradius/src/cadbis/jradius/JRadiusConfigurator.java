@@ -1,4 +1,6 @@
-package cadbis;
+package cadbis.jradius;
+
+import cadbis.CADBiSConfigurator;
 
 public class JRadiusConfigurator extends CADBiSConfigurator {
 	
