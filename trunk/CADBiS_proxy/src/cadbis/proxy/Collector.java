@@ -144,7 +144,7 @@ public class Collector extends CADBiSDaemon{
 	{
 		Action action = getActionByUserIp(userIp);
 		ActionDAO actionDAO = new ActionDAO();
-		actionDAO.execSql(String.format("insert into url_denied_log(url,unique_id,date) values('%s','%s',NOW())",action.getUnique_id(),url));
+		actionDAO.execSql(String.format("insert into url_denied_log(url,unique_id,date) values('%s','%s',NOW())",url,action.getUnique_id()));
 	}
 	
 	/**
