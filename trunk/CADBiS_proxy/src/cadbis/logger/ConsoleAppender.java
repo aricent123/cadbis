@@ -12,7 +12,7 @@ public class ConsoleAppender extends org.apache.log4j.ConsoleAppender {
 		message += new SimpleDateFormat("HH:mm:ss").format(new Date());
 		message += " ["+event.getLoggerName()+"]";
 		message += "\t ["+event.getThreadName()+"]";
-		message += "\t mem: "+((Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024)+"/"+(Runtime.getRuntime().totalMemory()/1024)+"Kb";
+		message += "\t mem: "+((Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024)+"/"+(Runtime.getRuntime().totalMemory()/1024)+"/"+(Runtime.getRuntime().maxMemory()/1024)+"Kb";
 		message += "\t " + event.getMessage();
 		System.out.println(message);
 	}
