@@ -35,6 +35,7 @@ public class Packet implements BusinessObject{
 	private String login_time;
 	private Integer simultaneous_use;
 	private Integer port_limit;
+	private Integer users_count;
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	public String[][] getPerstistenceFields() {
@@ -53,6 +54,7 @@ public class Packet implements BusinessObject{
 					{"login_time",			"String"},
 					{"simultaneous_use",	"Integer"}, 
 					{"port_limit",			"Integer"},
+					{"users_count",			"Integer"},
 					};
 		return fields;
 	}
@@ -142,72 +144,49 @@ public class Packet implements BusinessObject{
 	}
 
 
-
 	public Long getTotal_traffic_limit() {
 		return total_traffic_limit;
 	}
-
-
 
 	public void setTotal_traffic_limit(Long total_traffic_limit) {
 		this.total_traffic_limit = total_traffic_limit;
 	}
 
-
-
 	public Long getMonth_traffic_limit() {
 		return month_traffic_limit;
 	}
-
-
 
 	public void setMonth_traffic_limit(Long month_traffic_limit) {
 		this.month_traffic_limit = month_traffic_limit;
 	}
 
-
-
 	public Long getWeek_traffic_limit() {
 		return week_traffic_limit;
 	}
-
-
 
 	public void setWeek_traffic_limit(Long week_traffic_limit) {
 		this.week_traffic_limit = week_traffic_limit;
 	}
 
-
-
 	public Long getDay_traffic_limit() {
 		return day_traffic_limit;
 	}
-
-
 
 	public void setDay_traffic_limit(Long day_traffic_limit) {
 		this.day_traffic_limit = day_traffic_limit;
 	}
 
-
-
 	public String getLogin_time() {
 		return login_time;
 	}
-
-
 
 	public void setLogin_time(String login_time) {
 		this.login_time = login_time;
 	}
 
-
-
 	public Integer getSimultaneous_use() {
 		return simultaneous_use;
 	}
-
-
 
 	public void setSimultaneous_use(Integer simultaneous_use) {
 		this.simultaneous_use = simultaneous_use;
@@ -224,6 +203,14 @@ public class Packet implements BusinessObject{
 
 	public void setPort_limit(Integer port_limit) {
 		this.port_limit = port_limit;
+	}
+	
+	public Integer getUsers_count() {
+		return users_count;
+	}
+
+	public void setUsers_count(Integer users_count) {
+		this.users_count = users_count;
 	}
 	
 	
@@ -269,6 +256,8 @@ public class Packet implements BusinessObject{
 		}
 		return access;
 	}
+	
+	
 	
 	/**
 	 * @param cur_mtraffic
@@ -331,5 +320,4 @@ public class Packet implements BusinessObject{
 		if(this.simultaneous_use <= usage_count)
 			throw new SimultaneousUseExceedException();
 	}
-
 }
