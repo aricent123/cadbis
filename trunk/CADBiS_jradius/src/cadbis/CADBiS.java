@@ -17,6 +17,7 @@ import cadbis.jradius.JRadiusConfigurator;
 
 public class CADBiS extends CADBiSDaemon{
 	
+	protected PacketsTodayLimits packetLimits = null;
 	protected HashMap<String, String> activeSessions = null;
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	private static CADBiS instance = null;
@@ -61,7 +62,7 @@ public class CADBiS extends CADBiSDaemon{
 			res = 0L;
 		return res;		
 	}
-
+	
 	public Long getPacketUsageCount(User user)
 	{
 		Long res = (Long)new PacketDAO().getSingleValueByQuery(
