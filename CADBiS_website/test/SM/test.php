@@ -37,7 +37,7 @@ error_reporting(E_PARSE);
   <script type="text/javascript" src="../../js/ajax/engine.js"></script>
 </head>
 <body>
-	Channel loading:
+	Channel loading (Mbps):
 	<? 
 			$left = $ind_count->get_value()*11;
 			$height = rand(30,100);
