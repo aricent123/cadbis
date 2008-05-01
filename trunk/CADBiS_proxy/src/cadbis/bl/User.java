@@ -13,6 +13,7 @@ public class User implements BusinessObject{
 	private Integer blocked;
 	private Integer activated;
 	private String last_connection;
+	private Integer simultaneous_use;
 	
 	private Long ttime;
 	private Long mtime;
@@ -38,6 +39,7 @@ public class User implements BusinessObject{
 							{"blocked","Integer"},
 							{"activated","Integer"},
 							{"last_connection","String"}, 
+							{"simultaneous_use",	"Integer"}, 
 						};
 		return fields;
 	}	
@@ -218,6 +220,14 @@ public class User implements BusinessObject{
 	public void setTstats(UserStats tStats){
 		this.ttraffic = tStats.traffic;
 		this.ttime = tStats.time_on;
+	}
+
+	public Integer getSimultaneous_use() {
+		return simultaneous_use;
+	}
+
+	public void setSimultaneous_use(Integer simultaneous_use) {
+		this.simultaneous_use = simultaneous_use;
 	}
 
 }
