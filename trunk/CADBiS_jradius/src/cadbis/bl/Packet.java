@@ -13,7 +13,6 @@ import cadbis.exc.DayTrafficLimitExceedException;
 import cadbis.exc.MonthTimeLimitExceedException;
 import cadbis.exc.MonthTrafficLimitExceedException;
 import cadbis.exc.PacketUsageExceedException;
-import cadbis.exc.SimultaneousUseExceedException;
 import cadbis.exc.TotalTimeLimitExceedException;
 import cadbis.exc.TotalTrafficLimitExceedException;
 import cadbis.exc.WeekTimeLimitExceedException;
@@ -33,9 +32,11 @@ public class Packet implements BusinessObject{
 	private Long week_traffic_limit;
 	private Long day_traffic_limit;
 	private String login_time;
-	private Integer simultaneous_use;
 	private Integer port_limit;
-	private Integer users_count;
+	private Integer rang;
+	private Integer exceed_times;
+	private Integer users_count = 0;
+	private Integer simuluse_sum  = 0;
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	public String[][] getPerstistenceFields() {
@@ -51,10 +52,12 @@ public class Packet implements BusinessObject{
 					{"month_traffic_limit",	"Long"},
 					{"week_traffic_limit",	"Long"},
 					{"day_traffic_limit",	"Long"},
-					{"login_time",			"String"},
-					{"simultaneous_use",	"Integer"}, 
+					{"login_time",			"String"},					
 					{"port_limit",			"Integer"},
 					{"users_count",			"Integer"},
+					{"rang",				"Integer"},
+					{"exceed_times",		"Integer"},
+					{"simuluse_sum",		"Integer"}
 					};
 		return fields;
 	}
@@ -184,15 +187,6 @@ public class Packet implements BusinessObject{
 		this.login_time = login_time;
 	}
 
-	public Integer getSimultaneous_use() {
-		return simultaneous_use;
-	}
-
-	public void setSimultaneous_use(Integer simultaneous_use) {
-		this.simultaneous_use = simultaneous_use;
-	}
-
-
 	public void setTotal_time_limit(Long total_time_limit) {
 		this.total_time_limit = total_time_limit;
 	}	
@@ -213,7 +207,34 @@ public class Packet implements BusinessObject{
 		this.users_count = users_count;
 	}
 	
+	public Integer getRang() {
+		return rang;
+	}
+
+	public void setRang(Integer rang) {
+		this.rang = rang;
+	}
+
+	public Integer getExceed_times() {
+		return exceed_times;
+	}
+
+	public void setExceed_times(Integer exceed_times) {
+		this.exceed_times = exceed_times;
+	}	
 	
+	public Integer getSimuluse_sum() {
+		return simuluse_sum;
+	}
+
+	public void setSimuluse_sum(Integer simuluse_sum) {
+		this.simuluse_sum = simuluse_sum;
+	}	
+	
+	
+	public Integer getSummarRang() {
+		return rang*simuluse_sum;
+	}	
 	
 	protected boolean checkAccessByLoginTime(String dow, int fromh, int fromm, int toh, int tom)
 	{
@@ -315,9 +336,4 @@ public class Packet implements BusinessObject{
 			throw new PacketUsageExceedException();
 	}
 
-	public void checkSimultaneouseUse(long usage_count) throws SimultaneousUseExceedException
-	{
-		if(this.simultaneous_use <= usage_count)
-			throw new SimultaneousUseExceedException();
-	}
 }

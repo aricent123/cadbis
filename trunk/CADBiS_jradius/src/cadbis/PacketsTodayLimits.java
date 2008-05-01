@@ -1,65 +1,66 @@
 package cadbis;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cadbis.bl.Packet;
 import cadbis.db.PacketDAO;
+import cadbis.utils.DateUtils;
 
 public class PacketsTodayLimits {
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
+	protected HashMap<Integer, Double> packetsCoefs = null;
 	protected HashMap<Integer, Long> dayTrafficLimits = null;
-	protected HashMap<Integer, Long> weekTrafficLimits = null;
 	protected HashMap<Integer, Long> monthTrafficLimits = null;
-	
 	
 	protected void recalcTrafficLimits()
 	{
+		packetsCoefs = new HashMap<Integer, Double>();
 		dayTrafficLimits = new HashMap<Integer, Long>();
-		weekTrafficLimits = new HashMap<Integer, Long>();
 		monthTrafficLimits = new HashMap<Integer, Long>();
 		PacketDAO dao = new PacketDAO();
-		Long maximumMonthTraffic =  (Long)dao.getSingleValueByQuery("select value from `cadbis_config` where name='max_month_traffic'","value");
-		Long maximumWeekTraffic = maximumMonthTraffic / 4L;
-		Long maximumDayTraffic = maximumMonthTraffic / 30L;		
-		List<Packet> packets = dao.getItemsByQuery("select p.*, count(u.uid) as users_count from `packets` p inner join `users` u on u.gid = p.gid group by u.gid");
+		BigInteger maximumMonthTraffic =  (BigInteger)dao.getSingleValueByQuery("select value from `cadbis_config` where name='max_month_traffic'","value");
+		Long usedMonthTraffic = dao.getMonthTraffic();
+		Long restDaysCount = Long.valueOf((DateUtils.getDaysInMonth() - DateUtils.getDOM()))+1;		
+		if(usedMonthTraffic == null)
+			usedMonthTraffic= 0L;
+		List<Packet> packets = dao.getItemsWithStats();
+		if(maximumMonthTraffic!=null){
+			Long restMonthTraffic = maximumMonthTraffic.longValue() - usedMonthTraffic.longValue();
+			Long allowedDayTraffic = (restMonthTraffic) / restDaysCount;
+			
+			double SumOfRangs = 0; 
+			for(int i = 0; i< packets.size(); ++i)
+				SumOfRangs += (double)packets.get(i).getSummarRang();
+			for(int i = 0; i< packets.size(); ++i)
+				packetsCoefs.put(packets.get(i).getGid(), ((double)packets.get(i).getSummarRang())/SumOfRangs);
+			
+			for(int i = 0; i< packets.size(); ++i)
+			{
+				Long dayLimit = Math.round((double)allowedDayTraffic * packetsCoefs.get(packets.get(i).getGid()));
+				Long restPacketMonthTraffic = dayLimit*restDaysCount;
+				monthTrafficLimits.put(packets.get(i).getGid(),restPacketMonthTraffic);
+				if(packets.get(i).getExceed_times()*dayLimit<=restPacketMonthTraffic)
+					dayLimit *= packets.get(i).getExceed_times()+1; 
+				dayTrafficLimits.put(packets.get(i).getGid(),dayLimit);
+			}
 		
+		logger.info("maximumMonthTraffic = " + maximumMonthTraffic.longValue()/1024/1024+" Mb");
+		logger.info("usedMonthTraffic = " + usedMonthTraffic.longValue()/1024/1024+" Mb");
+		logger.info("restDaysCount = " + restDaysCount);
+		logger.info("restMonthTraffic="+ restMonthTraffic/1024/1024+" Mb");
+		logger.info("allowedDayTraffic="+ allowedDayTraffic/1024/1024+" Mb");
+		for(int i = 0; i< packets.size(); ++i)
+			logger.info("packet "+packets.get(i).getGid()+" '"+packets.get(i).getPacket()+"', coef="+packetsCoefs.get(packets.get(i).getGid())+",daylimit=" + dayTrafficLimits.get(packets.get(i).getGid())/1024/1024+"Mb of "+monthTrafficLimits.get(packets.get(i).getGid())/1024/1024+"Mb rest");
 		
-		// month limits
-		Long monthSum = 0L; 
-		for(int i = 0; i< packets.size(); ++i)
-			monthSum += packets.get(i).getMonth_traffic_limit() * packets.get(i).getUsers_count();
-		for(int i = 0; i< packets.size(); ++i)
-			monthTrafficLimits.put(packets.get(i).getGid(), Math.round((100.0/(double)monthSum)*(double)packets.get(i).getMonth_traffic_limit()));
-		// week limits
-		Long weekSum = 0L; 
-		for(int i = 0; i< packets.size(); ++i)
-			weekSum += packets.get(i).getWeek_traffic_limit() * packets.get(i).getUsers_count();
-		for(int i = 0; i< packets.size(); ++i)
-			weekTrafficLimits.put(packets.get(i).getGid(), Math.round((100.0/(double)weekSum)*(double)packets.get(i).getWeek_traffic_limit()));
-
-		// day limits
-		Long daySum = 0L; 
-		for(int i = 0; i< packets.size(); ++i)
-			daySum += packets.get(i).getDay_traffic_limit() * packets.get(i).getUsers_count();
-		for(int i = 0; i< packets.size(); ++i)
-			dayTrafficLimits.put(packets.get(i).getGid(), Math.round((100.0/(double)daySum)*(double)packets.get(i).getDay_traffic_limit()));
-		
-		
+		}		
 	}
 	
-	public Long getPacketMonthTrafficLimit(Integer gid)
-	{
-		if(monthTrafficLimits == null)
-			recalcTrafficLimits();
-		return monthTrafficLimits.get(gid);
-	}
-	
-	public Long getPacketWeekTrafficLimit(Integer gid)
-	{
-		if(weekTrafficLimits == null)
-			recalcTrafficLimits();
-		return weekTrafficLimits.get(gid);
-	}
 	public Long getPacketDayTrafficLimit(Integer gid)
 	{
 		if(dayTrafficLimits == null)
