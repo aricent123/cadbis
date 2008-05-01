@@ -13,14 +13,19 @@ import cadbis.bl.User;
 import cadbis.db.ActionDAO;
 import cadbis.db.PacketDAO;
 import cadbis.db.UserDAO;
+import cadbis.exc.SimultaneousUseExceedException;
 import cadbis.jradius.JRadiusConfigurator;
 
 public class CADBiS extends CADBiSDaemon{
 	
 	protected PacketsTodayLimits packetLimits = null;
 	protected HashMap<String, String> activeSessions = null;
+	protected PacketsTodayLimits dayLimits = null;
+	
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	private static CADBiS instance = null;
+	
+	
 	private CADBiS()
 	{
 		super("CADBiS",Integer.valueOf(JRadiusConfigurator.getInstance().getProperty("cadbis_daemon_period")));
@@ -36,6 +41,8 @@ public class CADBiS extends CADBiSDaemon{
 	private void createObjects()
 	{
 		activeSessions = new HashMap<String, String>();
+		dayLimits = new PacketsTodayLimits();
+		dayLimits.getPacketDayTrafficLimit(0);
 	}
 	
 	@Override
@@ -75,6 +82,7 @@ public class CADBiS extends CADBiSDaemon{
 	
 	public boolean checkAccessNow(String login)
 	{
+		
 		User user = new UserDAO().getByLoginWithStats(login);
 		PacketDAO dao = new PacketDAO();
 		Packet userpacket = dao.getItemByQuery(String.format("select * from `packets` where gid = %d",user.getGid()));
@@ -88,7 +96,8 @@ public class CADBiS extends CADBiSDaemon{
 				userpacket.checkTimeLimits(user.getMtime(),user.getWtime(), 
 													user.getDtime(),user.getTtime());
 				userpacket.checkPacketUsage(getPacketUsageCount(user));
-				userpacket.checkSimultaneouseUse(getConnectedCount(user));
+				if(getConnectedCount(user) >= user.getSimultaneous_use())
+					throw new SimultaneousUseExceedException();
 			}
 			catch(Exception e)
 			{
