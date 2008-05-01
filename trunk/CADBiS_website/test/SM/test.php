@@ -4,6 +4,9 @@ require_once("../../classes.php");
 require_once("./SMPHPToolkit/SMAjax.php");
 $ajaxbuf = new ajax_buffer("update_buffer");
 error_reporting(E_PARSE);
+
+
+$height = rand(30,100);
 ?>
 <html>
 <head>
@@ -23,9 +26,6 @@ error_reporting(E_PARSE);
 <body>
 	Channel loading: 
 	<? $ajaxbuf->start(); ?>
-		<? 
-			$height = rand(30,100);
-		?>
 		<div class="indicator" style="top:<?=100-$height ?>px; height: <?=$height ?>px">
 			<?=$height ?> %
 		</div>			
