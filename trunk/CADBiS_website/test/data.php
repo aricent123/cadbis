@@ -1,35 +1,26 @@
-<?php
-
+<?php 
+session_start();
 //include charts.php in your script
 include "charts.php";
-/*require_once "skins/smadbis/billing/DrClass.php";
-require_once "/modules_conf/smadbis.conf.php";
-*/
-/*switch($_GET['type'])
+
+
+if(!isset($_SESSION['graph_prev_values']))
+  {
+   $_SESSION['graph_prev_values'] = array(0);
+  }
+
+if(!isset($_SESSION['graph_prev_indexes']))
 {
-	case 'pie':
-		$chart [ 'chart_type' ] = "pie";
-		break;
-	default:
-		$chart [ 'chart_type' ] = "stacked 3d column";		
-};*/
+ $_SESSION['graph_prev_indexes'] = array("нагрузка");
+}
 
-
-/*$DB = new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"]);
-$user_data =  $DB->GetUsersOfTarif($_GET['gid']);*/
-
-/*
- * 
- * 
- */
 //change the chart to a bar chart
 $chart [ 'chart_type' ] = "line";
-$X = array ( "",	"0",	"1",	"2",	"3",	"4",	"5",	"6" );
-$y = array ( "a",	rand(5, 100),		rand(5, 100),		rand(5, 100),		rand(5, 100),		rand(5, 100),		rand(5, 100),		rand(5, 100)   );
-  $y[] = rand(5, 100);
-  $X[] = ""+count($X)-1;
-$chart [ 'chart_data' ] = array ( $X,
-                                  $y
+
+  $_SESSION['graph_prev_values'][]=rand(5, 100)  ;
+  array_push($_SESSION['graph_prev_indexes'],count($_SESSION['graph_prev_indexes']));
+$chart [ 'chart_data' ] = array ( $_SESSION['graph_prev_indexes'],
+                                  $_SESSION['graph_prev_values']
                          		);
                          		
 /*$chart [ 'chart_grid_h' ] = array (   'thickness'  =>  2,
