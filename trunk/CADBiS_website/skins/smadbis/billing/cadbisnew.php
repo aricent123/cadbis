@@ -59,10 +59,21 @@ $daylimits = new PacketsTodayLimits($BILL);
 	<input type="button" onclick="<?=$ajaxbuf->client_id() ?>.update()" value="Пересчитать"/>
 	<? $ajaxbuf->start(); ?>
 	<br/>
-	Потреблённый трафик: <?=make_fsize_str($daylimits->getUsedMonthTraffic()) ?><br/>
-	Оставшееся число дней: <?=$daylimits->getRestDaysCount()?><br/>
-	Оставшийся трафик: <?=make_fsize_str($daylimits->getRestMonthTraffic()) ?><br/>
-	Дневная норма трафика: <?=make_fsize_str($daylimits->getAllowedDayTraffic()) ?><br/>
+	<table>
+	<tr>
+		<td>Потреблённый трафик:</td><td><?=make_fsize_str($daylimits->getUsedMonthTraffic()) ?></td>
+	</tr>
+	<tr>
+		<td>Оставшееся число дней:</td><td><?=$daylimits->getRestDaysCount()?></td>
+	</tr>
+	<tr>
+		<td>Оставшийся трафик:</td><td><?=make_fsize_str($daylimits->getRestMonthTraffic()) ?></td>
+	</tr>
+	<tr>
+		<td>Дневная норма трафика:</td><td><?=make_fsize_str($daylimits->getAllowedDayTraffic()) ?></td>
+	</tr>
+	</table>
+	<? include "month_stats.php" ?>
 		<table class="wide-table">
 		<tr>
 			<td>

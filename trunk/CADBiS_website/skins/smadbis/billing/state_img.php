@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_PARSE);
 include("restore_confs.php");
 $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
 
