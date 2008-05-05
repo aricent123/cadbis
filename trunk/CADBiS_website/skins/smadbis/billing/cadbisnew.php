@@ -19,7 +19,7 @@ foreach($packets as $packet)
 	$packets_confs[$packet['gid']]['exceed_times'] = new ajax_var('et'.$packet['gid'],$packet['exceed_times']);
 	$ajaxbuf->register_vars($packets_confs[$packet['gid']]);
 }
-$max_month_traffic = new ajax_var('max_month_traffic', $config['max_month_traffic']);
+$max_month_traffic = new ajax_var('max_month_traffic', ((int)$config['max_month_traffic'])/1024/1024);
 $ajaxbuf->register_var($max_month_traffic);
 if($ajaxbuf->is_post_back())
 {
@@ -29,7 +29,7 @@ if($ajaxbuf->is_post_back())
 		$packet['exceed_times'] = $packets_confs[$packet['gid']]['exceed_times']->get_value();
 		$BILL->UpdateTarif($packet['gid'], $packet);
 	}   
-	$BILL->UpdateConfigVar('max_month_traffic',$max_month_traffic->get_value());
+	$BILL->UpdateConfigVar('max_month_traffic',$max_month_traffic->get_value()*1024*1024);
 }
 $daylimits = new PacketsTodayLimits($BILL);
 
@@ -51,13 +51,14 @@ $daylimits = new PacketsTodayLimits($BILL);
 <body>
 <h1>Настройки рейтинга групп:</h1>
 	Максимальное месячное количество трафика:
-	<input type="text" value="<?=$max_month_traffic->get_value()/1024/1024 ?>"
+	<input type="text" value="<?=$max_month_traffic->get_value()?>"
 		onchange="<?= $ajaxbuf->client_id()?>.set_var('<?=$max_month_traffic->client_id() ?>',this.value)"> (Мб)
 	<? $ajaxbuf->start(); ?>
+	Дневная норма трафика: <?=make_fsize_str($daylimits->getAllowedDayTraffic()) ?>
 		<table class="wide-table">
 		<tr>
 			<td>
-				Тариф
+				Тариф (к-во юзеров)
 			</td>
 			<td>
 				Ранг
@@ -66,13 +67,14 @@ $daylimits = new PacketsTodayLimits($BILL);
 				Дневное превышение (раз)
 			</td>
 			<td>
-				Пересчитанный дневной максимум (Мб)
+				Пересчитанный дневной максимум на группу (Мб)
 			</td>		
 		</tr>		
 		<? for($i=0;$i<count($packets);++$i){ ?>
 		<tr>
 			<td>
 				<?=utils::cp2utf($packets[$i]['packet'])?>
+				(<?=$packets[$i]['users_count'] ?>/<?=$packets[$i]['simuluse_sum'] ?>)
 			</td>
 			<td>
 				<input type="text" value="<?=$packets[$i]['rang']?>" 
