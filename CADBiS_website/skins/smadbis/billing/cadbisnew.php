@@ -5,11 +5,14 @@ require_once(dirname(__FILE__)."/../../../test/SM/CADBiS/PacketsTodayLimits.php"
 header("Content-Type: text/html;charset=UTF-8");
 $ajaxbuf = new ajax_buffer("update_buffer");
 $ajaxbuf->set_postback_url($_SERVER['REQUEST_URI']);
-if(!check_auth() || $CURRENT_USER['level']<7){
+if(!check_auth() || $CURRENT_USER['level']<7){	
 	die("Access denied!");
 }
+
+
 $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
 $packets = $BILL->GetTarifs();
+
 $config = $BILL->GetCADBiSConfig();
 
 $packets_confs = array();
@@ -19,7 +22,7 @@ foreach($packets as $packet)
 	$packets_confs[$packet['gid']]['exceed_times'] = new ajax_var('et'.$packet['gid'],$packet['exceed_times']);
 	$ajaxbuf->register_vars($packets_confs[$packet['gid']]);
 }
-$max_month_traffic = new ajax_var('max_month_traffic', ((int)$config['max_month_traffic'])/1024/1024);
+$max_month_traffic = new ajax_var('max_month_traffic', $config['max_month_traffic']/1024/1024);
 $ajaxbuf->register_var($max_month_traffic);
 if($ajaxbuf->is_post_back())
 {
@@ -53,8 +56,13 @@ $daylimits = new PacketsTodayLimits($BILL);
 	Максимальное месячное количество трафика:
 	<input type="text" value="<?=$max_month_traffic->get_value()?>"
 		onchange="<?= $ajaxbuf->client_id()?>.set_var('<?=$max_month_traffic->client_id() ?>',this.value)"> (Мб)
+	<input type="button" onclick="<?=$ajaxbuf->client_id() ?>.update()" value="Пересчитать"/>
 	<? $ajaxbuf->start(); ?>
-	Дневная норма трафика: <?=make_fsize_str($daylimits->getAllowedDayTraffic()) ?>
+	<br/>
+	Потреблённый трафик: <?=make_fsize_str($daylimits->getUsedMonthTraffic()) ?><br/>
+	Оставшееся число дней: <?=$daylimits->getRestDaysCount()?><br/>
+	Оставшийся трафик: <?=make_fsize_str($daylimits->getRestMonthTraffic()) ?><br/>
+	Дневная норма трафика: <?=make_fsize_str($daylimits->getAllowedDayTraffic()) ?><br/>
 		<table class="wide-table">
 		<tr>
 			<td>
@@ -64,7 +72,7 @@ $daylimits = new PacketsTodayLimits($BILL);
 				Ранг
 			</td>
 			<td>
-				Дневное превышение (раз)
+				Разрешённое превышение (раз)
 			</td>
 			<td>
 				Пересчитанный дневной максимум на группу (Мб)
@@ -90,7 +98,7 @@ $daylimits = new PacketsTodayLimits($BILL);
 		</tr>
 		<?} ?>
 		</table>
+	Стоимость 1 балла ранга равна <?=make_fsize_str($daylimits->getOnePointCost()) ?> на человека
 	<? $ajaxbuf->end(); ?>
-	<input type="button" onclick="<?=$ajaxbuf->client_id() ?>.update()" value="Save"/>
 </body>
 </html>
