@@ -1,0 +1,94 @@
+<?php
+error_reporting(E_PARSE);
+require_once(dirname(__FILE__)."/../../../test/SM/SMPHPToolkit/SMAjax.php");
+require_once(dirname(__FILE__)."/../../../test/SM/CADBiS/PacketsTodayLimits.php");
+header("Content-Type: text/html;charset=UTF-8");
+$ajaxbuf = new ajax_buffer("update_buffer");
+$ajaxbuf->set_postback_url($_SERVER['REQUEST_URI']);
+if(!check_auth() || $CURRENT_USER['level']<7){
+	die("Access denied!");
+}
+$BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
+$packets = $BILL->GetTarifs();
+$config = $BILL->GetCADBiSConfig();
+
+$packets_confs = array();
+foreach($packets as $packet)
+{
+	$packets_confs[$packet['gid']]['rang'] = new ajax_var('rng'.$packet['gid'],$packet['rang']);
+	$packets_confs[$packet['gid']]['exceed_times'] = new ajax_var('et'.$packet['gid'],$packet['exceed_times']);
+	$ajaxbuf->register_vars($packets_confs[$packet['gid']]);
+}
+$max_month_traffic = new ajax_var('max_month_traffic', $config['max_month_traffic']);
+$ajaxbuf->register_var($max_month_traffic);
+if($ajaxbuf->is_post_back())
+{
+	foreach($packets as &$packet)
+	{
+		$packet['rang'] = $packets_confs[$packet['gid']]['rang']->get_value();
+		$packet['exceed_times'] = $packets_confs[$packet['gid']]['exceed_times']->get_value();
+		$BILL->UpdateTarif($packet['gid'], $packet);
+	}   
+	$BILL->UpdateConfigVar('max_month_traffic',$max_month_traffic->get_value());
+}
+$daylimits = new PacketsTodayLimits($BILL);
+
+
+
+?>
+<html>
+<head>
+<style type="text/css">
+	@IMPORT url("skins/smadbis/css/ajax.css");
+	.wide-table{
+		width: 100%;
+		border: 1px solid black;
+	}
+</style>
+  <script type="text/javascript" src="js/scriptaculous/prototype.old.js"></script>
+  <script type="text/javascript" src="js/ajax/engine.js"></script>
+</head>
+<body>
+<h1>Настройки рейтинга групп:</h1>
+	Максимальное месячное количество трафика:
+	<input type="text" value="<?=$max_month_traffic->get_value()/1024/1024 ?>"
+		onchange="<?= $ajaxbuf->client_id()?>.set_var('<?=$max_month_traffic->client_id() ?>',this.value)"> (Мб)
+	<? $ajaxbuf->start(); ?>
+		<table class="wide-table">
+		<tr>
+			<td>
+				Тариф
+			</td>
+			<td>
+				Ранг
+			</td>
+			<td>
+				Дневное превышение (раз)
+			</td>
+			<td>
+				Пересчитанный дневной максимум (Мб)
+			</td>		
+		</tr>		
+		<? for($i=0;$i<count($packets);++$i){ ?>
+		<tr>
+			<td>
+				<?=utils::cp2utf($packets[$i]['packet'])?>
+			</td>
+			<td>
+				<input type="text" value="<?=$packets[$i]['rang']?>" 
+					onchange="<?= $ajaxbuf->client_id()?>.set_var('<?=$packets_confs[$packets[$i]['gid']]['rang']->client_id() ?>',this.value)"/>
+			</td>		
+			<td>
+				<input type="text" value="<?=$packets[$i]['exceed_times']?>" 
+					onchange="<?= $ajaxbuf->client_id()?>.set_var('<?=$packets_confs[$packets[$i]['gid']]['exceed_times']->client_id() ?>',this.value)"/>
+			</td>
+			<td>
+				<?=make_fsize_str($daylimits->getPacketDayTrafficLimit($packets[$i]['gid']))?>
+			</td>
+		</tr>
+		<?} ?>
+		</table>
+	<? $ajaxbuf->end(); ?>
+	<input type="button" onclick="<?=$ajaxbuf->client_id() ?>.update()" value="Save"/>
+</body>
+</html>

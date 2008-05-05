@@ -1,18 +1,25 @@
 <?php
 include "config.php";
-require(SK_DIR."/billing/funcs.php");
+require_once(SK_DIR."/billing/funcs.php");
 
 
 
 if(!isset($act))$act="";
-if($act=="noskin")
-	$act="smadbisrept";
-if($act=="smadbisrept")
+if(!isset($action))$action="";
+ global $BILLEVEL,$CURRENT_USER;
+  	authenticate();
+  	$BILLEVEL=0;
+  	$BILLEVEL=getbillevel($CURRENT_USER["level"]);
+ 
+// hack for the new system
+if($action == "cadbisnew")
+	exit(require_once "cadbisnew.php");
+elseif($act=="noskin")
   {
-  global $BILLEVEL,$CURRENT_USER;
-  authenticate();
-  $BILLEVEL=0;
-  $BILLEVEL=getbillevel($CURRENT_USER["level"]);
+	$act="smadbisrept";
+//  authenticate();
+//  $BILLEVEL=0;
+//  $BILLEVEL=getbillevel($CURRENT_USER["level"]);
   include"stats_rept.php";
   exit;
   }
@@ -117,6 +124,10 @@ elseif(isset($act) && $act=="tarifs")
   {
   include SK_DIR."/billing/admin_tarifs_denied_urls.php";
   }
+  elseif(isset($action) && $action=="expenses")
+  {
+  include SK_DIR."/billing/admin_tarifs_expenses.php";
+  }  
   elseif($BILLEVEL>3)
   {
   include SK_DIR."/billing/admin_tarifs.php";

@@ -1,6 +1,6 @@
 <?php
 global $_funcsPHP;
-if(!isset($_funcsPHP) || $_funcsPHP!="defined")include("funcs.php");
+if(!isset($_funcsPHP) || $_funcsPHP!="defined")require_once("funcs.php");
 $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
 
 $cur=$BILL->GetMonthTotalAccts();
