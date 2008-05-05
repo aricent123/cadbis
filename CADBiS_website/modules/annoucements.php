@@ -55,7 +55,7 @@ class CAnnoucements
    $dirct=opendir($dir);
    while($file=readdir($dirct))
 	{
-	if(($file!=".")&&($file!=".."))
+	if(($file!=".")&&($file!="..")&&is_file($file))
 		{
 		$files[]=$file;
 		}

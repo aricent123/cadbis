@@ -33,7 +33,7 @@ if($BILLEVEL<4) return;
               Настройки месячного потребления трафика
       </td>
       </table>
-     </td></tr
+     </td></tr>
 </table>
  <br>
  <div align=center><a href="<? OUT("?p=$p") ?>">назад</a></div>

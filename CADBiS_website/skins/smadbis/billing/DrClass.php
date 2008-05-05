@@ -266,8 +266,9 @@ function GetTarifTotalAccts($gid)
 function GetMonthMaxAccts()
  {
  global $GV;
+ $conf = $this->GetCADBiSConfig();
  $res=NULL;
- $res["traffic"]=$GV["max_month_traffic"];//1*1024*1024*1024;
+ $res["traffic"]=$conf["max_month_traffic"];//1*1024*1024*1024;
  $res["time"]=$GV["max_month_time"];//9999999999999999;
  return $res;
  }
@@ -1044,7 +1045,6 @@ function GetUserData($uid)
               $tmp["signature"]=$row["signature"];
               $tmp["info"]=$row["info"];
               $tmp["add_date"]=$row["add_date"];
-              $tmp["expired"]=$row["expired"];
               $tmp["crypt_method"]=$row["crypt_method"];
 	      //echo($row["user"]."<br>");
   return $tmp;
@@ -1198,8 +1198,6 @@ function GetTarifData($gid)
               $res["day_traffic_limit"]=$row["day_traffic_limit"];
               $res["login_time"]=$row["login_time"];
               $res["port_limit"]=$row["port_limit"];
-              $res["session_timeout"]=$row["session_timeout"];
-              $res["idle_timeout"]=$row["idle_timeout"];
               $res["level"]=$row["level"];
               $res["prim"]=$row["prim"];
               $res["exceed_times"]=$row["exceed_times"];
