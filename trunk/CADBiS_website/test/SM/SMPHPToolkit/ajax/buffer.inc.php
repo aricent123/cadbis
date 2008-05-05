@@ -68,6 +68,11 @@ class ajax_buffer extends smphp_control{
 	</script>'.spchr::endl;
 	}
 	//--------------------------------------------------
+	/**
+	 * Render variables list
+	 *
+	 * @return string
+	 */
 	protected function render_vars()
 	{
 		$result = "";
@@ -79,6 +84,10 @@ class ajax_buffer extends smphp_control{
 		return $result;
 	}
 	//--------------------------------------------------
+	/**
+	 *
+	 * @return string generated client-side vars list
+	 */
 	protected function client_side_vars()
 	{
 		$result = "";
@@ -90,6 +99,10 @@ class ajax_buffer extends smphp_control{
 		return $result;
 	}
 	//--------------------------------------------------
+	/**
+	 * Begin of the buffer area
+	 *
+	 */
 	public function start()
 	{
 		echo '<div id="'.$this->client_id().'">';
@@ -97,6 +110,10 @@ class ajax_buffer extends smphp_control{
 		echo $this->render_vars();
 	}
 	//--------------------------------------------------
+	/**
+	 * End of the buffer area
+	 *
+	 */
 	public function end()
 	{
 		$this->content .= ob_get_contents();
@@ -110,6 +127,11 @@ class ajax_buffer extends smphp_control{
 		echo '</div>';
 	}
 	//--------------------------------------------------
+	/**
+	 * Registers an ajax variable in the buffer
+	 *
+	 * @param ajax_var $variable
+	 */
 	public function register_var(&$variable)
 	{
 		if(!isset($this->vars[$variable->get_id()]))
@@ -121,6 +143,32 @@ class ajax_buffer extends smphp_control{
 		}
 	}
 	//--------------------------------------------------
+	/**
+	 * Set postback url for buffer
+	 *
+	 * @param string $url
+	 */	
+	public function set_postback_url($url)
+	{
+		$this->postback_url = $url;
+	}
+	//--------------------------------------------------
+	/**
+	 * Returns postback url for buffer
+	 *
+	 * @return string
+	 */	
+	public function get_postback_url()
+	{
+		return $this->postback_url;
+	}
+	
+	//--------------------------------------------------
+	/**
+	 * Registers array of variables in the buffer
+	 *
+	 * @param array $variables
+	 */
 	public function register_vars(&$variables)
 	{
 		foreach($variables as &$variable)

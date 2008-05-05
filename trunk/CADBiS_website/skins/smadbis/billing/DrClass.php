@@ -15,11 +15,11 @@ function radius_restart()
 {
  //$prg="sudo killall -HUP radiusd";
  //$prg="sudo ps -wuax";
- $res = shell_exec("killall -HUP radiusd");
+ //$res = shell_exec("killall -HUP radiusd");
  //$res=shell_exec("nohup $prg> /dev/null 2>&1 &");
  //$res=shell_exec("$prg");
  //$res=shell_exec("sudo ps -ux | grep radiusd");
- echo("res: $prg <br />".$res);
+ //echo("res: $prg <br />".$res);
  //$res="radiusd -XA";
  //echo($res);
  //echo("killall -HUP radiusd");
@@ -272,7 +272,11 @@ function GetMonthMaxAccts()
  return $res;
  }
 
-//Трафик Пользователей за сегодня
+/**
+ * Трафик Пользователей за месяц
+ *
+ * @return array
+ */
 function GetMonthTotalAccts()
 	{
 	global $GV;
@@ -1078,38 +1082,45 @@ function UpdateUser($uid,$data)
 //список Тарифов
 function GetTarifs()
 	{
-	global $GV;
-	$query="SELECT * from `".$GV["groups_tbl"]."`;";
-	$result=mysql_query($query,$this->link)or die("Invalid query(Get Groups List): " . mysql_error());
-	//$res=mysql_fetch_array($result);
-	if (mysql_num_rows($result) == 0)
-               return NULL;
-
-        $res=array();
-        $k=0;
-         while ($row = mysql_fetch_assoc($result))
-           {
-
-           $res[$k]["packet"]=$row["packet"];
-           $res[$k]["gid"]=$row["gid"];
-           $res[$k]["blocked"]=$row["blocked"];
-           $res[$k]["total_time_limit"]=$row["total_time_limit"];
-           $res[$k]["month_time_limit"]=$row["month_time_limit"];
-           $res[$k]["week_time_limit"]=$row["week_time_limit"];
-           $res[$k]["day_time_limit"]=$row["day_time_limit"];
-           $res[$k]["total_traffic_limit"]=$row["total_traffic_limit"];
-           $res[$k]["month_traffic_limit"]=$row["month_traffic_limit"];
-           $res[$k]["day_traffic_limit"]=$row["day_traffic_limit"];
-           $res[$k]["week_traffic_limit"]=$row["week_traffic_limit"];
-           $res[$k]["login_time"]=$row["login_time"];
-           $res[$k]["port_limit"]=$row["port_limit"];
-           $res[$k]["session_timeout"]=$row["session_timeout"];
-           $res[$k]["idle_timeout"]=$row["idle_timeout"];
-           $res[$k]["level"]=$row["level"];
-           $res[$k]["prim"]=$row["prim"];
-           $k++;
-           }
-
+		global $GV;
+		$query= 'select p.*, 
+			count(u.uid) as users_count, 
+			sum(u.simultaneouse_use) as simuluse_sum 
+			from `'.$GV["groups_tbl"].'` p inner join `users` u on u.gid = p.gid group by u.gid';
+		//$query="SELECT * from `".$GV["groups_tbl"]."`;";
+		$result=mysql_query($query,$this->link)or die("Invalid query(Get Groups List): " . mysql_error());
+		//$res=mysql_fetch_array($result);
+		if (mysql_num_rows($result) == 0)
+	               return NULL;
+	
+	        $res=array();
+	        $k=0;
+	         while ($row = mysql_fetch_assoc($result))
+	           {
+	
+	           $res[$k]["packet"]=$row["packet"];
+	           $res[$k]["gid"]=$row["gid"];
+	           $res[$k]["blocked"]=$row["blocked"];
+	           $res[$k]["total_time_limit"]=$row["total_time_limit"];
+	           $res[$k]["month_time_limit"]=$row["month_time_limit"];
+	           $res[$k]["week_time_limit"]=$row["week_time_limit"];
+	           $res[$k]["day_time_limit"]=$row["day_time_limit"];
+	           $res[$k]["total_traffic_limit"]=$row["total_traffic_limit"];
+	           $res[$k]["month_traffic_limit"]=$row["month_traffic_limit"];
+	           $res[$k]["day_traffic_limit"]=$row["day_traffic_limit"];
+	           $res[$k]["week_traffic_limit"]=$row["week_traffic_limit"];
+	           $res[$k]["login_time"]=$row["login_time"];
+	           $res[$k]["port_limit"]=$row["port_limit"];
+	           $res[$k]["session_timeout"]=$row["session_timeout"];
+	           $res[$k]["idle_timeout"]=$row["idle_timeout"];
+	           $res[$k]["rang"]=$row["rang"];
+	           $res[$k]["exceed_times"]=$row["exceed_times"];
+	           $res[$k]["level"]=$row["level"];
+	           $res[$k]["prim"]=$row["prim"];
+	           $res[$k]["users_count"]=$row["users_count"];
+	           $res[$k]["simuluse_sum"]=$row["simuluse_sum"];
+	           $k++;
+	           }
          return $res;
 	}
 
@@ -1191,32 +1202,45 @@ function GetTarifData($gid)
               $res["idle_timeout"]=$row["idle_timeout"];
               $res["level"]=$row["level"];
               $res["prim"]=$row["prim"];
+              $res["exceed_times"]=$row["exceed_times"];
+              $res["rang"]=$row["rang"];
               }
          return $res;
 }
 
 //Изменение информации конкретной группы
 function UpdateTarif($gid,$data)
-	{
-	 global $GV;
-
-        $query="Update `".$GV["groups_tbl"]."` set `packet`='".$data[packet]."', ".
-        "`blocked`='".$data["blocked"]."', `total_time_limit`='".$data["total_time_limit"]."', `month_time_limit`='".$data["month_time_limit"].
-        "', `week_time_limit`='".$data["week_time_limit"]."', `day_time_limit`='".$data["day_time_limit"]."', `total_traffic_limit`= '".
-        $data["total_traffic_limit"]."', `month_traffic_limit`= '".
-        $data["month_traffic_limit"]."', `week_traffic_limit`='".$data["week_traffic_limit"]."',`day_traffic_limit`='".$data["day_traffic_limit"]."', `login_time`='".
-        $data["login_time"]."', `port_limit`='".$data["port_limit"].
-        "', `session_timeout`=' ".$data["session_timeout"]."', `idle_timeout`='".$data["idle_timeout"]."',`prim`='".$data["prim"]."', `level`='".$data["level"]."' where `gid`='".$gid."' ;";
-        //die($query);
-        $result=mysql_query($query,$this->link)or die("Invalid query(Update Tarif): " . mysql_error());
-
+	{		
+		
+		
+		$query = 'update `packets` p set ';
+		$query .= '		
+		`packet`=\''.$data['packet'].'\'
+	    , `blocked`= '.$data['blocked'].'
+        , `total_time_limit`='.$data['total_time_limit'].'
+        , `month_time_limit`='.$data['month_time_limit'].'
+        , `week_time_limit`='.$data['week_time_limit'].'
+        , `day_time_limit`='.$data['day_time_limit'].'
+        , `total_traffic_limit`= '.$data['total_traffic_limit'].'
+        , `month_traffic_limit`= '.$data['month_traffic_limit'].'
+        , `week_traffic_limit`='.$data['week_traffic_limit'].'
+        , `day_traffic_limit`='.$data['day_traffic_limit'].'
+        , `login_time`=\''.$data['login_time'].'\'
+        , `port_limit`= '.$data['port_limit'].'
+        , `prim`=\''.$data['prim'].'\'
+        , `level`=\''.$data['level'].'\' 
+        , `exceed_times`='.$data['exceed_times'].'
+        , `rang`='.$data['rang'].'		
+		';
+		$query .= "where p.gid={$gid}";		
+	    $result=mysql_query($query,$this->link)or die("Invalid query(Update Tarif): " . mysql_error());
 
 	global $CURRENT_USER;
 	$data["uid"]=$CURRENT_USER["id"];
         $data["event"]="Обновление тарифа: ".$data["packet"];
         $data["date"]=norm_date_yymmddhhmmss(time());
         $this->AddEvent($data);
-	radius_restart();
+       
 	}
 
 
@@ -1235,12 +1259,14 @@ function AddTarif($data)
           `blocked`,`total_time_limit`,`month_time_limit`,`week_time_limit`,
           `day_time_limit`,`total_traffic_limit`,`month_traffic_limit`,`week_traffic_limit`,
           `day_traffic_limit`,`login_time`,`simultaneous_use`,`port_limit`,`session_timeout`,
-          `idle_timeout`,`level`) values ('".$data[packet]."','2','0','".$data[blocked]."','"
+          `idle_timeout`,`level`,`exceed_times`,`rang`) values ('".$data[packet]."','2','0','".$data[blocked]."','"
 	  .$data[total_time_limit]."','".$data[month_time_limit]."','".$data[week_time_limit]."','".$data[day_time_limit]."','"
           .$data[total_traffic_limit]."','".$data[month_traffic_limit]."','"
 	  .$data[week_traffic_limit]."','".$data[day_traffic_limit]."','".$data[login_time]."','"
-          .$data[simultaneous_use]."','".$data[port_limit]."','".$data[session_timeout]."','".$data[idle_timeout]."','"
-          .$data[level]."');";
+          .$data[simultaneous_use]."','".$data[port_limit]."','".$data[session_timeout]."','".$data[idle_timeout]."'
+          ,'".$data[level]."'
+          ,'".$data['exceed_times']."'
+          ,'".$data['rang']."');";
 	$result=mysql_query($query,$this->link)or die("Invalid query(Add User): " . mysql_error());
 
 	global $CURRENT_USER;
@@ -1458,7 +1484,7 @@ function KillInactiveUsers()
 function AddEvent($data)
 	{
 	global $GV,$CURRENT_USER;
- 	$query="Insert into `".$GV["events_tbl"]."`(`eid`,`uid`,`event`,`date`) values ('".$data[eid]."','".$data[uid]."','".$data[event]."','".$data[date]."');";
+ 	$query="Insert into `".$GV["events_tbl"]."`(`uid`,`event`,`date`) values ('".$data[uid]."','".$data[event]."','".$data[date]."');";
         $result=mysql_query($query,$this->link)or die("Invalid query(Add Event): " . mysql_error());
 	}
 
@@ -1948,4 +1974,31 @@ function DeleteDiapason($id)
  {
    mysql_query("DELETE FROM ip2country where id=$id;");
  } 
+ 
+ 
+	/**
+	 * Returns array of configuration items
+	 * @return array
+	 */
+	function GetCADBiSConfig()
+	{     
+		$query="SELECT * from `cadbis_config`";
+		$result=mysql_query($query,$this->link)or die("Invalid query(Get User Data): " . mysql_error());
+	    $ret = array();
+		while($res = mysql_fetch_assoc($result))
+		   $ret[$res['name']] = $res['value'];
+		  return $ret;   
+	}
+	
+	/**
+	 * Update the value of the cadbis config variable
+	 *
+	 * @param string $name
+	 * @param string $value
+	 */
+	function UpdateConfigVar($name, $value)
+	{
+		$sql = sprintf("update `cadbis_config` set value='%s' where name='%s'",$value, $name);
+	   	mysql_query($sql) or die("Error executing query: ".$sql);
+	}
 };

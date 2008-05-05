@@ -7,10 +7,10 @@ extract($_SESSION);
 
 //if(!isset($action))die("no image");
 $pdir="../../../";
-require($pdir."classes.php");
-require($pdir."conf/globals.php");
-require("DrClass.php");
-require("funcs.php");
+require_once($pdir."classes.php");
+require_once($pdir."conf/globals.php");
+require_once("DrClass.php");
+require_once("funcs.php");
 
 //reading all configs for all modules
 $list= read_dir_ext($pdir.$GV["modules_conf_dir"],$GV["module_ext"]);

@@ -786,7 +786,7 @@ class CFiltration
 /////////////////////////////////////////////////////
 function _logout()
 { 
-  global $MDL,$DIRS,$GV,$CURRENT_USER,$HTTP_SESSION_VARS;
+  global $MDL,$DIRS,$GV,$CURRENT_USER,$_SESSION;
  if($MDL->IsModuleExists('users') ){
  $MDL->Load("users"); 
  $USR=new CUsers($DIRS["users_data"],$DIRS["users_list"],$DIRS["users_private"],$DIRS["users_groups"],$DIRS["users_online"]);
@@ -794,7 +794,7 @@ function _logout()
  }
  else $USR=NULL;
  
- $HTTP_SESSION_VARS["login"]="";
+ $_SESSION["login"]="";
  session_unregister("login");
  if($USR)
    {
@@ -805,7 +805,7 @@ function _logout()
 /////////////////////////////////////////////////////
 function _login($login,$passwd)
 {
-  global $MDL,$DIRS,$GV,$CURRENT_USER,$HTTP_SESSION_VARS,$_root_login,$_root_passwd;  
+  global $MDL,$DIRS,$GV,$CURRENT_USER,$_SESSION,$_root_login,$_root_passwd;  
  if($MDL->IsModuleExists('users') ){
  $MDL->Load("users"); 
  $USR=new CUsers($DIRS["users_data"],$DIRS["users_list"],$DIRS["users_private"],$DIRS["users_groups"],$DIRS["users_online"]);
@@ -814,10 +814,10 @@ function _login($login,$passwd)
  else $USR=NULL;
    if($_root_login==$login && $_root_passwd==md5($passwd))
      {  
-     $HTTP_SESSION_VARS["login"]="$login";
-     $HTTP_SESSION_VARS["passwd"]="$passwd";   
-     $HTTP_SESSION_VARS["rootacc"]=true;
-     $HTTP_SESSION_VARS["defroot"]=true;
+     $_SESSION["login"]="$login";
+     $_SESSION["passwd"]="$passwd";   
+     $_SESSION["rootacc"]=true;
+     $_SESSION["defroot"]=true;
      $CURRENT_USER["ip"]=get_ip_address();
      $USR->SetOffline($CURRENT_USER);   
      return true;
@@ -826,12 +826,12 @@ function _login($login,$passwd)
      {
      if($USR->CheckAuth($login,$passwd))
        {
-       $HTTP_SESSION_VARS["login"]="$login";
-       $HTTP_SESSION_VARS["passwd"]="$passwd";
-       $HTTP_SESSION_VARS["defroot"]=false;       
+       $_SESSION["login"]="$login";
+       $_SESSION["passwd"]="$passwd";
+       $_SESSION["defroot"]=false;       
        $usr_data=$USR->GetUserData($USR->GetUserId($login));
        //this user also have root access
-       if($usr_data["level"]>=10)$HTTP_SESSION_VARS["rootacc"]=true;
+       if($usr_data["level"]>=10)$_SESSION["rootacc"]=true;
        $CURRENT_USER["ip"]=get_ip_address();
        $USR->SetOffline($CURRENT_USER);       
        return true;
@@ -842,35 +842,35 @@ function _login($login,$passwd)
 /////////////////////////////////////////////////////
 function _isroot()
  {
- global $HTTP_SESSION_VARS;
- return (isset($HTTP_SESSION_VARS["rootacc"]) && $HTTP_SESSION_VARS["rootacc"]!="");
+ global $_SESSION;
+ return (isset($_SESSION["rootacc"]) && $_SESSION["rootacc"]!="");
  }
 /////////////////////////////////////////////////////
 function _isrootdef()
  {
- global $HTTP_SESSION_VARS;
- return (isset($HTTP_SESSION_VARS["defroot"]) && $HTTP_SESSION_VARS["defroot"]!="");
+ global $_SESSION;
+ return (isset($_SESSION["defroot"]) && $_SESSION["defroot"]!="");
  }
 /////////////////////////////////////////////////////
 function _logoutroot()
  {
- global $HTTP_SESSION_VARS,$p;
- $HTTP_SESSION_VARS["rootacc"]=false;
+ global $_SESSION,$p;
+ $_SESSION["rootacc"]=false;
  _logout();
  resetpage();
  }
 ///////////////////////////////////////////////////// 
 function check_auth()
  {
- global $HTTP_SESSION_VARS;
- return(isset($HTTP_SESSION_VARS["login"]) && $HTTP_SESSION_VARS["login"]!="");
+ global $_SESSION;
+ return(isset($_SESSION["login"]) && $_SESSION["login"]!="");
  }
 /////////////////////////////////////////////////////
 //}
 // AUTHENTIFICATION CODE
 function authenticate()
 {
- global $MDL,$DIRS,$GV,$CURRENT_USER,$HTTP_SESSION_VARS;
+ global $MDL,$DIRS,$GV,$CURRENT_USER,$_SESSION;
  if($MDL->IsModuleExists('users') ){
  $MDL->Load("users"); 
  $USR=new CUsers($DIRS["users_data"],$DIRS["users_list"],$DIRS["users_private"],$DIRS["users_groups"],$DIRS["users_online"]);
@@ -880,16 +880,16 @@ function authenticate()
 
  if(check_auth() && $USR && !_isrootdef())
  {
- $CURRENT_USER["login"]=$HTTP_SESSION_VARS["login"];
- $CURRENT_USER["passwd"]=$HTTP_SESSION_VARS["passwd"];
- $CURRENT_USER["id"]=$USR->GetUserId($HTTP_SESSION_VARS["login"]);
+ $CURRENT_USER["login"]=$_SESSION["login"];
+ $CURRENT_USER["passwd"]=$_SESSION["passwd"];
+ $CURRENT_USER["id"]=$USR->GetUserId($_SESSION["login"]);
  $data=$USR->GetUserData($CURRENT_USER["id"]);
  $CURRENT_USER["nick"]=$data["nick"];
  $CURRENT_USER["email"]=$data["email"];
  $CURRENT_USER["url"]=$data["url"]; 
  $CURRENT_USER["level"]=$USR->GetUserLevel($CURRENT_USER["id"]);
- if($CURRENT_USER["level"]>=8)$HTTP_SESSION_VARS["rootacc"]=true;
- else $HTTP_SESSION_VARS["rootacc"]=false;         
+ if($CURRENT_USER["level"]>=8)$_SESSION["rootacc"]=true;
+ else $_SESSION["rootacc"]=false;         
  }
  elseif(_isrootdef())
   {

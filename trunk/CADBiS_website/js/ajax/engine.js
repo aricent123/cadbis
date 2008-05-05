@@ -36,7 +36,9 @@ var ajax_buffer = function(id,req,vc_pf)
 	//--------------------------------------------------    
     this.get_request = function()
     {
-    	return this._req + '?'+this._id+'=true'+this.implode_vars();
+    	var res = this._req;
+    	res += ((res.lastIndexOf('?')<0)?'?':'&');
+    	return res+this._id+'=true'+this.implode_vars();
     }
 	//--------------------------------------------------
 	this.onSuccess = function()
@@ -49,15 +51,15 @@ var ajax_buffer = function(id,req,vc_pf)
     	if(this._show_progress)
     		Dialog.info("", {width:150, height:150, className: 'alphacube', showProgress: true});
     	var show_progress = this._show_progress;
-    	var method = this._method; 
+    	var rpl_method = this._method; 
     	var successCallback = this.onSuccess;
 		new Ajax.Request(this.get_request(), {
 			  method: 'get',
 			  onSuccess: function(data) 
 			  {			  	
-			   switch(method)
+			   switch(rpl_method)
 			   {
-			     case 'replace':			    
+			     case 'replace':
 			  		$(id).innerHTML = data.responseText;
 			  		break;
 			  	 case 'append_before':
