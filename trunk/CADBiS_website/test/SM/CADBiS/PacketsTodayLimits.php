@@ -11,7 +11,12 @@ class PacketsTodayLimits
 	protected $packetsCoefs = null;
 	protected $allowedDayTraffic = null;
 	protected $dayTrafficLimits = null;
-	protected $monthTrafficLimits = null;	
+	protected $monthTrafficLimits = null;
+	protected $usedMonthTraffic = null;
+	protected $restMonthTraffic = null;
+	protected $restDaysCount = null;
+	protected $onePointCost = null;
+	
 	
 	/**
 	 * 
@@ -33,31 +38,35 @@ class PacketsTodayLimits
 		$config = $this->BILL->GetCADBiSConfig();
 		$maximumMonthTraffic = $config['max_month_traffic'];  
 		$monthAccts = $this->BILL->GetMonthTotalAccts();
-		$usedMonthTraffic = $monthAccts['traffic'];
-		$restDaysCount = date("t")-date("j");	
-		$restMonthTraffic = $maximumMonthTraffic - $usedMonthTraffic;
-		$this->allowedDayTraffic = ($restMonthTraffic) / $restDaysCount;
+		$this->usedMonthTraffic = ($monthAccts['traffic'])?$monthAccts['traffic']:0;
+		$this->restDaysCount = date("t")-date("j");	
+		$this->restMonthTraffic = $maximumMonthTraffic - $this->usedMonthTraffic;
+		$this->allowedDayTraffic = ($this->restMonthTraffic) / $this->restDaysCount;
 			
 		$SumOfRangs = 0; 
 		for($i = 0; $i< count($this->packets); ++$i)
 			$SumOfRangs += $this->packets[$i]['rang'] * $this->packets[$i]['simuluse_sum'];
 		for($i = 0; $i< count($this->packets); ++$i)
 			$this->packetsCoefs[$this->packets[$i]['gid']] = ((double)$this->packets[$i]['rang'] * (double)$this->packets[$i]['simuluse_sum'])/(double)$SumOfRangs;
-				
+		
+		$this->onePointCost = round($this->allowedDayTraffic/(double)$SumOfRangs);
+		
 		for($i = 0; $i< count($this->packets); ++$i)
 		{
 			$dayLimit = round($this->allowedDayTraffic * $this->packetsCoefs[$this->packets[$i]['gid']]);
-			$restPacketMonthTraffic = $dayLimit*$restDaysCount;
+			$restPacketMonthTraffic = $dayLimit*$this->restDaysCount;
 			$this->monthTrafficLimits[$this->packets[$i]['gid']]= $restPacketMonthTraffic;
 			if($this->packets[$i]['exceed_times']*$dayLimit<=$restPacketMonthTraffic)
 				$dayLimit *= $this->packets[$i]['exceed_times']+1;
+			else
+				$dayLimit = $restPacketMonthTraffic;
 			$this->dayTrafficLimits[$this->packets[$i]['gid']] = $dayLimit;
 		}
 	}
 	
 	/**
 	 * Returns allowed traffic for a day
-	 *
+	 * @return int
 	 */
 	public function getAllowedDayTraffic()
 	{
@@ -66,6 +75,49 @@ class PacketsTodayLimits
 		return $this->allowedDayTraffic;
 	}
 	
+	/**
+	 * Returns rest days of month
+	 * @return int
+	 */
+	public function getRestDaysCount()
+	{
+		if($this->restDaysCount == null)
+			$this->recalcTrafficLimits();		
+		return $this->restDaysCount;
+	}	
+	
+	/**
+	 * Returns rest month traffic
+	 * @return int
+	 */
+	public function getRestMonthTraffic()
+	{
+		if($this->restMonthTraffic == null)
+			$this->recalcTrafficLimits();		
+		return $this->restMonthTraffic;
+	}	
+	
+	/**
+	 * Returns used month traffic
+	 * @return int
+	 */
+	public function getUsedMonthTraffic()
+	{
+		if($this->usedMonthTraffic == null)
+			$this->recalcTrafficLimits();		
+		return $this->usedMonthTraffic;
+	}		
+	
+	/**
+	 * Returns cost of 1 point of rang
+	 * @return int
+	 */
+	public function getOnePointCost()
+	{
+		if($this->onePointCost == null)
+			$this->recalcTrafficLimits();		
+		return $this->onePointCost;
+	}		
 	/**
 	 * get traffic limit for a given gid
 	 *
