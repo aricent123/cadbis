@@ -106,3 +106,6 @@ $daylimits = new PacketsTodayLimits($BILL);
 		</table>
 	Стоимость 1 балла ранга равна <?=make_fsize_str($daylimits->getOnePointCost()) ?> на человека
 	<? $ajaxbuf->end(); ?>
+	<input type="button" onclick="<?=$ajaxbuf->client_id() ?>.update()" value="Пересчитать"/>
+	<br/><br/>
+<a href="javascript:history.back(1);">Назад</a>
