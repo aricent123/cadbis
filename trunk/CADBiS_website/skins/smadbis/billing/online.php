@@ -289,14 +289,14 @@ if($BILLEVEL<3)return;
                       </table>
                     </td>
                   </table>                
-                  <table width=50% height=100%>
+                  <table width=50% height=100%><tr>
                   <td align=center class=tbl1 width=30%>
                     <a href="<? OUT("?p=$p&act=$act&action=message&klip=".$list[$i]["call_from"]."&klport=".$list[$i]["port"]) ?>">написать сообщение</a></td>                   
                   <td align=center class=tbl1 width=30%>
                     <? $ud=get_user_data($data["uid"]); if($ud["level"]<$CURRENT_USER["level"] || $CURRENT_USER["id"]==$ud["uid"]){ ?><a href="<? OUT("?p=$p&act=$act&action=kill&klip=".$list[$i]["call_from"]."&kluser=".$list[$i]["user"]."&klserver=".$list[$i]["server"]."&klport=".$list[$i]["port"]) ?>">отключить</a> <? } ?></td>                  
                   <td align=center class=tbl1 width=30%>
                     <? $ud=get_user_data($data["uid"]); if($ud["level"]<$CURRENT_USER["level"] || $CURRENT_USER["id"]==$ud["uid"]){ ?><a href="<? OUT("?p=$p&act=log_url&action=online&unique_id=".$list[$i]["unique_id"]) ?>">посещённые сайты</a> <? } ?>                  
-                  </td></table><br>    
+                  </td><tr></table><br>    
   
     <?     
     }
