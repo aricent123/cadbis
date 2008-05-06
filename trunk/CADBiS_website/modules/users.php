@@ -160,7 +160,6 @@ class CUsers
               $user["signature"]=$vars["signature"];
               $user["info"]=$vars["info"];
               $user["add_date"]=$vars["add_date"];
-              $user["crypt_method"]=$vars["crypt_method"];
        $user['id']=                 $vars["uid"];
        $user['login']=              $vars["user"];
        $user['passwd']=             $vars["password"];

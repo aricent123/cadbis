@@ -543,7 +543,7 @@ function GetWeekUsersAccts($order=">traffic",$draw=false,$gid="all")
           $users[$k]["nick"]=$row["nick"];
           $users[$k++]["uid"]=$row["uid"];}
 
-        get_current_week(&$bdate,&$adate,1);
+        get_current_week($bdate,$adate,1);
 
         $res=NULL;
         $k=0;
@@ -1047,7 +1047,6 @@ function GetUserData($uid)
               $tmp["signature"]=$row["signature"];
               $tmp["info"]=$row["info"];
               $tmp["add_date"]=$row["add_date"];
-              $tmp["crypt_method"]=$row["crypt_method"];
 	      //echo($row["user"]."<br>");
   return $tmp;
 }

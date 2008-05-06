@@ -207,13 +207,13 @@ switch($BILLEVEL)
      </td></tr>
 
      <tr><td width=50% class=tbl1>
-     <table width=100% class=tbl2 style="cursor:hand;" cellspacing=0 cellpadding=0 onclick="document.location.href='?p=smadbis&act=options';">
+     <table width=100% class=tbl2 style="cursor:hand;" cellspacing=0 cellpadding=0 onclick="document.location.href='<?=cadbisnewurl('admin_tarifs_rangs') ?>';">
       <td height=100px width=30% align=center bgcolor=#DDEEF3><img src="<? OUT(SK_DIR) ?>/img/bill_options.gif"></td>
-      <td bgcolor=#DDEEF3><div align=center><b><a href="?p=smadbis&act=options">Настройки и статус</a></b></div><br>
+      <td bgcolor=#DDEEF3><div align=center><b><a href="<?=cadbisnewurl('admin_tarifs_rangs') ?>">Настройки и статус</a></b></div><br>
               Информация о пользовании интернетом, сводные цифры и графики. Настройка параметров биллинг-системы. Установка номинальных значений трафика и времени за промежутки времени.
       </td>
       </table>
-     </td></tr>
+     </td></tr> 
 
      <tr><td width=50% class=tbl1>
      <table width=100% class=tbl2 style="cursor:hand;" cellspacing=0 cellpadding=0 onclick="document.location.href='?p=smadbis&act=countries';">
