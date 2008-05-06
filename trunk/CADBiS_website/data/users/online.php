@@ -1,7 +1,7 @@
 <?php
 $ISONLINE["12"]=true;
 $ONLINE[0]["id"]="12";
-$ONLINE[0]["ip"]="ip:192.168.0.158; fwdf:n/a";
-$ONLINE[0]["time"]="1210029168";
-$ONLINE[0]["browser"]="Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; MRA 5.0 (build 02094); Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1) ; .NET CLR 1.1.4322; .NET CLR 2.0.50727)";
+$ONLINE[0]["ip"]="ip:127.0.0.1; fwdf:n/a";
+$ONLINE[0]["time"]="1208852191";
+$ONLINE[0]["browser"]="Mozilla/5.0 (Windows; U; Windows NT 5.2; ru; rv:1.8.1.14) Gecko/20080404 Firefox/2.0.0.14";
 ?>

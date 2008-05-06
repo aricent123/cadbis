@@ -88,7 +88,8 @@ $daylimits = new PacketsTodayLimits($BILL);
 			<td>
 				Пересчитанный дневной максимум на группу (Мб)
 			</td>		
-		</tr>		
+		</tr>
+		<? $sum_of_day_limits = 0; ?>	
 		<? for($i=0;$i<count($packets);++$i){ ?>
 		<tr>
 			<td>
@@ -105,9 +106,21 @@ $daylimits = new PacketsTodayLimits($BILL);
 			</td>
 			<td>
 				<?=make_fsize_str($daylimits->getPacketDayTrafficLimit($packets[$i]['gid']))?>
+				<? $sum_of_day_limits+=$daylimits->getPacketDayTrafficLimit($packets[$i]['gid']); ?>
 			</td>
 		</tr>
 		<?} ?>
+		<tr>
+			<td>
+			</td>
+			<td>
+			</td>		
+			<td>
+			</td>
+			<td>
+				<b><?=make_fsize_str($sum_of_day_limits)?></b>
+			</td>
+		</tr>
 		</table>
 	Стоимость 1 балла ранга равна <?=make_fsize_str($daylimits->getOnePointCost()) ?> на человека
 	<? $ajaxbuf->end(); ?>
