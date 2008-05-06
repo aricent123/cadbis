@@ -44,7 +44,7 @@ public class PacketsTodayLimits {
 				Long dayLimit = Math.round((double)allowedDayTraffic * packetsCoefs.get(packets.get(i).getGid()));
 				Long restPacketMonthTraffic = dayLimit*restDaysCount;
 				monthTrafficLimits.put(packets.get(i).getGid(),restPacketMonthTraffic);
-				if(packets.get(i).getExceed_times()*dayLimit<=restPacketMonthTraffic)
+				if((packets.get(i).getExceed_times()+1)*dayLimit<=restPacketMonthTraffic)
 					dayLimit *= packets.get(i).getExceed_times()+1; 
 				dayTrafficLimits.put(packets.get(i).getGid(),dayLimit);
 			}
