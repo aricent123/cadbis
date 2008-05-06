@@ -876,6 +876,14 @@ function GetLoginByUid($uid)
 //удаление пользователя
 function DeleteUser($uid)
 	{
+		
+        //журналирование событий
+        global $CURRENT_USER;
+	$data["uid"]=$CURRENT_USER["id"];
+        $data["event"]="Попытка удаления пользователя: ".$this->GetLoginByUid($uid);
+        $data["date"]=norm_date_yymmddhhmmss(time());
+        $this->AddEvent($data);
+		
 	 //проверка
 	if(!$this->IsUserExists($this->GetLoginByUid($uid))) return "Ошибка, Такого пользователя нет!";
 	global $GV,$CURRENT_USER;
@@ -883,12 +891,6 @@ function DeleteUser($uid)
 	$result=mysql_query($query,$this->link)or die("Invalid query(DeleteUser): " . mysql_error());
 
 
-        //журналирование событий
-        global $CURRENT_USER;
-	$data["uid"]=$CURRENT_USER["id"];
-        $data["event"]="Удаление пользователя: ".$this->GetLoginByUid($uid);
-        $data["date"]=norm_date_yymmddhhmmss(time());
-        $this->AddEvent($data);
 
 
         return $result;
@@ -1329,15 +1331,15 @@ function AddTarif($data)
 function DeleteTarif($gid)
 	{
 	global $GV;
-	$query="Delete from `".$GV["groups_tbl"]."` where gid='$gid';";
-	$result=mysql_query($query,$this->link)or die("Invalid query(DeleteTarif): " . mysql_error());
-
         global $CURRENT_USER;
-	$data["uid"]=$CURRENT_USER["id"];
-        $data["event"]="Удаление тарифа: ".$gid;
+		$data["uid"]=$CURRENT_USER["id"];
+		$packet = $this->GetTarifData($gid);
+        $data["event"]="Удаление тарифа: ".$packet['packet'];
         $data["date"]=norm_date_yymmddhhmmss(time());
         $this->AddEvent($data);
-
+	
+	$query="Delete from `".$GV["groups_tbl"]."` where gid='$gid';";
+	$result=mysql_query($query,$this->link)or die("Invalid query(DeleteTarif): " . mysql_error());
         return $result;
 	}
 
