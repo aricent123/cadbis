@@ -204,7 +204,7 @@ class ajax_buffer extends smphp_control{
 				$content .= $this->client_side_register();
 		}
 		try{
-			ob_end_clean();
+			@ob_end_clean();
 		}catch(Exception $e)
 		{/* ignore close errors */}
 		echo($content);

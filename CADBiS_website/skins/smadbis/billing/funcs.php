@@ -140,7 +140,7 @@ function is_group_allowed($group,$uid)
 
 
 
-function get_current_week($b,$a,$withh)
+function get_current_week(&$b,&$a,$withh)
  {
         $year=date("Y");
         $month=date("m");
@@ -209,6 +209,17 @@ function addlzeroes($time)
  return $time;
  }
 
+ /**
+  * Generates the URL to new cadbis page
+  *
+  * @param string $action
+  */
+ function cadbisnewurl($action)
+ {
+ 	return "?act=noskin&page=smadbis&noskinact=tarifs&action=cadbisnew&newact=".$action;
+ }
+ 
+ 
 function gethours($time)
  {
  return addlzeroes("".floor((float)$time/3600.0));

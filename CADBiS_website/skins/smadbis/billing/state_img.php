@@ -16,7 +16,7 @@ $month=date("m");
 $day=date("d");
 $daycount=date("t");
 $maxtraf=0;
-$daynorm=$GV["max_month_traffic"]/($daycount);
+$daynorm=$mon["traffic"]/($daycount);
 $rest=$mon["traffic"]-$cur["traffic"];   
 $dnrm=$rest/($daycount-$day+1);
 $k=($dnrm<0)?-90000:100;
@@ -27,5 +27,6 @@ $imgnum=(int)((float)$prc_tr2/$perimg);
 
 $imgnum+=1;
 if($imgnum>20)$imgnum=20;
+header("Cache-Control: no-cache, must-revalidate"); 
 header("Location: ../img/semafor/".($imgnum).".gif");
 ?>     

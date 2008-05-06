@@ -25,7 +25,7 @@ if($prc_tr2<100)
  {
  $colorr="00";
  $colorg="FF";
- $restclr="FFFFFF"; 
+ $restclr="AAAAAA"; 
  }
  elseif($prc_tr2>0 && $dnrm>0)
  {
@@ -35,14 +35,14 @@ if($prc_tr2<100)
  
  $color=(int)((16.0/150.0)*(150-$prc_tr2));
  $colorg=dechex($color).dechex($color);
- $restclr="FFFF00"; 
+ $restclr="AAAA00"; 
  }
  else
  {
  $resttext="Превышение";
   $colorr="00";
  $colorg="00";
- $restclr="FF0000";
+ $restclr="AA0000";
  }
 
 for($i=1;$i<=$daycount;++$i)          

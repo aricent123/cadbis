@@ -1,36 +1,18 @@
-<?php
-error_reporting(E_PARSE);
-require_once(dirname(__FILE__)."/../../../test/SM/SMPHPToolkit/SMAjax.php");
-require_once(dirname(__FILE__)."/../../../test/SM/CADBiS/PacketsTodayLimits.php");
-header("Content-Type: text/html;charset=UTF-8");
-$ajaxbuf = new ajax_buffer("update_buffer");
-$ajaxbuf->show_progress(true);
-$ajaxbuf->set_postback_url($_SERVER['REQUEST_URI']);
-if(!check_auth() || $CURRENT_USER['level']<7){	
-	die("Access denied!");
-}
-if(!isset($newact))
-	$newact = "";
-?>
 <html>
 <head>
-<title><?=utils::cp2utf($GV["site_title"]) ?></title>
+<title><? OUT($GV["site_title"]) ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=Windows-1251;">
-<meta http-equiv="Keywords" content="<?=utils::cp2utf($GV["site_keywds"]) ?>">
-<meta http-equiv="Author" content="<?=utils::cp2utf($GV["site_owner"]) ?>">
-<meta http-equiv="Description" content="<?=utils::cp2utf($GV["site_descr"]) ?>">
+<meta http-equiv="Keywords" content="<? OUT($GV["site_keywds"]) ?>">
+<meta http-equiv="Author" content="<? OUT($GV["site_owner"]) ?>">
+<meta http-equiv="Description" content="<? OUT($GV["site_descr"]) ?>">
 <link href="<? OUT(SK_DIR) ?>/styles.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/scriptaculous/prototype.js"></script>
-<script type="text/javascript" src="js/window/window.js"></script>
+<script type="text/javascript" src="js/scriptaculous/prototype.old.js"></script>
 <script type="text/javascript" src="js/ajax/engine.js"></script>
 <style type="text/css">
 	@IMPORT url("skins/smadbis/css/ajax.css");
 	.wide-table{
 		width: 100%;
 		border: 1px solid black;
-	}
-	.wide-table td{
-		font-size: 10px;
 	}
 </style>
 </head>
@@ -48,12 +30,7 @@ pas_sel=false;
 
 <!-- STARTOF MENU -->
 <?php
-      ob_start();
-       $MDL->LoadModule('menu',true);
-      $res = utils::cp2utf(ob_get_contents());
-      ob_end_clean();
-      echo $res;
-
+$MDL->LoadModule('menu',true);
 ?>
 <!-- ENDOF MENU -->
 <br>
@@ -62,21 +39,21 @@ pas_sel=false;
     <? if(!check_auth())
     { 
     ?>
-    <div align=center>Р’С…РѕРґ:</div>
+    <div align=center>Вход:</div>
     <form action=?act=auth method=post>
     <table width=100%>
     <tr><td width=30%>
-    Р»РѕРіРёРЅ
+    логин
     </td><td width=50% align=left>
     <input type=text name=login class=inputbox style="width:70%;" value="login" onfocus="if(!log_sel)this.value='';log_sel=true;" style="width:90px">  
     </td></tr>
     <tr><td width=30%>
-    РїР°СЂРѕР»СЊ
+    пароль
     </td><td width=50% align=left>
     <input type=password name=passwd class=inputbox style="width:70%;"value="password" onfocus="if(!pas_sel)this.value='';pas_sel=true;" style="width:90px">
     </td></tr>    
     </table>
-    <div align=center><input type=submit class=button value="РІРѕР№С‚Рё">
+    <div align=center><input type=submit class=button value="войти">
     </form>
     <? if($MDL->IsModuleExists('users'))
       {
@@ -85,13 +62,7 @@ pas_sel=false;
     <?php 
     }
     else 
-    {
-      ob_start();
-       $MDL->LoadMenu('users');
-      $res = utils::cp2utf(ob_get_contents());
-      ob_end_clean();
-      echo $res;
-    }    
+       $MDL->LoadMenu('users');    
     ?>   
 
   </td></tr>
@@ -149,14 +120,15 @@ pas_sel=false;
 
 
 <!-- STARTOF CONTENT -->
-	<? 
-	if(!empty($newact) && file_exists(dirname(__FILE__).'/'.$newact.'.php'))	
-		require_once(dirname(__FILE__).'/'.$newact.'.php');
-	else
-	{ 
-	?>
-		No such new CADBiS page
-	<? } ?>
+<? 
+if(isset($ajaxbuf) && $ajaxbuf instanceof ajax_buffer)
+	$ajaxbuf->start(); 
+?>
+	<?= $_CONTENT ?>
+<?
+if(isset($ajaxbuf) && $ajaxbuf instanceof ajax_buffer)
+	$ajaxbuf->end(); 
+?>
 <!-- ENDOF CONTENT -->
 
 
@@ -187,10 +159,10 @@ pas_sel=false;
    	</td></tr> 
           </table>
 	  
-	   <div align=center><small>В© SMStudio, 2006</small></div>
+	   <div align=center><small>© SMStudio, 2006</small></div>
 
 	</td>
-	<td>
+	<td width=100%>
 	  <table width=100% height=100% cellspacing=0 cellpadding=0 border=0px>
 	  <tr><td width=100% height=53px>
 	   <table width=228px height=100% cellspacing=0 cellpadding=0 valign=top align=left border=0>
@@ -198,8 +170,7 @@ pas_sel=false;
 	   <td bgcolor=#F0F6F8 width=149px></td>
 	   </table>	
 	  </td></tr>
- 	  <tr>
- 	  <td width=100% height=100%>
+ 	  <tr><td width=100% height=100%>
 	   <table width=228px height=100% cellspacing=0 cellpadding=0 valign=top align=left border=0>
 	    <td width=45px height=100% background="<? OUT(SK_DIR) ?>/img/right_lm.gif"></td>
 	    <td bgcolor=#F0F6F8 width=183px valign=top>
@@ -207,23 +178,16 @@ pas_sel=false;
 
 <!-- STARTOF BARS -->
 
-	
-<table width="178px" cellspacing=0 cellpadding=0 class=tblbar>
+	   <table width=178px cellspacing=0 cellpadding=0 class=tblbar>
 	    <tr><td background="<? OUT(SK_DIR) ?>/img/bar_title.gif">
 	     <table width=178px height=32px><td align=center valign=bottom width=100% height=100%>
 		<font class=bartitle>
-		РџРѕР»СЊР·РѕРІР°С‚РµР»Рё	
+		Пользователи	
 		</font>
 	     </td></table>
 	    </td></tr>
 	    <tr><td width=100%>
-             <? 
-		      ob_start();
-		      $MDL->LoadModule('users',true);  
-		      $res = utils::cp2utf(ob_get_contents());
-		      ob_end_clean();
-		      echo $res;	             
-			?>
+             <? $MDL->LoadModule('users',true);   ?>
 	    </td></tr>
 	   </table><br>
 
@@ -231,21 +195,58 @@ pas_sel=false;
 	    <tr><td background="<? OUT(SK_DIR) ?>/img/bar_title.gif">
 	     <table width=178px height=32px><td align=center valign=bottom width=100% height=100%>
 		<font class=bartitle>
-                РќРѕРІРѕСЃС‚Рё
+                Новости
                 </font>
 	     </td></table>
 	    </td></tr>
 	    <tr><td width=100% class=tblbar>
-             <? 
-		      ob_start();
-		      $MDL->LoadModule('news',true);   
-		      $res = utils::cp2utf(ob_get_contents());
-		      ob_end_clean();
-		      echo $res;	             
-             ?>
+             <? $MDL->LoadModule('news',true);   ?>
 	    </td></tr>
-	   </table>
-	   <br/>
+	   </table><br>
+	      
+	   <table width=178px cellspacing=0 cellpadding=0 class=tblbar>
+	    <tr><td background="<? OUT(SK_DIR) ?>/img/bar_title.gif">
+	     <table width=178px height=32px><td align=center valign=bottom width=100% height=100%>
+		<font class=bartitle>
+                Последние статьи
+                </font>
+	     </td></table>
+	    </td></tr>
+	    <tr><td width=100%>
+	   <? $MDL->LoadModule('articles',true);   ?>
+	    </td></tr>
+	   </table><br>
+
+	   <table width=178px cellspacing=0 cellpadding=0 class=tblbar>
+	    <tr><td background="<? OUT(SK_DIR) ?>/img/bar_title.gif">
+	     <table width=178px height=32px><td align=center valign=bottom width=100% height=100%>
+		<font class=bartitle>
+                Объявления      
+                </font>
+	     </td></table>
+	    </td></tr>
+	    <tr><td width=100%>
+             <? $MDL->LoadModule('annoucements',true);   ?>
+
+	    </td></tr>
+	   </table><br>
+	   
+	   
+	   <table width=178px cellspacing=0 cellpadding=0 class=tblbar>
+	    <tr><td background="<? OUT(SK_DIR) ?>/img/bar_title.gif">
+	     <table width=178px height=32px><td align=center valign=bottom width=100% height=100%>
+		<font class=bartitle>
+                Состояние     
+                </font>
+	     </td></table>
+	    </td></tr>
+	    <tr><td width=100%>
+             <? $MDL->LoadModule('smadbis',true);   ?>
+
+	    </td></tr>
+	   </table><br>	   
+
+
 
 <!-- ENDOF BARS -->
 	
