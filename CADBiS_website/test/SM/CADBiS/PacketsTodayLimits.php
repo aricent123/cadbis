@@ -56,7 +56,7 @@ class PacketsTodayLimits
 			$dayLimit = round($this->allowedDayTraffic * $this->packetsCoefs[$this->packets[$i]['gid']]);
 			$restPacketMonthTraffic = $dayLimit*$this->restDaysCount;
 			$this->monthTrafficLimits[$this->packets[$i]['gid']]= $restPacketMonthTraffic;
-			if($this->packets[$i]['exceed_times']*$dayLimit<=$restPacketMonthTraffic)
+			if(($this->packets[$i]['exceed_times']+1)*$dayLimit<=$restPacketMonthTraffic)
 				$dayLimit *= $this->packets[$i]['exceed_times']+1;
 			else
 				$dayLimit = $restPacketMonthTraffic;
