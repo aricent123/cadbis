@@ -1334,7 +1334,7 @@ function DeleteTarif($gid)
 
         global $CURRENT_USER;
 	$data["uid"]=$CURRENT_USER["id"];
-        $data["event"]="Удаление тфрифа: ".$gid;
+        $data["event"]="Удаление тарифа: ".$gid;
         $data["date"]=norm_date_yymmddhhmmss(time());
         $this->AddEvent($data);
 
