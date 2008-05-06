@@ -1444,7 +1444,7 @@ if($_NOTBAR)
      {
      $data=$ART->GetTopicDataById($topic);
      ?> 
-     <table width=100%>
+     <table width=100%><tr>
      <td class=tdarttopic>
      <div align=center><b><?php OUT($data["title"]); ?></b> (<?php OUT(count($data["articles"])); ?>)</div><br>
      <div align=right>Автор:<?php $ud=get_user_data($data["author"]); OUT("<a href=?p=users&act=userinfo&id=".$data["author"].">".$ud["nick"]."</a>"); ?></div>
