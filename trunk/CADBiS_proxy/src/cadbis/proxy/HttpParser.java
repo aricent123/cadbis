@@ -11,11 +11,14 @@ import cadbis.utils.StringUtils;
 public class HttpParser {
 	private HashMap<Integer, String> Headers;
 	private String RequestString;
+	private String Body = "";
 	private String FullHeader;
 	private String RequestMethod;
 	private int HttpPort = 80;
 	private String HttpHost = "";
 	private final Logger logger = LoggerFactory.getLogger(getClass());
+	private boolean isResponseParsed = false;
+	private boolean isRequestParsed = false;
 	
 	public HttpParser()
 	{		
@@ -58,14 +61,18 @@ public class HttpParser {
 	public void ParseRequestHeaders(String FullHeader)
 	{
 		this.FullHeader = FullHeader;
-		ParseHeaders(this.FullHeader.split("\r\n"));		
+		ParseHeaders(this.FullHeader.split("\r\n"));	
+		isRequestParsed = true;
 	}
 	
 	public void ParseResponseHeaders(String FullHeader)
 	{
 		String[] HeadBody = FullHeader.split("\r\n\r\n");
 		this.FullHeader = HeadBody[0];
+		if(HeadBody.length > 1)
+			this.Body = HeadBody[1];
 		ParseHeaders(this.FullHeader.split("\r\n"));
+		isResponseParsed = true;
 	}
 	public String getHttpHost()
 	{
@@ -125,5 +132,20 @@ public class HttpParser {
 		}
 		logger.debug("Request String is OK");
 		return packet;
+	}
+
+
+	public String getBody() {
+		return Body;
+	}
+
+
+	public boolean isResponseParsed() {
+		return isResponseParsed;
+	}
+
+
+	public boolean isRequestParsed() {
+		return isRequestParsed;
 	}	
 }
