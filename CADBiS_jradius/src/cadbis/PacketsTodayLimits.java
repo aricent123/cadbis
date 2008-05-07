@@ -16,6 +16,11 @@ public class PacketsTodayLimits {
 	protected HashMap<Integer, Double> packetsCoefs = null;
 	protected HashMap<Integer, Long> dayTrafficLimits = null;
 	protected HashMap<Integer, Long> monthTrafficLimits = null;
+	protected Long restDaysCount = 0L;
+	protected Long usedMonthTraffic = 0L;
+	protected Long maximumMonthTraffic = 0L;
+	protected Long restMonthTraffic = 0L;
+	private Long allowedDayTraffic = 0L;
 	
 	protected void recalcTrafficLimits()
 	{
@@ -23,15 +28,16 @@ public class PacketsTodayLimits {
 		dayTrafficLimits = new HashMap<Integer, Long>();
 		monthTrafficLimits = new HashMap<Integer, Long>();
 		PacketDAO dao = new PacketDAO();
-		BigInteger maximumMonthTraffic =  (BigInteger)dao.getSingleValueByQuery("select value from `cadbis_config` where name='max_month_traffic'","value");
-		Long usedMonthTraffic = dao.getMonthTraffic();
-		Long restDaysCount = Long.valueOf((DateUtils.getDaysInMonth() - DateUtils.getDOM()))+1;		
+		BigInteger tmpMaximumMonthTraffic =  (BigInteger)dao.getSingleValueByQuery("select value from `cadbis_config` where name='max_month_traffic'","value");
+		usedMonthTraffic = dao.getMonthTraffic();
+		restDaysCount = Long.valueOf((DateUtils.getDaysInMonth() - DateUtils.getDOM()))+1;		
 		if(usedMonthTraffic == null)
 			usedMonthTraffic= 0L;
-		List<Packet> packets = dao.getItemsWithStats();
-		if(maximumMonthTraffic!=null){
-			Long restMonthTraffic = maximumMonthTraffic.longValue() - usedMonthTraffic.longValue();
-			Long allowedDayTraffic = (restMonthTraffic) / restDaysCount;
+		List<Packet> packets = dao.getPacketsWithStats();
+		if(tmpMaximumMonthTraffic!=null){
+			maximumMonthTraffic = tmpMaximumMonthTraffic.longValue();
+			restMonthTraffic = maximumMonthTraffic.longValue() - usedMonthTraffic.longValue();
+			allowedDayTraffic  = (restMonthTraffic) / restDaysCount;
 			
 			double SumOfRangs = 0; 
 			for(int i = 0; i< packets.size(); ++i)
@@ -65,5 +71,21 @@ public class PacketsTodayLimits {
 		if(dayTrafficLimits == null)
 			recalcTrafficLimits();
 		return dayTrafficLimits.get(gid);
+	}
+
+	public Long getRestDaysCount() {
+		return restDaysCount;
+	}
+
+	public Long getUsedMonthTraffic() {
+		return usedMonthTraffic;
+	}
+
+	public Long getRestMonthTraffic() {
+		return restMonthTraffic;
+	}
+
+	public Long getAllowedDayTraffic() {
+		return allowedDayTraffic;
 	}	
 }

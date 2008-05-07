@@ -1,8 +1,8 @@
 package cadbis.exc;
 
-public class MonthTrafficLimitExceedException extends CADBiSException {
+public class DayPacketTrafficLimitExceedException extends CADBiSException {
 
-	public MonthTrafficLimitExceedException(String message) {
+	public DayPacketTrafficLimitExceedException(String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
