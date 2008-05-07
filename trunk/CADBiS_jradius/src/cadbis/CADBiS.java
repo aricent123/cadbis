@@ -13,8 +13,9 @@ import cadbis.bl.User;
 import cadbis.db.ActionDAO;
 import cadbis.db.PacketDAO;
 import cadbis.db.UserDAO;
-import cadbis.exc.SimultaneousUseExceedException;
+import cadbis.exc.CADBiSException;
 import cadbis.jradius.JRadiusConfigurator;
+import cadbis.proxy.Proxy;
 
 public class CADBiS extends CADBiSDaemon{
 	
@@ -29,6 +30,8 @@ public class CADBiS extends CADBiSDaemon{
 	private CADBiS()
 	{
 		super("CADBiS",Integer.valueOf(JRadiusConfigurator.getInstance().getProperty("cadbis_daemon_period")));
+		logger.info("Instantiating the proxy server...");
+		new Proxy().start();		
 		createObjects();
 	}
 	
@@ -42,7 +45,6 @@ public class CADBiS extends CADBiSDaemon{
 	{
 		activeSessions = new HashMap<String, String>();
 		dayLimits = new PacketsTodayLimits();
-		dayLimits.getPacketDayTrafficLimit(0);
 	}
 	
 	@Override
@@ -85,10 +87,13 @@ public class CADBiS extends CADBiSDaemon{
 		
 		User user = new UserDAO().getByLoginWithStats(login);
 		PacketDAO dao = new PacketDAO();
-		Packet userpacket = dao.getItemByQuery(String.format("select * from `packets` where gid = %d",user.getGid()));
+		Packet userpacket = dao.getPacketWithStats(user.getGid());
 		if(userpacket!=null)
 		{
 			try{
+				user.checkBlocked();
+				user.checkTrafficLimits();
+				user.checkSimultaneous_use(getConnectedCount(user));
 				userpacket.checkAccessTime(); 
 				userpacket.checkTrafficLimits(user.getMtraffic(),user.getWtraffic(),
 													user.getDtraffic(), user.getTtraffic());
@@ -96,13 +101,20 @@ public class CADBiS extends CADBiSDaemon{
 				userpacket.checkTimeLimits(user.getMtime(),user.getWtime(), 
 													user.getDtime(),user.getTtime());
 				userpacket.checkPacketUsage(getPacketUsageCount(user));
-				if(getConnectedCount(user) >= user.getSimultaneous_use())
-					throw new SimultaneousUseExceedException();
+				
+				userpacket.checkDayTrafficLimit(
+						dao.getDayTraffic(userpacket.getGid()),
+						dayLimits.getPacketDayTrafficLimit(user.getGid()));
+			}
+			catch(CADBiSException e)
+			{
+				logger.warn("Exceed access error: " + e.getClass() + ", error= "+ e.getMessage());
+				return false;
 			}
 			catch(Exception e)
 			{
-				logger.warn("Exceed access error: " + e.getClass());
-				return false;
+				logger.error("Error occured while access checking: " +e.getMessage());
+				e.printStackTrace();
 			}
 
 			
@@ -137,8 +149,8 @@ public class CADBiS extends CADBiSDaemon{
 			activeSessions.remove(uniqueId);
 		activeSessions.put(sessionId, uniqueId);
 		User user = new UserDAO().getByLogin(login);
-		new ActionDAO().execSql(String.format("insert into `actions`(user,gid,id,unique_id,start_time,ip,call_from,last_change, terminate_cause, port)" +
-				"values('%s',%d,'%s','%s',NOW(),'%s','%s',UNIX_TIMESTAMP(NOW()),'Online',%d)",user.getUser(),user.getGid(),sessionId,uniqueId,framedIP,clientIP,nasPort));
+		new ActionDAO().execSql(String.format("insert into `actions`(user,gid,id,unique_id,start_time,stop_time,ip,call_from,last_change, terminate_cause, port)" +
+				"values('%s',%d,'%s','%s',NOW(),NOW(),'%s','%s',UNIX_TIMESTAMP(NOW()),'Online',%d)",user.getUser(),user.getGid(),sessionId,uniqueId,framedIP,clientIP,nasPort));
 	}
 	
 	public void SessionStop(String sessionId, String login, long sessionTime, long outputOctets, long inputOctets, String terminateCause)

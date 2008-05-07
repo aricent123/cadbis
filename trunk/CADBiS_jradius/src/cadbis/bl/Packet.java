@@ -8,6 +8,8 @@ import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cadbis.exc.CADBiSException;
+import cadbis.exc.DayPacketTrafficLimitExceedException;
 import cadbis.exc.DayTimeLimitExceedException;
 import cadbis.exc.DayTrafficLimitExceedException;
 import cadbis.exc.MonthTimeLimitExceedException;
@@ -249,7 +251,7 @@ public class Packet implements BusinessObject{
 		return false;
 	}
 	
-	public boolean checkAccessTime() throws WrongAccessTimeException
+	public boolean checkAccessTime() throws CADBiSException
 	{
 		boolean access = false;
 		if(login_time != null && !login_time.isEmpty())
@@ -273,7 +275,7 @@ public class Packet implements BusinessObject{
 					}
 				}
 			if(!access)
-				throw new WrongAccessTimeException();
+				throw new WrongAccessTimeException("Access denied outside of " + login_time);
 		}
 		return access;
 	}
@@ -291,17 +293,16 @@ public class Packet implements BusinessObject{
 	 * @throws TotalTimeLimitExceedException
 	 */
 	public void checkTrafficLimits(long cur_mtraffic, long cur_wtraffic, long cur_dtraffic, long cur_ttraffic) 
-		throws MonthTrafficLimitExceedException, WeekTrafficLimitExceedException, 
-		DayTrafficLimitExceedException, TotalTrafficLimitExceedException
+		throws CADBiSException
 	{
 		if(!(cur_mtraffic <= month_traffic_limit || month_traffic_limit==0))
-			throw new MonthTrafficLimitExceedException();
+			throw new MonthTrafficLimitExceedException(cur_mtraffic+" exceed maximum of "+month_traffic_limit);
 		if(!(cur_wtraffic <= week_traffic_limit  || week_traffic_limit==0))
-			throw new WeekTrafficLimitExceedException();
+			throw new WeekTrafficLimitExceedException(cur_wtraffic+" exceed maximum of "+week_traffic_limit);
 		if(!(cur_dtraffic <= day_traffic_limit || day_traffic_limit==0))
-			throw new DayTrafficLimitExceedException();
+			throw new DayTrafficLimitExceedException(cur_dtraffic+" exceed maximum of "+day_traffic_limit);
 		if(!(cur_ttraffic <= total_traffic_limit || total_traffic_limit==0))
-			throw new TotalTrafficLimitExceedException();
+			throw new TotalTrafficLimitExceedException(cur_ttraffic+" exceed maximum of "+total_traffic_limit);
 	}
 
 	/**
@@ -316,24 +317,30 @@ public class Packet implements BusinessObject{
 	 * @throws TotalTimeLimitExceedException
 	 */
 	public void checkTimeLimits(long cur_mtime, long cur_wtime, long cur_dtime, long cur_ttime) 
-		throws MonthTimeLimitExceedException, WeekTimeLimitExceedException, 
-				DayTimeLimitExceedException, TotalTimeLimitExceedException
+		throws CADBiSException
 	{
 		if(!(cur_mtime <= month_time_limit || month_time_limit==0))
-			throw new MonthTimeLimitExceedException();
+			throw new MonthTimeLimitExceedException(cur_mtime+" exceed maximum of "+month_time_limit);
 		if(!(cur_wtime <= week_time_limit || week_time_limit==0))
-			throw new WeekTimeLimitExceedException();
+			throw new WeekTimeLimitExceedException(cur_wtime+" exceed maximum of "+week_time_limit);
 		if(!(cur_dtime <= day_time_limit || day_time_limit==0))
-			throw new DayTimeLimitExceedException();
+			throw new DayTimeLimitExceedException(cur_dtime+" exceed maximum of "+day_time_limit);
 		if(!(cur_ttime <= total_time_limit || total_time_limit==0))
-			throw new TotalTimeLimitExceedException();
+			throw new TotalTimeLimitExceedException(cur_ttime+" exceed maximum of "+total_time_limit);
 	}
 
 	
-	public void checkPacketUsage(long usage_count) throws PacketUsageExceedException
+	public void checkPacketUsage(long usage_count) throws CADBiSException
 	{
 		if(this.port_limit <= usage_count)
-			throw new PacketUsageExceedException();
+			throw new PacketUsageExceedException(port_limit+" exceed maximum of "+usage_count);
+	}
+
+
+
+	public void checkDayTrafficLimit(Long dayTraffic, Long dayTrafficLimit) throws CADBiSException {
+		if(dayTraffic >= dayTrafficLimit)
+			throw new DayPacketTrafficLimitExceedException(dayTraffic+" exceed maximum of "+dayTrafficLimit); 
 	}
 
 }

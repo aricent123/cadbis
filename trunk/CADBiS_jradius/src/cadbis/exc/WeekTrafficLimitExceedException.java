@@ -2,6 +2,11 @@ package cadbis.exc;
 
 public class WeekTrafficLimitExceedException extends CADBiSException {
 
+	public WeekTrafficLimitExceedException(String message) {
+		super(message);
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * 
 	 */
