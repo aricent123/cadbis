@@ -1,18 +1,15 @@
 package cadbis.proxy;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.zip.DataFormatException;
-import java.util.zip.Inflater;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,20 +30,7 @@ class ProxyConnection extends CADBiSThread {
 	 private final Logger logger = LoggerFactory.getLogger(getClass());
 	 private static final int MAX_BLOCK_SIZE = 4096;
 	 private boolean trueproxy = false;
-	 
-	 
-	 // lifetime members
-	 private long startTime = new Date().getTime();
-	 private long endTime = new Date().getTime();
-	 private boolean isReadWrite = true;
-	 private boolean isAccessDenied = false;
-	 private int ErrorsCount = 0;
-	 private String HttpHost = "";
-	 private int HttpPort = 80;
-	 private String HostIp = "";
-	 private StringBuffer fullResponseBuffer = new StringBuffer();
-	 private boolean isPossibleContentEnd = false;
-	 private String UserIp;
+
 	 
 	 ProxyConnection(Socket s, long timeout)
 	 {
@@ -66,13 +50,15 @@ class ProxyConnection extends CADBiSThread {
 	 protected boolean isNeedToCheckContent(HttpParser ResponseParser)
 	 {
 		 boolean enabled = ProxyConfigurator.getInstance().getProperty("contentcheck").equals("enabled");
-		 return enabled && (ResponseParser.GetHeader("Content-Type").indexOf("text/html")>=0);
+		 String ctype = ResponseParser.GetHeader("Content-Type");
+		 return enabled && (ctype.indexOf("text/html")>=0 || ctype.indexOf("text/plain")>=0);
 	 }
 	 
-	 protected void answerAccessDenied(HttpParser RequestParser,List<byte[]> buffer, String UserIp, String HttpHost)
+	 protected void answerAccessDenied(List<byte[]> buffer, String UserIp, String HttpHost)
 	 {
+		 buffer.clear();
 			String accDenied = ProxyConfigurator.getInstance().getFile_denied_access();
-			accDenied = accDenied.replace("%U",RequestParser.GetHeader("Host"));
+			accDenied = accDenied.replace("%U",HttpHost);
 			accDenied = accDenied.replace("%T",new Date().toString());
 			for(int i=0;i<accDenied.length();i+=MAX_BLOCK_SIZE)
 			{
@@ -103,8 +89,7 @@ class ProxyConnection extends CADBiSThread {
 			logger.info("Category unknown, have to parse whole response... " );
 			//ByteBuffer fullResponse = ByteBuffer.allocate(totalRcvd);
 			String body = "";
-			if(ResponseParser.GetHeader("Content-Encoding").equals("gzip"))
-			{
+
 				try
 				{
 					String[] parts = fullResponse.toString().split("\r\n\r\n");
@@ -112,29 +97,31 @@ class ProxyConnection extends CADBiSThread {
 					{						
 						if(!ResponseParser.GetHeader("Content-Length").isEmpty()){
 							Integer content_length = Integer.valueOf(ResponseParser.GetHeader("Content-Length"));
-							body = parts[1].substring(0,content_length);
+							if(parts[1].length()>content_length && content_length!=0)
+								parts[1] = parts[1].substring(0,content_length-2);
+							else
+								parts[1] = parts[1].substring(0,parts[1].length()-2);
 							logger.info("Body with header, splitted. header='"+parts[0]+"', bodylength="+body.length());							
 							if(parts[1].length()!=content_length)
 								logger.error("Parsing response error: "+body.length()+"!="+content_length);
 						}
+						else
+							parts[1] = parts[1].substring(0, parts[1].length()-2);
+						body = parts[1];
 					}
-					
+				if(ResponseParser.GetHeader("Content-Encoding").equals("gzip"))
 					body = new String(StringUtils.getChars(IOUtils.UnzipArray(body.getBytes())));
 				}
 				catch(DataFormatException e)
 				{
-					logger.error("Data format error while trying to unzip body of packet with header = "+ResponseParser.GetFullHeader());
+					logger.error("Data format error while trying to unzip body of packet with header = "+ResponseParser.GetFullHeader()+", body.len="+body.length());
 				}
 				catch(IOException e)
 				{
 					logger.error("IO error while trying to unzip body of packet with header = "+ResponseParser.GetFullHeader());
 				}
-			}
-			else
-				body = fullResponse.toString();
-			logger.info("Parsed, body length="+body.length()+"...");
+			logger.info("Parsed, body='"+body+"' length="+body.length()+"...");
 			return Categorizer.getInstance().recognizeAndAddCategory(HttpHost, body);
-
 	 }
 	 
 
@@ -143,11 +130,7 @@ class ProxyConnection extends CADBiSThread {
 		 InputStream clientIn = null;
 		 OutputStream clientOut = null;
 		 InputStream serverIn = null;
-		 OutputStream serverOut = null;
-		 
-	  
-		 startTime = new Date().getTime();
-		 endTime = new Date().getTime();
+		 OutputStream serverOut = null;	 
 		 Socket toServer = null;
 		 
 		 // defining the streams
@@ -161,6 +144,20 @@ class ProxyConnection extends CADBiSThread {
 			 logger.error(e.getMessage());
 		 }
 
+		 
+		 // lifetime members
+		 long startTime = new Date().getTime();
+		 long endTime = new Date().getTime();
+		 boolean isReadWrite = true;
+		 boolean isAccessDenied = false;
+		 int ErrorsCount = 0;
+		 String HttpHost = "";
+		 int HttpPort = 80;
+		 String HostIp = "";
+		 StringBuffer fullResponseBuffer = new StringBuffer();
+		 String UserIp;		 
+		 boolean NeedToCheckContent = false;
+		 boolean isFullAnswer = false;
 		 isReadWrite = true;
 		 isAccessDenied = false;
 	 	 ErrorsCount = 0;
@@ -168,25 +165,20 @@ class ProxyConnection extends CADBiSThread {
 		 HttpPort = 80;
 		 HostIp = "";
 		 fullResponseBuffer = new StringBuffer();
-		 isPossibleContentEnd = false;
 		 
 		 // current user IP
 		 UserIp = fromClient.getInetAddress().getHostAddress();
 		 final int WaitRWPeriod = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("waitrwtime"));
 		 final int MaxErrorsCount = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("maxerrorscount"));
-		 final HttpParser 
-			RequestParser= new HttpParser(), 
-			ResponseParser= new HttpParser();
+		 final HttpParser firstPacketResponseParser  = new HttpParser();
 		 
-		 while(endTime - startTime < timeout && ErrorsCount<MaxErrorsCount) 
+		 
+		 while(endTime - startTime < timeout && ErrorsCount<MaxErrorsCount && !isFullAnswer) 
 		 {
 			 //logger.debug("new packet processing iteration, timeout: " + (endTime-startTime) +" ms");
-			 
-			 /**
-			  * guess that content is already fully recieved if timeout
-			  * is reached in half
-			  */
-			 isPossibleContentEnd = (endTime - startTime >= 3*timeout/4);
+			 final HttpParser 
+				RequestParser= new HttpParser(), 
+				ResponseParser= new HttpParser();			 
 			 
 			 
 			 isReadWrite = false;			 
@@ -223,7 +215,6 @@ class ProxyConnection extends CADBiSThread {
 					RequestParser.ClearHeaders();
 					RequestParser.ParseRequestHeaders(cRcvdData);
 				}
-				//buffer.set(0, RequestParser.GetFixedFullHeader().getBytes());
 				buffer.set(0, RequestParser.GetFixedPacket(buffer.get(0)));
 				HttpHost = RequestParser.getHttpHost();
 				HttpPort = RequestParser.getHttpPort();		
@@ -307,8 +298,8 @@ class ProxyConnection extends CADBiSThread {
 					RcvdAmount = IOUtils.readStreamAsArray(serverIn, buffer);
 				else if(toServer!=null)
 				{
-					isAccessDenied = false;
-					answerAccessDenied(RequestParser,buffer,UserIp,HttpHost);
+					isFullAnswer = true;
+					answerAccessDenied(buffer,UserIp,HttpHost);
 				}
 			 }
 			 catch(IOException e)
@@ -322,21 +313,21 @@ class ProxyConnection extends CADBiSThread {
 			  * Parse the response headers
 			  *************************************/
 			 if(buffer.size()>0)
-				 if(!ResponseParser.isResponseParsed())
+				 if(!firstPacketResponseParser.isResponseParsed())
 				 {
-					 logger.debug("This is a first time of response processing, parse headers...");
-					 ResponseParser.ParseResponseHeaders(new String(StringUtils.getChars(buffer.get(0))));
+					 firstPacketResponseParser.ParseResponseHeaders(new String(StringUtils.getChars(buffer.get(0))));
+					 logger.debug("content-type = "+firstPacketResponseParser.GetHeader("Content-Type"));
+					 NeedToCheckContent = isNeedToCheckContent(firstPacketResponseParser);
 				 }
-				 else
-					 logger.debug("This is not a first time of response processing, skip headers...");
 			 
+			 			 
 			 /***************************************
 			  * Analyzing the response to define the access
 			  * to category
 			  * TODO: The place for content analyze
 			  * analyze only text/html content
 			  ***************************************/
-			 if(isNeedToCheckContent(ResponseParser))
+			 if(NeedToCheckContent)
 			 {
 				 Integer cid = Categorizer.getInstance().getCategoryForUrl(HttpHost);
 				 // category not recognized, trying to recognize it
@@ -353,20 +344,22 @@ class ProxyConnection extends CADBiSThread {
 					  * we must do it only if the content 
 					  * is already fully received 
 					  */							 
-					 if(isPossibleContentEnd)
+					 //if(fullResponseBuffer.length()>Integer.valueOf(content_length) + firstPacketResponseParser.GetFullHeader().length())
+					 if(endTime - startTime > timeout/2)
 					 {
 						logger.info("Possible content end reached, trying to recognize category...");
-						cid = RecognizeCategory(ResponseParser, fullResponseBuffer, HttpHost);
+						cid = RecognizeCategory(firstPacketResponseParser, fullResponseBuffer, HttpHost);
 					 }
 				 }
 				 else
 				 {
+					 NeedToCheckContent = false;
 					 Action act = Collector.getInstance().getActionByUserIp(UserIp);
-					 logger.debug("Checking access of "+act.getUser()+" to cid="+cid+"...");
+					 logger.info("Checking access of "+act.getUser()+" to cid="+cid+"...");
 					 if(!new ContentAccessChecker().checkAccessOfUserToCategory(act.getUser(), cid))
 						{
-							isAccessDenied = false;
-							answerAccessDenied(RequestParser,buffer,UserIp,HttpHost);
+							isFullAnswer = true;
+							answerAccessDenied(buffer,UserIp,HttpHost);
 						}
 				 }
 				 
@@ -381,6 +374,7 @@ class ProxyConnection extends CADBiSThread {
 				 // if we have read smthg
 				 if(buffer.size()>0 && toServer!=null)
 				 {
+					 ResponseParser.ParseResponseHeaders(new String(StringUtils.getChars(buffer.get(0))));
 					 logger.debug("Response.type = "+ResponseParser.GetHeader("Content-Type"));
 					 logger.debug("buffer, blocks count = " + buffer.size());					 
 					 isReadWrite = true;

@@ -1,8 +1,5 @@
 package cadbis.logger;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.apache.log4j.spi.LoggingEvent;
 
 public class ConsoleAppender extends org.apache.log4j.ConsoleAppender {
