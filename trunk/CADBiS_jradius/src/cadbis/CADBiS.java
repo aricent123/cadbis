@@ -26,7 +26,6 @@ public class CADBiS extends CADBiSDaemon{
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	private static CADBiS instance = null;
 	
-	
 	private CADBiS()
 	{
 		super("CADBiS",Integer.valueOf(JRadiusConfigurator.getInstance().getProperty("cadbis_daemon_period")));
@@ -82,33 +81,36 @@ public class CADBiS extends CADBiSDaemon{
 		return res;
 	}	
 	
-	public boolean checkAccessNow(String login)
+	public boolean checkAccessNow(String login, String framedIp, String clientIp)
 	{
 		
 		User user = new UserDAO().getByLoginWithStats(login);
 		PacketDAO dao = new PacketDAO();
 		Packet userpacket = dao.getPacketWithStats(user.getGid());
+		Checker checker = new Checker(userpacket, user);
+		
 		if(userpacket!=null)
 		{
 			try{
-				user.checkBlocked();
-				user.checkTrafficLimits();
-				user.checkSimultaneous_use(getConnectedCount(user));
-				userpacket.checkAccessTime(); 
-				userpacket.checkTrafficLimits(user.getMtraffic(),user.getWtraffic(),
+				checker.checkBlocked();
+				checker.checkTrafficLimits();
+				checker.checkSimultaneous_use(getConnectedCount(user));
+				checker.checkAccessTime(); 
+				checker.checkTrafficLimits(user.getMtraffic(),user.getWtraffic(),
 													user.getDtraffic(), user.getTtraffic());
 				
-				userpacket.checkTimeLimits(user.getMtime(),user.getWtime(), 
+				checker.checkTimeLimits(user.getMtime(),user.getWtime(), 
 													user.getDtime(),user.getTtime());
-				userpacket.checkPacketUsage(getPacketUsageCount(user));
+				checker.checkPacketUsage(getPacketUsageCount(user));
 				
-				userpacket.checkDayTrafficLimit(
+				checker.checkDayTrafficLimit(
 						dao.getDayTraffic(userpacket.getGid()),
 						dayLimits.getPacketDayTrafficLimit(user.getGid()));
 			}
 			catch(CADBiSException e)
 			{
 				logger.warn("Exceed access error: " + e.getClass() + ", error= "+ e.getMessage());
+				new Notifier(login,"","",e.getUniformMessage()).start();
 				return false;
 			}
 			catch(Exception e)
@@ -172,7 +174,7 @@ public class CADBiS extends CADBiSDaemon{
 		{
 			new ActionDAO().execSql(String.format("update `actions` set in_bytes=%d, out_bytes=%d,time_on=%d where unique_id = '%s'",
 					inputOctets, outputOctets, sessionTime, uniqueId));
-			if(!checkAccessNow(login))
+			if(!checkAccessNow(login, framedIP, clientIP))
 			{
 				new Killer(login,framedIP, clientIP, nasPort).start();
 			}
