@@ -85,6 +85,8 @@ public class CADBiSHandler extends PacketHandlerBase
             }
     	    
     	    
+			String clientIP = req.getAttributes().get("Client-IP-Address").getValue().toString();
+			String framedIP = req.getAttributes().get("Framed-IP-Address").getValue().toString();
 
             switch (type)
             {
@@ -92,8 +94,6 @@ public class CADBiSHandler extends PacketHandlerBase
 	        	{
 	        		String sessionID = req.getAttributes().get("Acct-Session-Id").getValue().toString();
 	        		String statusType = req.getAttributes().get("Acct-Status-Type").getValue().toString();	        		
-	        		String clientIP = req.getAttributes().get("Client-IP-Address").getValue().toString();
-	        		String framedIP = req.getAttributes().get("Framed-IP-Address").getValue().toString();
 	        		String login = req.getAttributes().get("User-Name").getValue().toString();
 	        		Integer nasPort = Integer.parseInt(req.getAttributes().get("NAS-Port").getValue().toString());
 	        		// generate unique session id
@@ -123,7 +123,7 @@ public class CADBiSHandler extends PacketHandlerBase
 	        	case JRadiusServer.JRADIUS_authorize:
 	        	{
 	        		
-	        		if (!CADBiS.getInstance().checkAccessNow(username))
+	        		if (!CADBiS.getInstance().checkAccessNow(username, framedIP, clientIP))
 	        		{
 	        			jRequest.setReturnValue(JRadiusServer.RLM_MODULE_REJECT);
 	        			return false;
