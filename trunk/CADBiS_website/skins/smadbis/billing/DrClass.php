@@ -118,16 +118,15 @@ function AddUser($user)
         expired - ДЗПУ        +
 	*/
 
-	 if($this->IsUserExists($user[user]))return "Ошибка, данный логин уже занят!";
+	 if($this->IsUserExists($user['user']))return "Ошибка, данный логин уже занят!";
 
 	$query="Insert into `".$GV["users_tbl"].
-        "`(`user`,`password`,`gid`,`fio`,`phone`,`address`,`prim`,`add_uid`,`nick`,`gender`,`email`,`icq`,`url`,`rang`,`group`,`city`,`country`,`raiting`,`signature`,`info`,`add_date`,`expired`,`crypt_method`) values ('"
-        .$user[user]."','".$user[password]."','".$user[gid]."','".$user[fio]."','".$user[phone]."','".$user[address]."','"
-	  .$user[prim]."','".$user[add_uid]."','".$user[nick]."','".$user[gender]."','".$user[email]."','".$user[icq]."','".$user[url]."','"
-	  .$user[rang]."','".$user[group]."','".$user[city]."','".$user[country]."','".$user[raiting]."','".$user[signature]."','".$user[info]."','"
-	  .norm_date_yymmdd(time())."','".$user[expired]."','0');";
-
-        //die($query);
+        "`(`user`,`password`,`gid`,`fio`,`phone`,`address`,`prim`,`add_uid`,`nick`,`gender`,`email`,`icq`,`url`,`rang`,`group`,`city`,`country`,`raiting`,`signature`,`info`,`add_date`
+        ,`max_total_traffic`,`max_month_traffic`,`max_week_traffic`,`max_day_traffic`,`simultaneous_use`) values ('"
+        .$user['user']."','".$user['password']."','".$user['gid']."','".$user['fio']."','".$user['phone']."','".$user['address']."','"
+	  .$user['prim']."','".$user['add_uid']."','".$user['nick']."','".$user['gender']."','".$user['email']."','".$user['icq']."','".$user['url']."','"
+	  .$user['rang']."','".$user['group']."','".$user['city']."','".$user['country']."','".$user['raiting']."','".$user['signature']."','".$user['info']."','"
+	  .norm_date_yymmdd(time())."',".$user['max_total_traffic'].",".$user['max_month_traffic'].",".$user['max_week_traffic'].",".$user['max_day_traffic'].",".$user['simultaneous_use'].");";
         $result=mysql_query($query,$this->link)or die("Invalid query(Add User): " . mysql_error());
 
         //Журналирование событий
@@ -414,6 +413,7 @@ function GetMonthUsersAccts($order=">traffic",$draw=false,$gid="all")
 	 return $res;
 	}
 
+	
 //Трафик Пользователей за сегодня
 function GetTodayUsersAccts($order=">traffic",$draw=false,$gid="all")
 	{
@@ -1047,6 +1047,11 @@ function GetUserData($uid)
               $tmp["signature"]=$row["signature"];
               $tmp["info"]=$row["info"];
               $tmp["add_date"]=$row["add_date"];
+              $tmp["simultaneous_use"]=$row["simultaneous_use"];
+              $tmp["max_total_traffic"]=$row["max_total_traffic"];
+              $tmp["max_month_traffic"]=$row["max_month_traffic"];
+              $tmp["max_week_traffic"]=$row["max_week_traffic"];
+              $tmp["max_day_traffic"]=$row["max_day_traffic"];
 	      //echo($row["user"]."<br>");
   return $tmp;
 }
@@ -1057,15 +1062,25 @@ function GetUserData($uid)
 function UpdateUser($uid,$data)
 	{
 	global $GV;
-	$query="Update `".$GV["users_tbl"]."` set `password`='".$data[password].
-        "', `crypt_method`='0', `gid`='".$data["gid"]."', `nick`='".$data["nick"].
+	var_dump($data);die;
+	
+	$query="Update `".$GV["users_tbl"]."` set `password`='".$data['password'].
+        "', `gid`='".$data["gid"]."', `nick`='".$data["nick"].
         "', `fio`='".$data["fio"]."', `gender`='".$data["gender"]."', `phone`= '".$data["phone"]."', `email`= '".
         $data["email"]."', `icq`='".$data["icq"]."',`url`='".$data["url"]."',  `address`='".$data["address"]."', `rang`='".$data["rang"].
         "', `group`='".$data["group"]."', `city`='".$data["city"]."', `country`='".$data["country"].
         "', `raiting`='".$data["raiting"]."', `signature`='".$data["signature"]."', `info`='".$data["info"].
         "', `prim`='".$data["prim"]."', `add_date`='".$data["add_date"]."', `blocked`='".$data["blocked"].
-        "', `activated`='".$data["activated"]."',`phone`='".$data["phone"]."', `total_time`='".$data["total_time"]."',
-        `total_traffic`='".$data["total_traffic"]."' , `user`='".$data[user]."' where `uid`='".$uid."' ;";
+        "', `phone`='".$data["phone"]."', `total_time`='".$data["total_time"]."',
+        `total_traffic`='".$data["total_traffic"]."' 
+        , `user`='".$data['user']."' 
+        , `simultaneous_use`='".$data['simultaneous_use']."'
+        , `max_total_traffic`='".$data['max_total_traffic']."'
+        , `max_month_traffic`='".$data['max_month_traffic']."'
+        , `max_week_traffic`='".$data['max_week_traffic']."'
+        , `max_day_traffic`='".$data['max_day_traffic']."'
+        
+        where `uid`='".$uid."' ;";
         //die($query);
         $result=mysql_query($query,$this->link)or die("Invalid query(Update Users): " . mysql_error());
 
@@ -1086,7 +1101,7 @@ function GetTarifs()
 		global $GV;
 		$query= 'select p.*, 
 			count(u.uid) as users_count, 
-			sum(u.simultaneouse_use) as simuluse_sum 
+			sum(u.simultaneous_use) as simuluse_sum 
 			from `'.$GV["groups_tbl"].'` p inner join `users` u on u.gid = p.gid group by u.gid';
 		//$query="SELECT * from `".$GV["groups_tbl"]."`;";
 		$result=mysql_query($query,$this->link)or die("Invalid query(Get Groups List): " . mysql_error());
@@ -1258,12 +1273,12 @@ function AddTarif($data)
           `blocked`,`total_time_limit`,`month_time_limit`,`week_time_limit`,
           `day_time_limit`,`total_traffic_limit`,`month_traffic_limit`,`week_traffic_limit`,
           `day_traffic_limit`,`login_time`,`simultaneous_use`,`port_limit`,`session_timeout`,
-          `idle_timeout`,`level`,`exceed_times`,`rang`) values ('".$data[packet]."','2','0','".$data[blocked]."','"
-	  .$data[total_time_limit]."','".$data[month_time_limit]."','".$data[week_time_limit]."','".$data[day_time_limit]."','"
-          .$data[total_traffic_limit]."','".$data[month_traffic_limit]."','"
-	  .$data[week_traffic_limit]."','".$data[day_traffic_limit]."','".$data[login_time]."','"
-          .$data[simultaneous_use]."','".$data[port_limit]."','".$data[session_timeout]."','".$data[idle_timeout]."'
-          ,'".$data[level]."'
+          `idle_timeout`,`level`,`exceed_times`,`rang`) values ('".$data['packet']."','2','0','".$data['blocked']."','"
+	  .$data['total_time_limit']."','".$data['month_time_limit']."','".$data['week_time_limit']."','".$data['day_time_limit']."','"
+          .$data['total_traffic_limit']."','".$data['month_traffic_limit']."','"
+	  .$data['week_traffic_limit']."','".$data['day_traffic_limit']."','".$data['login_time']."','"
+          .$data['simultaneous_use']."','".$data['port_limit']."','".$data['session_timeout']."','".$data['idle_timeout']."'
+          ,'".$data['level']."'
           ,'".$data['exceed_times']."'
           ,'".$data['rang']."');";
 	$result=mysql_query($query,$this->link)or die("Invalid query(Add User): " . mysql_error());
@@ -1483,7 +1498,7 @@ function KillInactiveUsers()
 function AddEvent($data)
 	{
 	global $GV,$CURRENT_USER;
- 	$query="Insert into `".$GV["events_tbl"]."`(`uid`,`event`,`date`) values ('".$data[uid]."','".$data[event]."','".$data[date]."');";
+ 	$query="Insert into `".$GV["events_tbl"]."`(`uid`,`event`,`date`) values ('".$data['uid']."','".$data['event']."','".$data['date']."');";
         $result=mysql_query($query,$this->link)or die("Invalid query(Add Event): " . mysql_error());
 	}
 
@@ -1577,11 +1592,11 @@ function GetUserLastUrls($unique_id,$sort="<date")
  		break;
  	};
   global $GV;
-  $result = mysql_query("select url,SUM(length) as length,UNIX_TIMESTAMP(date) as date,ip from url_log where unique_id='$unique_id' group by url order by $order;");
+  $result = mysql_query("select url,SUM(length) as length,UNIX_TIMESTAMP(date) as date,ip,content_type from url_log where unique_id='$unique_id' group by url order by $order;");
   //die("select url,SUM(length) as length,UNIX_TIMESTAMP(date) as date from url_log where unique_id='$unique_id' group by url order by $order;");
   $logs = array();
   while($log = mysql_fetch_object($result))
-     $logs[]= array('url'=>$log->url,'length'=>$log->length,'date'=>$log->date,'ip'=>$log->ip);
+     $logs[]= array('url'=>$log->url,'length'=>$log->length,'date'=>$log->date,'ip'=>$log->ip,'content_type'=>$log->content_type);
   return $logs;
  }
 
@@ -2000,4 +2015,17 @@ function DeleteDiapason($id)
 		$sql = sprintf("update `cadbis_config` set value='%s' where name='%s'",$value, $name);
 	   	mysql_query($sql) or die("Error executing query: ".$sql);
 	}
+	
+	/**
+	 * Packets accts for today
+	 *
+	 * @param int $gid
+	 */
+	function GetTarifTodayAccts($gid)
+		{
+	        $fdate = date("Y-m-d 00:00:00");
+	        $todate = date("Y-m-d 23:59:59");
+			return $this->GetTarifAccts($gid, $fdate, $todate);
+		}
+	
 };

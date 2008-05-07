@@ -10,11 +10,12 @@ $year=date("Y");
 $month=date("m"); 
 $day=date("d");
 $daycount=date("t");
+$rest=$mon["traffic"]-$cur["traffic"];
+$restdays=date("t")-date("j");
 $maxtraf=1;
 $daynorm=NULL;
-$daynorm[0]=$conf["max_month_traffic"]/($daycount);
+$daynorm[0]=$rest/$restdays;
 
-$rest=$mon["traffic"]-$cur["traffic"];   
 $dnrm=$rest/($daycount-$day+1);
 $k=($dnrm<0)?-90000:100;
 $prc_tr2=((float)$daynorm[0])/((float)$dnrm)*100.0-$k;  
@@ -45,7 +46,7 @@ if($prc_tr2<100)
  $restclr="AA0000";
  }
 
-for($i=1;$i<=$daycount;++$i)          
+for($i=2;$i<=$daycount;++$i)          
   {
    $d=($i<10)?("0".($i)):$i;
   $day=date("D",makeunixtime($year,$month,$i+1,0,0,0));
@@ -123,11 +124,11 @@ for($i=0;$i<$daycount;++$i)
 </td>
 <tr><td class=tbl1 colspan=2 width=100%>
 Цветовое обозначение: <br>                                                                                                                                            
-<table style="font-size:9px"><td><table width=10px height=10px bgcolor=#00FF00 align=left><td></td></table></td><td>- Норма (траффик потреблялся в соответствии с нормой дня)</td></table>
-<table style="font-size:9px"><td><table width=10px height=10px bgcolor=#778800 align=left><td></td></table></td><td>- Незначительное превышение нормы (траффик незначительно превысил норму)</td></table>
-<table style="font-size:9px"><td><table width=10px height=10px bgcolor=#995500 align=left><td></td></table></td><td>- Превышение нормы (превышение, на которое стоит обратить внимание)</td></table>          
-<table style="font-size:9px"><td><table width=10px height=10px bgcolor=#DD2200 align=left><td></td></table></td><td>- Значительное превышение нормы (сильное превышение)</td></table>
-<table style="font-size:9px"><td><table width=10px height=10px bgcolor=#FF0000 align=left><td></td></table></td><td> - Многократное превышение нормы (критическое превышение нормы) </td></table>
+<table style="font-size:9px" class="table-legend"><td><table width=10px height=10px bgcolor=#00FF00 align=left><td></td></table></td><td>- Норма (трафик потреблялся в соответствии с нормой дня)</td></table>
+<table style="font-size:9px" class="table-legend"><td><table width=10px height=10px bgcolor=#778800 align=left><td></td></table></td><td>- Незначительное превышение нормы (трафик незначительно превысил норму)</td></table>
+<table style="font-size:9px" class="table-legend"><td><table width=10px height=10px bgcolor=#995500 align=left><td></td></table></td><td>- Превышение нормы (превышение, на которое стоит обратить внимание)</td></table>          
+<table style="font-size:9px" class="table-legend"><td><table width=10px height=10px bgcolor=#DD2200 align=left><td></td></table></td><td>- Значительное превышение нормы (сильное превышение)</td></table>
+<table style="font-size:9px" class="table-legend"><td><table width=10px height=10px bgcolor=#FF0000 align=left><td></td></table></td><td> - Многократное превышение нормы (критическое превышение нормы) </td></table>
 
 </td></tr>
 </table>

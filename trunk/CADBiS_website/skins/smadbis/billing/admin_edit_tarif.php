@@ -119,7 +119,7 @@ if($BILLEVEL<3) return;
                         Количество пользователей:
                         </td><td width=50%><? OUT($ucount) ?></td></tr>
                         <tr><td width=50%>
-                        Траффик:
+                        Трафик:
                         </td><td width=50%><? OUT(bytes2mb($tdata["traffic"])." Mb") ?></td></tr>
                         <tr><td width=50%>
                         Время:
