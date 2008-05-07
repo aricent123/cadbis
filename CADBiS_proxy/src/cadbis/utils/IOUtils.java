@@ -1,7 +1,9 @@
 package cadbis.utils;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -73,5 +75,13 @@ public class IOUtils {
 	    
 	    // Get the decompressed data
 	    return bos.toByteArray();
+	}
+	
+	public static void WriteStringToFile(String filename, String data) throws IOException
+	{
+		FileWriter fstream = new FileWriter(filename);
+	    BufferedWriter out = new BufferedWriter(fstream);
+	    out.write(data);
+	    out.close();
 	}
 }

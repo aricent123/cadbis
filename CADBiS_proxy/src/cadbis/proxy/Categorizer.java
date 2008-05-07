@@ -51,8 +51,9 @@ public class Categorizer extends CADBiSDaemon{
 	public Integer recognizeAndAddCategory(String url, String content)
 	{
 		ContentCategory cat = recognizeCategory(content, cats, uswords);
-		logger.info("Recognizing and adding a category for url='"+url+"' and content='"+content+"', = " + cat.getTitle());
-		new ContentCategoryDAO().execSql(String.format("insert into url_categories_match(url,cid) values('%s',%d)",url,cat.getCid()));		
+		logger.info("Recognizing and adding a category for url='"+url+"' = " + cat.getTitle());
+		new ContentCategoryDAO().execSql(String.format("insert into url_categories_match(url,cid) values('%s',%d)",url,cat.getCid()));
+		url_cat.put(url, cat.getCid());
 		return cat.getCid();
 	}
 	
@@ -63,7 +64,7 @@ public class Categorizer extends CADBiSDaemon{
 		if(!url_cat.containsKey(url))
 		{
 			logger.debug("Category unrecognized, reloading data... ");
-			reloadData();
+			//	reloadData();
 		}
 		else
 			logger.debug("Category recognized, = " + url_cat.get(url));

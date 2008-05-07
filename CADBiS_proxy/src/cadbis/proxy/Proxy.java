@@ -41,7 +41,7 @@ public class Proxy extends CADBiSThread {
 		}
 		catch(Exception e)
 		{
-			logger.error(e.getMessage());
+			logger.error("Starting system error: " + e.getMessage());
 		}			
 	}
 	
