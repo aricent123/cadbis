@@ -79,6 +79,7 @@ if($BILLEVEL<3)return;
     <tr>
     	<td class=tbl1>¹</td>
     	<td class=tbl1><?=log_url_template_header_sort($paramstr,$sort,"url","URL");?></td>
+    	<td class=tbl1>Content-type</td>
     	<td class=tbl1><?=log_url_template_header_sort($paramstr,$sort,"date","Date");?></td>
     	<td class=tbl1><?=log_url_template_header_sort($paramstr,$sort,"length","Bytes");?></td>
     	<td class=tbl1>ip</td>
@@ -108,6 +109,7 @@ if($BILLEVEL<3)return;
      <tr>
      	<td class=tbl1><?=$i?></td>
      	<td class=tbl1><?=make_url_str($urls[$i]['url'],true)?></td>
+     	<td class=tbl1><?= $urls[$i]['content_type']?></td>
      	<td class=tbl1><?=norm_date_yymmddhhmmss($urls[$i]['date'])?></td>
      	<td class=tbl1><?=make_fsize_str($urls[$i]['length'])?></td>
      	<td class=tbl1><?=$country?></td>
@@ -118,6 +120,7 @@ if($BILLEVEL<3)return;
   	?>
      <tr>
      	<td class=tbl1><b>TOTAL</td>
+     	<td class=tbl1></td>
      	<td class=tbl1></td>
      	<td class=tbl1></td>
      	<td class=tbl1><?=make_fsize_str($total)?></td>
@@ -221,7 +224,7 @@ if($BILLEVEL<3)return;
   for($i=0;$i<count($strs)-1;++$i)
    {
     $data = explode("{*}",$strs[$i]);
-    $urls[] = array('date'=>strtotime($data[0]),'url'=>$data[1],'count'=>$data[2],'length'=>$data[3],'ip'=>$data[4]);
+    $urls[] = array('date'=>strtotime($data[0]),'url'=>$data[1],'count'=>$data[2],'length'=>$data[3],'ip'=>$data[4],'content_type'=>$data[5]);
    }
    switch($sort)
     {

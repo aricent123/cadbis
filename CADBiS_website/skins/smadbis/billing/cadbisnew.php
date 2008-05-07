@@ -25,12 +25,52 @@ if(!isset($newact))
 <script type="text/javascript" src="js/ajax/engine.js"></script>
 <style type="text/css">
 	@IMPORT url("skins/smadbis/css/ajax.css");
+	.simple-table td{
+		font-size: 10px;
+	}
+	.table-legend td{
+		font-size: 10px;
+	}
+	td{
+		font-size: 12px;
+	}
+	h2{
+		font-size: 16px;
+	}
 	.wide-table{
 		width: 100%;
-		border: 1px solid black;
+		border: 1px solid #C5E4EC;
 	}
 	.wide-table td{
 		font-size: 10px;
+		padding: 5px;
+	}
+	.wide-table input{
+		width: 100px;
+	}	
+	.bar-used-rest{
+		width: 150px;
+		border: 0px;
+		height: 3px;				
+	}
+	.bar-used-rest td{
+		padding: 0px;
+	}
+	.bar-used{
+		border: 1px solid black;
+		background: #dd0000;
+	}
+	.bar-rest{
+		border: 1px solid black;
+		background: #00ff00;
+	}	
+	input{
+		border: 1px solid #C5E4EC;
+		background: #f4fafc;
+	}
+	.button{
+		border: 1px solid #a5c4cC;
+		background: #eaefee;
 	}
 </style>
 </head>

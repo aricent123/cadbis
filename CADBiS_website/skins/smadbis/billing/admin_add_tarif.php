@@ -15,28 +15,29 @@ if(isset($mod)  && $mod=="add" && !isset($addtime) && !isset($deltimes))
 
  //if($vars[1]!=$vars[2])$error.="<br><b>Ошибка!</b> Введённые пароли не совпадают!!!<br>";
  $data=array();
- $data[packet]                 = addslashes($vars[0]);
- $data[blocked]                = "".(!$activated);
- $data[total_time_limit]       = timeinsec($time_vals[0],$time_vals[1],$time_vals[2]);
- $data[month_time_limit]       = timeinsec($time_vals[3],$time_vals[4],$time_vals[5]);
- $data[week_time_limit]        = timeinsec($time_vals[6],$time_vals[7],$time_vals[8]);
- $data[day_time_limit]         = timeinsec($time_vals[9],$time_vals[10],$time_vals[11]);
- $data[total_traffic_limit]    = mb2bytes($vars[1]);
- $data[month_traffic_limit]    = mb2bytes($vars[2]);
- $data[week_traffic_limit]     = mb2bytes($vars[3]);
- $data[day_traffic_limit]      = mb2bytes($vars[4]);
- $data[login_time]             = $logintime;
- $data[simultaneous_use]       = (int)$vars[5];
- $data[port_limit]             = (int)$vars[6];
- $data[session_timeout]        = timeinsec($time_vals[12],$time_vals[13],$time_vals[14]);
- $data[idle_timeout]           = (int)$vars[7];
- $data[level]                  = (int)$vars[8];
- $data[prim]                  =  addslashes($FLTR->DirectProcessText($vars[9],1,1));
- 
- if($data[blocked]!=1)$data[blocked]="0";
+ $data['packet']                 = addslashes($vars[0]);
+ $data['blocked']                = "".(!$activated);
+ $data['total_time_limit']       = timeinsec($time_vals[0],$time_vals[1],$time_vals[2]);
+ $data['month_time_limit']       = timeinsec($time_vals[3],$time_vals[4],$time_vals[5]);
+ $data['week_time_limit']        = timeinsec($time_vals[6],$time_vals[7],$time_vals[8]);
+ $data['day_time_limit']         = timeinsec($time_vals[9],$time_vals[10],$time_vals[11]);
+ $data['total_traffic_limit']    = mb2bytes($vars[1]);
+ $data['month_traffic_limit']    = mb2bytes($vars[2]);
+ $data['week_traffic_limit']     = mb2bytes($vars[3]);
+ $data['day_traffic_limit']      = mb2bytes($vars[4]);
+ $data['login_time']             = $logintime;
+ $data['simultaneous_use']       = (int)$vars[5];
+ $data['port_limit']             = (int)$vars[6];
+ $data['session_timeout']        = timeinsec($time_vals[12],$time_vals[13],$time_vals[14]);
+ $data['idle_timeout']           = (int)$vars[7];
+ $data['level']                  = (int)$vars[8];
+ $data['prim']                  =  addslashes($FLTR->DirectProcessText($vars[9],1,1));
+ $data['rang']					= (int)$vars[10];
+ $data['exceed_times']			= (int)$vars[11];
+ if($data['blocked']!=1)$data['blocked']="0";
     
- if(!$data[packet])$error.="<br><b>Ошибка!</b> Необходимо ввести название тарифа!!!<br>";
- if($data[level]>$BILLEVEL)$error.="<br><b>Ошибка!</b> Вы не можете добавлять тарифы выше своего уровня!<br>";
+ if(!$data['packet'])$error.="<br><b>Ошибка!</b> Необходимо ввести название тарифа!!!<br>";
+ if($data['level']>$BILLEVEL)$error.="<br><b>Ошибка!</b> Вы не можете добавлять тарифы выше своего уровня!<br>";
 
  if(!$error)
   {
@@ -48,7 +49,7 @@ if(isset($mod)  && $mod=="add" && !isset($addtime) && !isset($deltimes))
      if(!$res)
        {
        ?>
-       <b>ОК!</b> Тариф '<? OUT($data[packet]) ?>' успешно добавлен!<br>
+       <b>ОК!</b> Тариф '<? OUT($data['packet']) ?>' успешно добавлен!<br>
        Добавил администратор <? OUT($CURRENT_USER["nick"]) ?>.
        <div align=center><a href="<? OUT("?p=$p&act=$act") ?>">назад</a></div>      
        <?
@@ -62,7 +63,7 @@ if(isset($mod)  && $mod=="add" && !isset($addtime) && !isset($deltimes))
      if(!$res)
        {
        ?>
-       <b>ОК!</b> Тариф '<? OUT($data[packet]) ?>' успешно изменён!<br>
+       <b>ОК!</b> Тариф '<? OUT($data['packet']) ?>' успешно изменён!<br>
        Изменил администратор <? OUT($CURRENT_USER["nick"]) ?>.
        <div align=center><a href="<? OUT("?p=$p&act=$act") ?>">назад</a></div>      
        <?
@@ -86,34 +87,36 @@ if($form)
   {
   $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
   $data=$BILL->GetTarifData($gid);      
-  $vars[0]=$data[packet];
-  $activated=!$data[blocked];
-  $time_vals[0]=gethours($data[total_time_limit]);
-  $time_vals[1]=getmins($data[total_time_limit]);
-  $time_vals[2]=getsecs($data[total_time_limit]);  
-  $time_vals[3]=gethours($data[month_time_limit]);
-  $time_vals[4]=getmins($data[month_time_limit]);
-  $time_vals[5]=getsecs($data[month_time_limit]);
-  $time_vals[6]=gethours($data[week_time_limit]);
-  $time_vals[7]=getmins($data[week_time_limit]);
-  $time_vals[8]=getsecs($data[week_time_limit]);
-  $time_vals[9]=gethours($data[day_time_limit]);
-  $time_vals[10]=getmins($data[day_time_limit]);
-  $time_vals[11]=getsecs($data[day_time_limit]);  
-  $time_vals[12]=gethours($data[session_timeout]);
-  $time_vals[13]=getmins($data[session_timeout]);
-  $time_vals[14]=getsecs($data[session_timeout]);    
-  $vars[1]=bytes2mb($data[total_traffic_limit]);
-  $vars[2]=bytes2mb($data[month_traffic_limit]);
-  $vars[3]=bytes2mb($data[week_traffic_limit]);
-  $vars[4]=bytes2mb($data[day_traffic_limit]);
-  $vars[5]=(int)$data[simultaneous_use];
-  $vars[6]=(int)$data[port_limit];
-  $vars[7]=(int)$data[idle_timeout];
-  $vars[8]=(int)$data[level];
-  $vars[9]=$FLTR->ReverseProcessText($data[prim]);
-  makelogintimearrays($data[login_time],&$times_d,&$times_hf,&$times_ht,&$times_mf,&$times_mt);  
-  $data[session_timeout]        = timeinsec($time_vals[12],$time_vals[13],$time_vals[14]);
+  $vars[0]=$data['packet'];
+  $activated=!$data['blocked'];
+  $time_vals[0]=gethours($data['total_time_limit']);
+  $time_vals[1]=getmins($data['total_time_limit']);
+  $time_vals[2]=getsecs($data['total_time_limit']);  
+  $time_vals[3]=gethours($data['month_time_limit']);
+  $time_vals[4]=getmins($data['month_time_limit']);
+  $time_vals[5]=getsecs($data['month_time_limit']);
+  $time_vals[6]=gethours($data['week_time_limit']);
+  $time_vals[7]=getmins($data['week_time_limit']);
+  $time_vals[8]=getsecs($data['week_time_limit']);
+  $time_vals[9]=gethours($data['day_time_limit']);
+  $time_vals[10]=getmins($data['day_time_limit']);
+  $time_vals[11]=getsecs($data['day_time_limit']);  
+  $time_vals[12]=gethours($data['session_timeout']);
+  $time_vals[13]=getmins($data['session_timeout']);
+  $time_vals[14]=getsecs($data['session_timeout']);    
+  $vars[1]=bytes2mb($data['total_traffic_limit']);
+  $vars[2]=bytes2mb($data['month_traffic_limit']);
+  $vars[3]=bytes2mb($data['week_traffic_limit']);
+  $vars[4]=bytes2mb($data['day_traffic_limit']);
+  $vars[5]=(int)$data['simultaneous_use'];
+  $vars[6]=(int)$data['port_limit'];
+  $vars[7]=(int)$data['idle_timeout'];
+  $vars[8]=(int)$data['level'];
+  $vars[9]=$FLTR->ReverseProcessText($data['prim']);
+  $vars[10]=$data['rang'];
+  $vars[11]=$data['exceed_times'];
+  makelogintimearrays($data['login_time'],&$times_d,&$times_hf,&$times_ht,&$times_mf,&$times_mt);  
+  $data['session_timeout']        = timeinsec($time_vals[12],$time_vals[13],$time_vals[14]);
 
   }
  
@@ -283,8 +286,15 @@ if($form)
     <td width=50%>Уровень администраторов, которые могут назначать этот тариф </td><td width=50%><? OUT($levelsel) ?></td>
   </tr>
   <tr>
-    <td width=50%>Описание тарифа </td><td width=50%><textarea name=vars[] class=inputbox style="width:100%" rows=5><? OUT($vars[9]) ?></textarea></td>
+    <td width=50%>Описание тарифа </td><td width=50%><textarea name=vars[] class=inputbox style="width:100%" rows=5><? ++$k;OUT($vars[$k++]) ?></textarea></td>
   </tr>  
+  <tr>
+    <td width=50%>Ранг данного тарифа </td><td width=50%><input type=text class=inputbox style="width:100%" name=vars[] value="<? OUT($vars[$k++]) ?>"></td>
+  </tr>
+  <tr>
+    <td width=50%>Максимальное дневное превышение трафика (раз) </td><td width=50%><input type=text class=inputbox style="width:100%" name=vars[] value="<? OUT($vars[$k++]) ?>"></td>
+  </tr>   
+     
   </table>
   <div align=center><input type=submit name=submform class=button value="Сохранить"></div> 
  </form><br>
