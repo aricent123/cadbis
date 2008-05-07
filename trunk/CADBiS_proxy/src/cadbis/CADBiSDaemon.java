@@ -33,7 +33,7 @@ public abstract class CADBiSDaemon extends CADBiSThread {
 	
 	@SuppressWarnings("static-access")
 	@Override
-	public void run() {
+	public final void run() {
 		synchronized (dLock) {
 		prerun();
 			while(true)

@@ -1,12 +1,5 @@
 package cadbis.bl;
 
-import cadbis.exc.CADBiSException;
-import cadbis.exc.DayTrafficLimitExceedException;
-import cadbis.exc.MonthTrafficLimitExceedException;
-import cadbis.exc.SimultaneousUseExceedException;
-import cadbis.exc.TotalTrafficLimitExceedException;
-import cadbis.exc.WeekTrafficLimitExceedException;
-
 public class User implements BusinessObject{
 	private String user;
 	private String password;
@@ -257,26 +250,4 @@ public class User implements BusinessObject{
 	public void setMax_day_traffic(Long max_day_traffic) {
 		this.max_day_traffic = max_day_traffic;
 	}
-
-	public void checkBlocked() throws CADBiSException {
-		if(blocked == 1)
-			throw new CADBiSException("User is blocked!");		
-	}
-
-	public void checkTrafficLimits() throws CADBiSException {
-		if(!(mtraffic <= max_month_traffic|| max_month_traffic==0))
-			throw new MonthTrafficLimitExceedException(mtraffic+" exceeds the value of "+max_month_traffic);
-		if(!(wtraffic <= max_week_traffic  || max_week_traffic==0))
-			throw new WeekTrafficLimitExceedException(wtraffic+" exceeds the value of "+max_week_traffic);
-		if(!(dtraffic <= max_day_traffic || max_day_traffic==0))
-			throw new DayTrafficLimitExceedException(dtraffic+" exceeds the value of "+max_day_traffic);
-		if(!(ttraffic <= max_total_traffic || max_total_traffic==0))
-			throw new TotalTrafficLimitExceedException(ttraffic+" exceeds the value of "+max_total_traffic);		
-	}
-
-	public void checkSimultaneous_use(Long connectedCount) throws CADBiSException {
-		if(connectedCount >= simultaneous_use)
-			throw new SimultaneousUseExceedException(connectedCount+" exceeds the value of "+simultaneous_use);		
-	}
-
 }
