@@ -1,5 +1,12 @@
 package cadbis.bl;
 
+import cadbis.exc.CADBiSException;
+import cadbis.exc.DayTrafficLimitExceedException;
+import cadbis.exc.MonthTrafficLimitExceedException;
+import cadbis.exc.SimultaneousUseExceedException;
+import cadbis.exc.TotalTrafficLimitExceedException;
+import cadbis.exc.WeekTrafficLimitExceedException;
+
 public class User implements BusinessObject{
 	private String user;
 	private String password;
@@ -11,9 +18,11 @@ public class User implements BusinessObject{
 	private Integer add_uid;
 	private String add_date;
 	private Integer blocked;
-	private Integer activated;
-	private String last_connection;
-	private Integer simultaneous_use;
+	private Integer simultaneous_use = 0;
+	private Long max_total_traffic;
+	private Long max_month_traffic;
+	private Long max_week_traffic;
+	private Long max_day_traffic;
 	
 	private Long ttime;
 	private Long mtime;
@@ -37,9 +46,11 @@ public class User implements BusinessObject{
 							{"add_uid","Integer"}, 
 							{"add_date","String"},
 							{"blocked","Integer"},
-							{"activated","Integer"},
-							{"last_connection","String"}, 
 							{"simultaneous_use",	"Integer"}, 
+							{"max_total_traffic",	"Long"},
+							{"max_month_traffic",	"Long"},
+							{"max_week_traffic",	"Long"},
+							{"max_day_traffic",	"Long"},
 						};
 		return fields;
 	}	
@@ -124,21 +135,6 @@ public class User implements BusinessObject{
 		this.blocked = blocked;
 	}
 
-	public Integer getActivated() {
-		return activated;
-	}
-
-	public void setActivated(Integer activated) {
-		this.activated = activated;
-	}
-
-	public String getLast_connection() {
-		return last_connection;
-	}
-
-	public void setLast_connection(String last_connection) {
-		this.last_connection = last_connection;
-	}
 
 	public Long getTtime() {
 		return ttime;
@@ -228,6 +224,59 @@ public class User implements BusinessObject{
 
 	public void setSimultaneous_use(Integer simultaneous_use) {
 		this.simultaneous_use = simultaneous_use;
+	}
+
+	public Long getMax_total_traffic() {
+		return max_total_traffic;
+	}
+
+	public void setMax_total_traffic(Long max_total_traffic) {
+		this.max_total_traffic = max_total_traffic;
+	}
+
+	public Long getMax_month_traffic() {
+		return max_month_traffic;
+	}
+
+	public void setMax_month_traffic(Long max_month_traffic) {
+		this.max_month_traffic = max_month_traffic;
+	}
+
+	public Long getMax_week_traffic() {
+		return max_week_traffic;
+	}
+
+	public void setMax_week_traffic(Long max_week_traffic) {
+		this.max_week_traffic = max_week_traffic;
+	}
+
+	public Long getMax_day_traffic() {
+		return max_day_traffic;
+	}
+
+	public void setMax_day_traffic(Long max_day_traffic) {
+		this.max_day_traffic = max_day_traffic;
+	}
+
+	public void checkBlocked() throws CADBiSException {
+		if(blocked == 1)
+			throw new CADBiSException("User is blocked!");		
+	}
+
+	public void checkTrafficLimits() throws CADBiSException {
+		if(!(mtraffic <= max_month_traffic|| max_month_traffic==0))
+			throw new MonthTrafficLimitExceedException(mtraffic+" exceeds the value of "+max_month_traffic);
+		if(!(wtraffic <= max_week_traffic  || max_week_traffic==0))
+			throw new WeekTrafficLimitExceedException(wtraffic+" exceeds the value of "+max_week_traffic);
+		if(!(dtraffic <= max_day_traffic || max_day_traffic==0))
+			throw new DayTrafficLimitExceedException(dtraffic+" exceeds the value of "+max_day_traffic);
+		if(!(ttraffic <= max_total_traffic || max_total_traffic==0))
+			throw new TotalTrafficLimitExceedException(ttraffic+" exceeds the value of "+max_total_traffic);		
+	}
+
+	public void checkSimultaneous_use(Long connectedCount) throws CADBiSException {
+		if(connectedCount >= simultaneous_use)
+			throw new SimultaneousUseExceedException(connectedCount+" exceeds the value of "+simultaneous_use);		
 	}
 
 }

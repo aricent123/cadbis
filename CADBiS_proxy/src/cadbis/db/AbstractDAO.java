@@ -74,6 +74,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		}
 		catch(SQLException e)
 		{
+			logger.error("SQLError: " + e.getMessage());
 			closeRsState(rs, this.state);
 		}
 		return rs;
@@ -144,7 +145,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 				   }
 				   catch(SQLException e)
 				   {
-					   /* ignore */
+					   logger.error("SQL exception for query '"+query+"'!  " + e.getMessage());
 				   }
 				   catch(Exception e)
 				   {

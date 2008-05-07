@@ -108,7 +108,7 @@ public class Collector extends CADBiSDaemon{
 		synchronized (wLock) {
 			if(!actionsOfIps.containsKey(userIp.hashCode()))
 			{
-				logger.info("User of ip='"+userIp+"' not found, refreshing sessions info.");
+				logger.warn("User of ip='"+userIp+"' not found, refreshing sessions info.");
 				_refreshSessions();		
 			}					
 			Action action = getActionByUserIp(userIp);			
