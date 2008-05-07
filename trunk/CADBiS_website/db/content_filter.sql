@@ -16,9 +16,9 @@ CREATE TABLE  `url_categories_denied_log` (
   `date` datetime NOT NULL,
   `uid` int(10) unsigned NOT NULL,
   PRIMARY KEY (`ucdlid`),
-  KEY `Index_gid` (`gid`) USING BTREE,
+  KEY `Index_gid` (`gid`),
   KEY `FK_url_categories_denied_log_categories` (`cid`),
-  KEY `Index_uid` (`uid`) USING BTREE,
+  KEY `Index_uid` (`uid`),
   CONSTRAINT `FK_url_categories_denied_log_categories` FOREIGN KEY (`cid`) REFERENCES `url_categories` (`cid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -39,6 +39,16 @@ CREATE TABLE  `url_categories_match` (
   `url` varchar(255) NOT NULL,
   `cid` int(10) unsigned NOT NULL,
   PRIMARY KEY (`u2cid`),
-  KEY `url_index` (`url`) USING BTREE,
-  KEY `FK_url2category_url_categories` (`cid`)
+  KEY `url_index` (`url`),
+  KEY `FK_url2category_url_categories` (`cid`),
+  CONSTRAINT `FK_url2category_url_categories` FOREIGN KEY (`cid`) REFERENCES `url_categories` (`cid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+
+DROP TABLE IF EXISTS `url_categories_unsensewords`;
+CREATE TABLE  `url_categories_unsensewords` (
+  `ucuwid` int(10) unsigned NOT NULL auto_increment,
+  `keyword` varchar(20) NOT NULL,
+  PRIMARY KEY  (`ucuwid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `url_categories_match` ADD UNIQUE INDEX `Index_url_unique`(`url`);
