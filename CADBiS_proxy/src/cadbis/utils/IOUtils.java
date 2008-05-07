@@ -1,11 +1,14 @@
 package cadbis.utils;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 
 public class IOUtils {
 
@@ -49,5 +52,26 @@ public class IOUtils {
 			os.write(buffer.get(i));
 		 }
 		os.flush();
-	}		
+	}
+	
+	public static byte[] UnzipArray(byte[] compressedData) throws DataFormatException,IOException
+	{
+		 // Create the decompressor and give it the data to compress
+	    Inflater decompressor = new Inflater();
+	    decompressor.setInput(compressedData);
+	    
+	    // Create an expandable byte array to hold the decompressed data
+	    ByteArrayOutputStream bos = new ByteArrayOutputStream(compressedData.length);
+	    
+	    // Decompress the data
+	    byte[] buf = new byte[1024];
+	    while (!decompressor.finished()) {
+	            int count = decompressor.inflate(buf);
+	            bos.write(buf, 0, count);
+	    	}
+        bos.close();
+	    
+	    // Get the decompressed data
+	    return bos.toByteArray();
+	}
 }

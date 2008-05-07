@@ -34,6 +34,9 @@ public class Proxy extends CADBiSThread {
 			if(ProxyConfigurator.getInstance().getProperty("aggregator").equals("enabled"))	
 				Aggregator.getInstance().start();				
 			
+			if(ProxyConfigurator.getInstance().getProperty("categorizer").equals("enabled"))
+				Categorizer.getInstance().start();
+			
 			this.run(bindhost,bindport,fwdhost,fwdport,timeout);							
 		}
 		catch(Exception e)
