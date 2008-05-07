@@ -270,6 +270,38 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		return value;
 	}		
 	
+
+	/**
+	 * Returns the instances count
+	 * @return count
+	 */
+	public List<String> getListOfStringsByQuery(String query, String key)
+	{
+		logger.debug(query);
+		List<String> res = new ArrayList<String>();
+		if(dataAccess==null)
+			return null;
+		
+		ResultSet rs = null;
+		try
+		{
+		   rs = getResultSet(query);
+		   if(rs!=null && rs.next ())
+			   res.add(rs.getString(key));
+		}
+		catch(SQLException e)
+		{
+			logger.error("Query '"+query+"' execution error: " + e.getMessage());
+		}
+		finally
+		{
+			closeRs(rs);
+		}
+		return res;
+	}		
+	
+	
+	
 	/**
 	 * Returns the instances count
 	 * @return count
