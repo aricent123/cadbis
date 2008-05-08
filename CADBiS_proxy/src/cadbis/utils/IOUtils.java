@@ -2,7 +2,9 @@ package cadbis.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,9 +12,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.zip.DataFormatException;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 
 public class IOUtils {
+    /**
+     * GZIP header magic number.
+     */
+    public final static int GZIP_MAGIC = 0x8b1f;
 
 	public static String readStreamAsString(InputStream is) throws IOException
 	{    	
@@ -76,6 +83,52 @@ public class IOUtils {
 	    // Get the decompressed data
 	    return bos.toByteArray();
 	}
+	
+    /*
+     * Reads unsigned byte.
+     */
+    private static int readUByte(InputStream in) throws IOException {
+	int b = in.read();
+	if (b == -1) {
+	    throw new EOFException();
+	}
+        if (b < -1 || b > 255) {
+            // Report on this.in, not argument in; see read{Header, Trailer}.
+            throw new IOException(in.getClass().getName()
+                + ".read() returned value out of range -1..255: " + b);
+        }
+        return b;
+    }
+	
+    public static int readUShort(InputStream in) throws IOException {
+    	int b = readUByte(in);
+    	return ((int)readUByte(in) << 8) | b;
+        }
+    
+    public static int readUShort(byte[] compressedData) throws IOException {
+    	ByteArrayInputStream bis = new ByteArrayInputStream(compressedData);
+    	int b = readUByte(bis);
+    	return ((int)readUByte(bis) << 8) | b;
+        }
+    
+	
+	public static byte[] UnGzipArray(byte[] compressedData) throws DataFormatException,IOException
+	{
+		ByteArrayInputStream bis = new ByteArrayInputStream(compressedData);
+		GZIPInputStream gis = new GZIPInputStream(bis);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		int rtn = -1;
+		byte[] b = new byte[1];
+		while (true)
+		{
+			rtn = gis.read(b);
+			if (rtn == -1)
+				break;
+			bos.write(b,0,1);
+		}
+		return bos.toByteArray();
+	}	
+	
 	
 	public static void WriteStringToFile(String filename, String data) throws IOException
 	{
