@@ -147,5 +147,11 @@ public class HttpParser {
 
 	public boolean isRequestParsed() {
 		return isRequestParsed;
+	}
+
+
+	public boolean ResponseContainsHeader(byte[] packet) {
+		String PacketString = new String(StringUtils.getChars(packet));
+		return PacketString.matches("(?s).*HTTP/.* OK.*");
 	}	
 }
