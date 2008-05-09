@@ -43,4 +43,11 @@ public class StringUtils {
 		return bb.array();
         }	
 
+	public static String KillTags(String where)
+	{
+		where = where.replaceAll("(?s)<script[^>]*>.*<\\/script>", "");
+		where = where.replaceAll("(?s)<style[^>]*>.*<\\/style>", "");
+		where = where.replaceAll("(?s)<[^>]*>", "");
+		return where;
+	}
 }
