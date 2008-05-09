@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import org.slf4j.LoggerFactory;
 
 import cadbis.CADBiSThread;
 import cadbis.bl.Action;
+import cadbis.proxy.httpparser.RequestHttpParser;
+import cadbis.proxy.httpparser.ResponseHttpParser;
 import cadbis.utils.IOUtils;
 import cadbis.utils.StringUtils;
 
@@ -30,7 +33,6 @@ class ProxyConnection extends CADBiSThread {
 	 private final Logger logger = LoggerFactory.getLogger(getClass());
 	 private static final int MAX_BLOCK_SIZE = 4096;
 	 private boolean trueproxy = false;
-
 	 
 	 ProxyConnection(Socket s, long timeout)
 	 {
@@ -47,7 +49,7 @@ class ProxyConnection extends CADBiSThread {
 		  this.timeout=timeout;
 	 }
 
-	 protected boolean isNeedToCheckContent(HttpParser ResponseParser)
+	 protected boolean isNeedToCheckContent(ResponseHttpParser ResponseParser)
 	 {
 		 boolean enabled = ProxyConfigurator.getInstance().getProperty("contentcheck").equals("enabled");
 		 String ctype = ResponseParser.GetHeader("Content-Type");
@@ -84,11 +86,21 @@ class ProxyConnection extends CADBiSThread {
 	 }
 	 
 	 
-	 protected Integer RecognizeCategory(HttpParser ResponseParser, StringBuffer fullResponse, String HttpHost)
+	 protected Integer RecognizeCategory(ResponseHttpParser ResponseParser, StringBuffer fullResponse, String HttpHost)
 	 {
-			logger.info("Category unknown, have to parse whole response... " );
+			logger.debug("Category unknown, have to parse whole response... " );
 			String body = fullResponse.toString();
-
+			logger.info("Content charset = '"+ResponseParser.GetCharset()+"'");
+			String charset = ResponseParser.GetCharset();
+			if(!charset.toUpperCase().equals("UTF-8"))
+			{
+				try {
+					logger.info("Trying to convert from '"+charset+"' to UTF-8...");
+					body = new String(body.getBytes(ResponseParser.GetCharset()), "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					logger.error("Response contains unsupported encoding '"+charset+"':"+e.getMessage());
+				}
+			}
 				try
 				{					
 					Integer headerEnd = body.indexOf("\r\n\r\n");
@@ -99,19 +111,16 @@ class ProxyConnection extends CADBiSThread {
 						if(!ResponseParser.GetHeader("Content-Length").isEmpty()){
 							Integer content_length = Integer.valueOf(ResponseParser.GetHeader("Content-Length"));
 							if(body.length()>content_length && content_length!=0)
-							{
-								logger.warn("Body length exceeds the content length header ("+body.length()+">"+content_length+"), diff is:");
-								logger.warn("'"+body.substring(content_length)+"'");
 								body = body.substring(0,content_length);
-							}
+						}
+						else
+						{
+							Integer nullBytePos = body.indexOf(0);
+							if(nullBytePos>0)
+								body = body.substring(0,nullBytePos);
 						}
 					}
 				if(ResponseParser.GetHeader("Content-Encoding").equals("gzip"))
-					for(int i=0;i<20;++i)
-					{
-						logger.info(Integer.toHexString(IOUtils.GZIP_MAGIC)+" != "+Integer.toHexString(IOUtils.readUShort(body.substring(i).getBytes())));
-					}
-					
 					body = new String(StringUtils.getChars(IOUtils.UnGzipArray(body.getBytes())));
 				}
 				catch(DataFormatException e)
@@ -121,7 +130,7 @@ class ProxyConnection extends CADBiSThread {
 				catch(IOException e)
 				{
 					logger.error("IO error '"+e.getMessage()+"' while trying to unzip body of packet with header = "+ResponseParser.GetFullHeader());
-				}
+				}				
 			logger.info("Parsed, body='"+body+"' length="+body.length()+"...");
 			return Categorizer.getInstance().recognizeAndAddCategory(HttpHost, body);
 	 }
@@ -160,26 +169,20 @@ class ProxyConnection extends CADBiSThread {
 		 String UserIp;		 
 		 boolean NeedToCheckContent = false;
 		 boolean isFullAnswer = false;
-		 isReadWrite = true;
-		 isAccessDenied = false;
-	 	 ErrorsCount = 0;
-		 HttpHost = "";
-		 HttpPort = 80;
-		 HostIp = "";
-		 
+
+		 int max_resp_size = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("max_response_buffer_size"));
 		 fullResponseBuffer = new StringBuffer();
 		 // current user IP
 		 UserIp = fromClient.getInetAddress().getHostAddress();
 		 final int WaitRWPeriod = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("waitrwtime"));
 		 final int MaxErrorsCount = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("maxerrorscount"));
 
-		 final HttpParser firstResponsePacketParser = new HttpParser();
+		 final ResponseHttpParser firstResponsePacketParser = new ResponseHttpParser();
 		 while(endTime - startTime < timeout && ErrorsCount<MaxErrorsCount && !isFullAnswer) 
 		 {
 			 //logger.debug("new packet processing iteration, timeout: " + (endTime-startTime) +" ms");
-			 final HttpParser 
-			 	ResponseParser= new HttpParser(),
-				RequestParser= new HttpParser();			 
+			 final RequestHttpParser RequestParser= new RequestHttpParser();	
+			 final ResponseHttpParser ResponseParser= new ResponseHttpParser(); 
 			 
 			 
 			 isReadWrite = false;			 
@@ -216,6 +219,7 @@ class ProxyConnection extends CADBiSThread {
 					RequestParser.ClearHeaders();
 					RequestParser.ParseRequestHeaders(cRcvdData);
 				}
+				RequestParser.setEncodingAcceptable(false);
 				buffer.set(0, RequestParser.GetFixedPacket(buffer.get(0)));
 				HttpHost = RequestParser.getHttpHost();
 				HttpPort = RequestParser.getHttpPort();		
@@ -318,7 +322,7 @@ class ProxyConnection extends CADBiSThread {
 				 if(!firstResponsePacketParser.isResponseParsed())
 				 {
 					 firstResponsePacketParser.ParseResponseHeaders(new String(StringUtils.getChars(buffer.get(0))));				 
-					 logger.info("first.content-type="+firstResponsePacketParser.GetHeader("Content-Type"));
+					 logger.debug("first.content-type="+firstResponsePacketParser.GetHeader("Content-Type"));
 					 NeedToCheckContent = isNeedToCheckContent(firstResponsePacketParser);
 				 }
 			 }	 
@@ -338,26 +342,35 @@ class ProxyConnection extends CADBiSThread {
 					 /**
 					  * filling the full response buffer only if 
 					  * the category is not recognized...
+					  * copying only allowed size of memory
 					  */
-					 for(int i=0;i<buffer.size();++i)
-						 fullResponseBuffer.append(StringUtils.getChars(buffer.get(i)));
+					 if(fullResponseBuffer.length() < max_resp_size)
+						 for(int i=0;i<buffer.size();++i)
+							 fullResponseBuffer.append(StringUtils.getChars(buffer.get(i)));
 					 
 					 /**
 					  * we must do it only if the content 
-					  * is already fully received 
+					  * is already fully received
+					  * guessing that it is happened... 
 					  */							 
-					 if(endTime - startTime > timeout/2)
+					 if(endTime - startTime > timeout/4 || fullResponseBuffer.length() >=  max_resp_size)
 					 {
-						logger.info("Possible content end reached, trying to recognize category...");
-						cid = RecognizeCategory(firstResponsePacketParser, fullResponseBuffer, HttpHost);
+						 final StringBuffer fResponseBuffer = fullResponseBuffer;
+						 final String fHttpHost = HttpHost;
+						 new CADBiSThread(){
+							 public void run() {
+								logger.debug("Possible content end reached, trying to recognize category...");
+								RecognizeCategory(firstResponsePacketParser, fResponseBuffer, fHttpHost);								 
+							 };
+						 }.start();
 					 }
 				 }
 				 else
 				 {
 					 NeedToCheckContent = false;
 					 Action act = Collector.getInstance().getActionByUserIp(UserIp);
-					 logger.info("Checking access of "+act.getUser()+" to cid="+cid+"...");
-					 if(!new ContentAccessChecker().checkAccessOfUserToCategory(act.getUser(), cid))
+					 logger.debug("Checking access of "+act.getUser()+" to cid="+cid+"...");
+					 if(!Categorizer.getInstance().checkAccessToCategory(act.getGid(), cid))
 						{
 							isFullAnswer = true;
 							answerAccessDenied(buffer,UserIp,HttpHost);
