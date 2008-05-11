@@ -12,7 +12,6 @@ import cadbis.bl.UrlCategoryMatch;
 import cadbis.db.UrlCategoryDeniedDAO;
 import cadbis.db.ContentCategoryDAO;
 import cadbis.db.UrlCategoryMatchDAO;
-import cadbis.utils.StringUtils;
 
 public class Categorizer extends CADBiSDaemon{
 	protected HashMap<String, Integer> url_cat = null;
@@ -61,13 +60,15 @@ public class Categorizer extends CADBiSDaemon{
 		return res;
 	}
 	
-	public Integer recognizeAndAddCategory(String url, String content)
+	public synchronized Integer recognizeAndAddCategory(String url, String content)
 	{
 		ContentCategory cat = recognizeCategory(content, cats, uswords);
-		logger.info("Content recognizing: '"+StringUtils.KillTags(content)+"', size="+content.length());
 		logger.info("Recognizing and adding a category for url='"+url+"' = " + cat.getTitle());
-		new ContentCategoryDAO().execSql(String.format("insert into url_categories_match(url,cid) values('%s',%d)",url,cat.getCid()));
-		url_cat.put(url, cat.getCid());
+		if(!url_cat.containsKey(url))
+		{
+			new ContentCategoryDAO().execSql(String.format("insert into url_categories_match(url,cid) values('%s',%d)",url,cat.getCid()));
+			url_cat.put(url, cat.getCid());
+		}
 		return cat.getCid();
 	}
 	
@@ -78,10 +79,10 @@ public class Categorizer extends CADBiSDaemon{
 		if(!url_cat.containsKey(url))
 		{
 			logger.debug("Category unrecognized, reloading data... ");
-			//	reloadData();
+			reloadData();
 		}
 		else
-			logger.debug("Category recognized, = " + url_cat.get(url));
+			logger.info("Category recognized, = " + url_cat.get(url));
 		return url_cat.get(url);
 	}
 	
