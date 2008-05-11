@@ -176,6 +176,7 @@ public class CADBiS extends CADBiSDaemon{
 					inputOctets, outputOctets, sessionTime, uniqueId));
 			if(!checkAccessNow(login, framedIP, clientIP))
 			{
+				logger.info("Killing user '"+login+"' with ip='"+clientIP+"'");
 				new Killer(login,framedIP, clientIP, nasPort).start();
 			}
 		}
