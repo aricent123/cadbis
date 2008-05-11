@@ -2,6 +2,86 @@
 if($BILLEVEL<3)return;
  $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
 
+ 
+ /**
+  * render icon for file format
+  *
+  * @param string $ctype
+  */
+ function log_url_format_ctype($ctype)
+ {
+ 	$ctype_ico_match = array(
+ 				'text/html'=>'img/icons/html.jpg',
+ 				'avi'=>'img/icons/avi.jpg',
+ 				'javascript'=>'img/icons/js.gif',
+			 	'pdf'=>'img/icons/pdf.jpg',
+			 	'image/png'=>'img/icons/png.png',
+			 	'image/gif'=>'img/icons/gif.gif',
+ 				'image/jpeg'=>'img/icons/jpeg.gif',
+			 	'text/plain'=>'img/icons/txt.png',
+ 				'text/x'=>'img/icons/xml.png',
+			 	'rar'=>'img/icons/rar.png',
+			 	'text/xml'=>'img/icons/xml.png',
+			 	'mp3'=>'img/icons/mp3.png',
+ 				'swf'=>'img/icons/swf.jpg',
+ 				'x-icon'=>'img/icons/gif.gif',
+ 				'image/icons'=>'img/icons/gif.gif', 				
+ 				'rdf+xml'=>'img/icons/xml.png',
+ 				'shockwave-flash'=>'img/icons/swf.jpg',
+ 				'text/css'=>'img/icons/css.jpg',
+ 				'default'=>'img/icons/file.png',
+ 				'video/'=>'img/icons/video.gif',
+ 				'audio/'=>'img/icons/mp3.jpg',
+ 				);
+ 	$res = "";
+ 	foreach($ctype_ico_match as $key=>$value)
+ 	  if(stristr($ctype,$key))
+ 	  {$res = $value;break;}
+ 	if(!empty($res))
+ 		$res = '<img src="'.$res.'" width="30px" height="30px"/>';
+ 	else
+ 		$res = $ctype;
+	return $res;
+ }
+ 
+ /**
+  * Primitive paging
+  *
+  * @param string $paramstr
+  * @param string $sort
+  * @param integer $page
+  * @param CPageDivider $PGR
+  */
+ function log_url_pager_template($paramstr,$sort, $page, $PGR)
+ {
+ 	$pcount = $PGR->GetPagesCount($urls);
+ 	$psize = $PGR->GetPOP();
+ 	?><div id="pager"><?
+ 	for($i=0;$i<$pcount;++$i)
+ 	{
+ 		if($page != $i)
+ 		{
+ 			log_url_template_header_sort($paramstr."&page=$i&pagesize=$psize",$sort,substr($sort,1),($i+1)."",false,false); 			
+		}
+		else
+		{
+			echo ($i+1);
+		}
+		if($i<$pcount-1)
+			echo ",";
+	}	
+	?>
+	</div>
+	<div id="pager-psize">
+	Количество на страницу:
+	<?
+ 		log_url_template_header_sort($paramstr."&page=0&pagesize=".($psize/2),$sort,substr($sort,1),($psize/2)."",false,false);
+ 		log_url_template_header_sort($paramstr."&page=0&pagesize=".($psize*2),$sort,substr($sort,1),($psize*2)."",false,false);
+ 	?>
+ 	</div>
+ 	<?
+ }
+ 
  function log_url_user_template($data,$onlinedata=null)
  {
   global $DIRS;
@@ -59,16 +139,23 @@ if($BILLEVEL<3)return;
 
  }
 
- function log_url_template_header_sort($paramstr,$sort,$fname,$ftitle)
+ function log_url_template_header_sort($paramstr,$sort,$fname,$ftitle,$showpic = true, $changesort = true)
  {
     global $p,$act,$action,$draw;
+    if($changesort)
+     ($sort==">$fname")?$ssort="<$fname":$ssort=">$fname";
+    else
+     $ssort = $sort;
 	?>
-    <a href="<? ($sort==">$fname")?$ssort="<$fname":$ssort=">$fname"; OUT("?p=$p&act=$act&action=$action&draw=$draw&$paramstr&sort=$ssort") ?>"><?=$ftitle?></a>
+    <a href="<? OUT("?p=$p&act=$act&action=$action&draw=$draw&$paramstr&sort=$ssort") ?>"><?=$ftitle?></a>
+    
  	<?
+ 	if($showpic){
     	if($sort=="<$fname")
     		OUT("<img src=\"".SK_DIR."/img/asc.gif\">");
     	elseif($sort==">$fname")
     		OUT("<img src=\"".SK_DIR."/img/desc.gif\">");
+ 	}
  }
 
  function log_url_table_template_header($paramstr,$sort)
@@ -79,7 +166,7 @@ if($BILLEVEL<3)return;
     <tr>
     	<td class=tbl1>№</td>
     	<td class=tbl1><?=log_url_template_header_sort($paramstr,$sort,"url","URL");?></td>
-    	<td class=tbl1>Content-type</td>
+    	<td class=tbl1><?=log_url_template_header_sort($paramstr,$sort,"ctype","Content-type");?></td>
     	<td class=tbl1><?=log_url_template_header_sort($paramstr,$sort,"date","Date");?></td>
     	<td class=tbl1><?=log_url_template_header_sort($paramstr,$sort,"length","Bytes");?></td>
     	<td class=tbl1>ip</td>
@@ -109,7 +196,7 @@ if($BILLEVEL<3)return;
      <tr>
      	<td class=tbl1><?=$i?></td>
      	<td class=tbl1><?=make_url_str($urls[$i]['url'],true)?></td>
-     	<td class=tbl1><?= $urls[$i]['content_type']?></td>
+     	<td class=tbl1><?=log_url_format_ctype($urls[$i]['content_type'])?></td>
      	<td class=tbl1><?=norm_date_yymmddhhmmss($urls[$i]['date'])?></td>
      	<td class=tbl1><?=make_fsize_str($urls[$i]['length'])?></td>
      	<td class=tbl1><?=$country?></td>
@@ -234,21 +321,30 @@ if($BILLEVEL<3)return;
      case ">date":usort($urls,"_urls_sort_functorDATE_desc");break;
      case "<length":usort($urls,"_urls_sort_functorLEN_asc");break;
      case ">length":usort($urls,"_urls_sort_functorLEN_desc");break;
-     default:usort($urls,"_urls_sort_functorDATE_asc");break;
+     case "<ctype":usort($urls,"_urls_sort_functorCTYPE_asc");break;
+     case ">ctype":usort($urls,"_urls_sort_functorCTYPE_desc");break;
+     default:usort($urls,"_urls_sort_functorDATE_asc");break;     
     }
  break;
  }
-
+  if(!isset($pagesize))
+    $pagesize = 20;
+  $PGR = new CPageDivider($pagesize);
+  $urls = $PGR->GetPage($urls, $page + 1);
   if($action=="online")
    {
    log_url_user_template($data,$onlinedata);
+   log_url_pager_template("unique_id=$unique_id",$sort,$page,$PGR);   
    log_url_table_template("unique_id=$unique_id",$urls,$sort,$BILL);
+   log_url_pager_template("unique_id=$unique_id",$sort,$page,$PGR);
    ?><div align=center><a href="<? OUT("?p=$p&act=online") ?>">назад на онлайн-лист</a></div><?
    }
   elseif($action=="session_protocol")
-   {
+   {   
    log_url_user_template($session['user'],$session['session']);
+   log_url_pager_template("unique_id=$unique_id",$sort,$page,$PGR);
    log_url_table_template("unique_id=$unique_id",$urls,$sort,$BILL);
+   log_url_pager_template("unique_id=$unique_id",$sort,$page,$PGR);
    ?><div align=center><a href="<? OUT("?p=$p&act=stats&action=sessions") ?>">назад к статистике</a></div><?
    }
   else

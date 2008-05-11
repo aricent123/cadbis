@@ -1,16 +1,20 @@
 <?php
-error_reporting(E_PARSE);
-require_once(dirname(__FILE__)."/../../../test/SM/SMPHPToolkit/SMAjax.php");
-require_once(dirname(__FILE__)."/../../../test/SM/CADBiS/PacketsTodayLimits.php");
 header("Content-Type: text/html;charset=UTF-8");
-$ajaxbuf = new ajax_buffer("update_buffer");
-$ajaxbuf->show_progress(true);
-$ajaxbuf->set_postback_url($_SERVER['REQUEST_URI']);
-if(!check_auth() || $CURRENT_USER['level']<7){	
-	die("Access denied!");
-}
+error_reporting(E_PARSE);
 if(!isset($newact))
+{
 	$newact = "";
+	$viewfile = "";
+	$backendfile = "";
+}
+else
+{
+	$viewfile = dirname(__FILE__).'/'.$newact.'_view.php';
+	$backendfile = dirname(__FILE__).'/'.$newact.'_backend.php';
+}
+
+if(!empty($backendfile) && file_exists($backendfile))
+	require_once($backendfile);
 ?>
 <html>
 <head>
@@ -189,9 +193,9 @@ pas_sel=false;
 
 
 <!-- STARTOF CONTENT -->
-	<? 
-	if(!empty($newact) && file_exists(dirname(__FILE__).'/'.$newact.'.php'))	
-		require_once(dirname(__FILE__).'/'.$newact.'.php');
+	<? 		
+	if(!empty($viewfile) && file_exists($viewfile))	
+		require_once($viewfile);
 	else
 	{ 
 	?>

@@ -70,6 +70,17 @@ return $res;
   if($a['ucount']>$b['ucount'])return -1;
   return ($a['ucount']==$b['ucount'])?0:1;
   }
+ function _urls_sort_functorCTYPE_asc($a,$b)
+  {
+  if($a['content_type']>$b['content_type'])return 1;
+  return ($a['content_type']==$b['content_type'])?0:-1;
+  }
+ function _urls_sort_functorCTYPE_desc($a,$b)
+  {
+  if($a['content_type']>$b['content_type'])return -1;
+  return ($a['content_type']==$b['content_type'])?0:1;
+  }    
+  
   
  function template_header_sort($paramstr,$sort,$fname,$ftitle)
  {
