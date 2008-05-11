@@ -30,7 +30,7 @@ if($BILLEVEL<3)return;
      ?>
      <div align=center><b>Напишите сообщение следующим пользователям:</b></div>
      <table width=100% align=center class=tbl2><td> 
-     <form action="<? OUT("?p=$p&act=$act&action=message&klip=$klip&sure=true") ?>" method=post>    
+     <form action="<? OUT("?p=$p&act=$act&action=message&klip=$klip&sure=true") ?>" method=post>     
      <?
      for($i=0;$i<count($list);++$i)
        {
@@ -92,7 +92,7 @@ if($BILLEVEL<3)return;
        </td>
        </table>
        <div align=center><input type=submit class=button value="Отправить!"></div>
-       </form>
+     </form>
        <div align=center><a href="<? OUT("?p=$p&act=$act") ?>">назад</a></div>       
        <?
      return;

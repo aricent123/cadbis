@@ -642,6 +642,9 @@ class CErrors
 class CPageDivider 
  { 
  var $POP;
+ protected $count = 0;
+ protected $current = 0;
+ 
  //-----------------------------------------------------------------------
  function CPageDivider($POP)
    {$this->POP=$POP;}
@@ -651,7 +654,10 @@ class CPageDivider
  //-----------------------------------------------------------------------
  function GetPage($posts,$pnum)
    {
-   if(!count($posts))return NULL;
+   if(!count($posts))
+   	 return NULL;
+   	$this->current = $pnum;
+   	$this->count = count($posts);
    //rsort($posts);
     $ptot=ceil(count($posts)/$this->POP);
     if($pnum>$ptot)
@@ -664,10 +670,15 @@ class CPageDivider
     return $res;
    }
  //-----------------------------------------------------------------------     
- function GetPagesCount($posts)
+ function GetPagesCount($posts = null)
    {
-   return ceil(count($posts)/$this->POP);
-   }  
+   return ceil($this->count/$this->POP);
+   }
+ //-----------------------------------------------------------------------
+ public function GetCurrentPageNum()
+ {
+ 	return $this->current;
+ }
  //-----------------------------------------------------------------------     
  function GetPOP()
    {
