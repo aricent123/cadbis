@@ -118,7 +118,7 @@ switch($_GET['chart_type'])
 	 
 	 
 	 
-	 //$params[14]="Top $limit посещённых сайтов".$byuser;
+	 $title="Top $limit посещённых сайтов".$byuser;
 	 $sum_data=array('count'=>0,'length'=>0,'ucount'=>0);
 	 $avg_data=$sum_data;
 	 $min_data =array('count'=>9999999,'length'=>9999999,'ucount'=>999999);
@@ -156,6 +156,25 @@ switch($_GET['chart_type'])
 	 	$labels[]=$data_other['label']." - ".$tmpstr;
 	 }
 	 $chart [ 'chart_data' ] = array ($labels, $data);
+	 $chart [ 'draw' ] = array ( array ( 'type'       => "text",
+                                    'transition' => 'slide_left',
+                                    'delay'      => 0, 
+                                    'duration'   => 0,
+                                    'x'          => 300, 
+                                    'y'          => 10, 
+                                    'width'      => 300,  
+                                    'height'     => 100, 
+                                    'h_align'    => "center", 
+                                    'v_align'    => "top", 
+                                    'rotation'   => 90, 
+                                    'text'       => $title,  
+                                    'font'       => "Tahoma", 
+                                    'bold'       => true, 
+                                    'size'       => 18, 
+                                    'color'      => "4400ff", 
+                                    'alpha'      => 90
+                                  )
+                                  );
 	 $chart [ 'chart_value' ] = array ('font'             =>  "Tahoma", 
                                     'bold'             =>  true, 
                                     'size'             =>  12,
