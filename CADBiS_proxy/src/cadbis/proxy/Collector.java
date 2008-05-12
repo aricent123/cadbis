@@ -136,16 +136,27 @@ public class Collector extends CADBiSDaemon{
 	}
 	
 	/**
-	 * Log the denied access attempt
+	 * Log the denied access attempt to url
 	 * @param userIp
 	 * @param url
 	 */
-	public void AddDeniedAccessAttempt(String userIp, String url)
+	public void AddDeniedAccessAttemptUrl(String userIp, String url)
 	{
 		Action action = getActionByUserIp(userIp);
 		ActionDAO actionDAO = new ActionDAO();
 		actionDAO.execSql(String.format("insert into url_denied_log(url,unique_id,date) values('%s','%s',NOW())",url,action.getUnique_id()));
 	}
+	/**
+	 * Log the denied access attempt to content
+	 * @param userIp
+	 * @param url
+	 */
+	public void AddDeniedAccessAttemptCategory(String userIp, String url, Integer cid)
+	{
+		Action action = getActionByUserIp(userIp);
+		ActionDAO actionDAO = new ActionDAO();
+		actionDAO.execSql(String.format("insert into url_categories_denied_log(cid,url,unique_id,date) values(%d,'%s','%s',NOW())",cid,url,action.getUnique_id()));
+	}	
 	
 	/**
 	 * Flush all collected data
