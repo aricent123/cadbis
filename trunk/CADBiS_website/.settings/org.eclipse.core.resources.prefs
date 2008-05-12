@@ -1,6 +1,13 @@
-#Sun May 11 01:56:39 MSD 2008
+#Mon May 12 01:21:16 MSD 2008
 eclipse.preferences.version=1
-encoding//skins/smadbis/billing/admin_tarifs_rangs_backend.php=UTF-8
-encoding//skins/smadbis/billing/admin_tarifs_rangs_view.php=UTF-8
+encoding//js/ajax/manager.js=UTF-8
 encoding//skins/smadbis/billing/cadbisnew.php=UTF-8
+encoding//skins/smadbis/billing/cadbisnew/admin_cats_backend.php=UTF-8
+encoding//skins/smadbis/billing/cadbisnew/admin_cats_denied_backend.php=UTF-8
+encoding//skins/smadbis/billing/cadbisnew/admin_cats_denied_view.php=UTF-8
+encoding//skins/smadbis/billing/cadbisnew/admin_cats_list_backend.php=UTF-8
+encoding//skins/smadbis/billing/cadbisnew/admin_cats_list_view.php=UTF-8
+encoding//skins/smadbis/billing/cadbisnew/admin_cats_view.php=UTF-8
+encoding//skins/smadbis/billing/cadbisnew/admin_tarifs_rangs_backend.php=UTF-8
+encoding//skins/smadbis/billing/cadbisnew/admin_tarifs_rangs_view.php=UTF-8
 encoding//skins/smadbis/billing/month_stats.php=UTF-8

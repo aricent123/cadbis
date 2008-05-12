@@ -5,7 +5,7 @@
 	<input class="button" type="button" onclick="<?=$ajaxbuf->client_id() ?>.update()" value="Пересчитать"/>
 	<? $ajaxbuf->start(); ?>
 	<br/>
-	<? include "month_stats.php" ?>
+	<? include dirname(__FILE__)."/../month_stats.php" ?>
 		<table class="wide-table" cellpadding="0" cellspacing="0">
 		<tr>
 			<td>
