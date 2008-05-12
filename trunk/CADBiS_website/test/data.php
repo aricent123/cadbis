@@ -2,7 +2,7 @@
 session_start();
 error_reporting (0); 
 require_once("../skins/smadbis/billing/DrClass.php");
-require_once("../modules_conf/smadbis.conf.php");
+require_once("../skins/smadbis/billing/restore_confs.php");
 $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
 //session_destroy();//СЂР°СЃРєРѕРјРµРЅС‚РёС‚СЊ, С‡С‚РѕР±С‹ РѕС‡РёСЃС‚РёС‚СЊ СЃРµСЃСЃРёСЋ
 //include charts.php in your script
@@ -88,7 +88,6 @@ switch($_GET['chart_type'])
 		SendChartData ( $chart );
 		break;
 //--------------------
-	//--------------------
 	case "topurl":
 		$chart [ 'chart_type' ] = "3d pie";
 		$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma", 'size'       => 10);
