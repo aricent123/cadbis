@@ -213,12 +213,21 @@ switch($BILLEVEL)
               Информация о пользовании интернетом, сводные цифры и графики. Настройка параметров биллинг-системы. Установка номинальных значений трафика и времени за промежутки времени.
       </td>
       </table>
-     </td></tr> 
+     </td></tr>
+     
+     <tr><td width=50% class=tbl1>
+     <table width=100% class=tbl2 style="cursor:hand;" cellspacing=0 cellpadding=0 onclick="document.location.href='<?=cadbisnewurl('admin_cats') ?>';">
+      <td height=100px width=30% align=center bgcolor=#F0F6F8><img src="<? OUT(SK_DIR) ?>/img/bill_ctfilter.gif"></td>
+      <td bgcolor=#F0F6F8><div align=center><b><a href="<?=cadbisnewurl('admin_cats') ?>">Контентный фильтр</a></b></div><br>
+              Настройки категорий, ключевых слов и прочих параметров контентного фильтра.
+      </td>
+      </table>
+     </td></tr>       
 
      <tr><td width=50% class=tbl1>
      <table width=100% class=tbl2 style="cursor:hand;" cellspacing=0 cellpadding=0 onclick="document.location.href='?p=smadbis&act=countries';">
-      <td height=100px width=30% align=center bgcolor=#F0F6F8><img src="<? OUT(SK_DIR) ?>/img/bill_edit_countries.gif"></td>
-      <td bgcolor=#F0F6F8><div align=center><b><a href="?p=smadbis&act=countries">Страны мира</a></b></div><br>
+      <td height=100px width=30% align=center bgcolor=#DDEEF3><img src="<? OUT(SK_DIR) ?>/img/bill_edit_countries.gif"></td>
+      <td bgcolor=#DDEEF3><div align=center><b><a href="?p=smadbis&act=countries">Страны мира</a></b></div><br>
                Управление странами и диапазонами IP-адресов.
       </td>
       </table>

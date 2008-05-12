@@ -52,3 +52,17 @@ CREATE TABLE  `url_categories_unsensewords` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 ALTER TABLE `url_categories_match` ADD UNIQUE INDEX `Index_url_unique`(`url`);
+ALTER TABLE `url_categories_unsensewords` ADD UNIQUE `Index_keyword_unique`(`keyword`), ENGINE = InnoDB;
+ALTER TABLE `url_categories_denied_log` ADD COLUMN `url` VARCHAR(125) NOT NULL AFTER `uid`, ENGINE = InnoDB;
+
+ALTER TABLE `url_categories_denied_log` CHANGE COLUMN `gid` `unique_id` VARCHAR(64) NOT NULL,
+ DROP COLUMN `uid`
+, DROP INDEX `Index_gid`
+, DROP INDEX `Index_uid`
+, ENGINE = InnoDB;
+
+ALTER TABLE `url_categories_keywords` MODIFY COLUMN `keyword` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
+, ENGINE = InnoDB;
+ALTER TABLE `url_categories_unsensewords` MODIFY COLUMN `keyword` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
+, ENGINE = InnoDB;
+

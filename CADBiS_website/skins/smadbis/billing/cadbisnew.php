@@ -1,18 +1,123 @@
 <?php
 header("Content-Type: text/html;charset=UTF-8");
 error_reporting(E_PARSE);
-if(!isset($newact))
-{
-	$newact = "";
-	$viewfile = "";
-	$backendfile = "";
-}
-else
-{
-	$viewfile = dirname(__FILE__).'/'.$newact.'_view.php';
-	$backendfile = dirname(__FILE__).'/'.$newact.'_backend.php';
-}
-
+require_once (dirname(__FILE__).'/cadbisnew/SMPHPToolkit/common.inc.php');
+class CADBiSNew{
+	protected static $_instance = null;
+	protected $_scripts_src = array();
+	protected $_scripts = array();
+	protected $_csss = array();
+	protected $viewfile = "";
+	protected $backendfile = "";
+	protected function __construct()
+	{
+		global $newact;
+		if(!isset($newact))
+			$newact = "";
+		else
+		{
+			$this->viewfile = dirname(__FILE__).'/cadbisnew/'.$newact.'_view.php';
+			$this->backendfile = dirname(__FILE__).'/cadbisnew/'.$newact.'_backend.php';
+		}		
+	}
+	/**
+	 * Returns current view file path
+	 * @return string viewpath
+	 */
+	public function getViewFile(){
+		return $this->viewfile;
+	}
+	/**
+	 * Returns current backend file path
+	 * @return string backendpath
+	 */
+	public function getBackendFile(){
+		return $this->backendfile;
+	}	
+	/**
+	 * Get the instance
+	 * @return CADBiSNew instance
+	 */
+	public function instance(){
+		if(self::$_instance == null)
+			self::$_instance = new CADBiSNew();
+		return self::$_instance;
+	}
+	/**
+	 * Register client script src
+	 * @param string $script
+	 */
+	public function script_src($script)
+	{
+		$this->_scripts_src[] = $script;
+	}
+	/**
+	 * Register client script
+	 * @param string $script
+	 */
+	public function register_script($script)
+	{
+		$this->_scripts[] = $script;
+	}	
+	/**
+	 * Register css
+	 * @param string $css
+	 */
+	public function link_href($css)
+	{
+		$this->_csss[] = $css;
+	}	
+	/**
+	 * Render startup javascripts
+	 * @return string csss
+	 */
+	public function render_link_hrefs()
+	{
+		$res = "";
+		for($i=0;$i<count($this->_csss);++$i)
+			$res .= '<link type="text/css" rel="stylesheet" href="'.$this->_csss[$i].'"/>';
+		return $res;
+	}
+	/**
+	 * Render startup javascripts
+	 * @return string scripts
+	 */
+	public function render_script_srcs()
+	{
+		$res = "";
+		for($i=0;$i<count($this->_scripts_src);++$i)
+			$res .= '<script type="text/javascript" src="'.$this->_scripts_src[$i].'"></script>';
+		return $res;
+	}	
+	/**
+	 * Render startup javascripts
+	 * @return string scripts
+	 */
+	public function render_scripts()
+	{
+		$res = "";
+		for($i=0;$i<count($this->_scripts);++$i)
+			$res .= $this->_scripts[$i];
+		return $res;
+	}	
+	/**
+	 * Render menu item
+	 * @return string scripts
+	 */
+	public function render_menu_item($link,$title,$bgcolor,$img,$desc)
+	{
+		return '
+	     <tr><td width="50%" class="tbl1">
+	     <table width="100%" class="tbl2" style="cursor:hand;" cellspacing="0" cellpadding="0" onclick="document.location.href=\''.$link.'\';">
+	      <td height="100px" width="30%" align="center" bgcolor="'.$bgcolor.'"><img src="'.$img.'"></td>
+	      <td bgcolor="'.$bgcolor.'"><div align="center"><b><a href="'.$link.'">'.$title.'</a></b></div><br>
+	       	'.$desc.'
+	      </td>
+	      </table>
+	     </td></tr>';
+	}	
+};
+$backendfile = CADBiSNew::instance()->getBackendFile();
 if(!empty($backendfile) && file_exists($backendfile))
 	require_once($backendfile);
 ?>
@@ -24,9 +129,11 @@ if(!empty($backendfile) && file_exists($backendfile))
 <meta http-equiv="Author" content="<?=utils::cp2utf($GV["site_owner"]) ?>">
 <meta http-equiv="Description" content="<?=utils::cp2utf($GV["site_descr"]) ?>">
 <link href="<? OUT(SK_DIR) ?>/styles.css" rel="stylesheet" type="text/css" />
+<?=CADBiSNew::instance()->render_link_hrefs() ?>
 <script type="text/javascript" src="js/scriptaculous/prototype.js"></script>
 <script type="text/javascript" src="js/window/window.js"></script>
-<script type="text/javascript" src="js/ajax/engine.js"></script>
+<?=CADBiSNew::instance()->render_script_srcs() ?>
+<?=CADBiSNew::instance()->render_scripts()?>
 <style type="text/css">
 	@IMPORT url("skins/smadbis/css/ajax.css");
 	.simple-table td{
@@ -72,6 +179,11 @@ if(!empty($backendfile) && file_exists($backendfile))
 		border: 1px solid #C5E4EC;
 		background: #f4fafc;
 	}
+	textarea{
+		border: 1px solid #C5E4EC;
+		background: #f4fafc;
+	}
+	
 	.button{
 		border: 1px solid #a5c4cC;
 		background: #eaefee;
@@ -194,12 +306,14 @@ pas_sel=false;
 
 <!-- STARTOF CONTENT -->
 	<? 		
+	$viewfile = CADBiSNew::instance()->getViewFile();
 	if(!empty($viewfile) && file_exists($viewfile))	
 		require_once($viewfile);
 	else
 	{ 
 	?>
-		No such new CADBiS page
+		No such new CADBiS page<br/>
+		<a href="javascript:history.back(1);">Назад</a>
 	<? } ?>
 <!-- ENDOF CONTENT -->
 

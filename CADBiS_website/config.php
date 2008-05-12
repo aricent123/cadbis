@@ -1,5 +1,4 @@
 <?php
-
 /*
 ini_set(safe_mode, false);
 ini_set(upload_tmp_dir,"sml");
@@ -54,6 +53,3 @@ $val = AddSlashes(StripSlashes($val));
 $$key = $val;
 }
 }
-
-
-?>

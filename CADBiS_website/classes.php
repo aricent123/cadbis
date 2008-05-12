@@ -318,7 +318,7 @@ function OUT($str)
 //.............................................................//
 //..........................CLASSES............................//
 //.............................................................//
-
+include("js/fckeditor/fckeditor_php5.php");
 //*************************** timer ***********************************//
 /////////////////////////////////////////////////////////////////////////
 class CTimer 
@@ -720,6 +720,25 @@ class CFiltration
   $str=ereg_replace(" +"," ",trim(stripslashes(stripslashes(addslashes($str)))));
   return $str;  
   }
+ //----------------------------------------------------------------------- 
+ function DirectProcessURL($str)
+  {
+  global $GV;        
+  $str=str_replace("&","/amp/",$str);  
+  $str=htmlspecialchars($str);
+  $str=ereg_replace(" +"," ",trim(stripslashes(stripslashes(addslashes($str)))));
+  return $str;  
+  }
+ //----------------------------------------------------------------------- 
+ function ReverseProcessURL($str)
+  {
+  global $GV;
+  $str=strip_tags($str);
+  $str=str_replace("\"","",$str);
+  $str=str_replace("/amp/","&",$str);  
+  $str=str_replace("\&amp;quot;","\"",$str);  
+  return $str;  
+  }  
  //-----------------------------------------------------------------------   
  function DirectProcessText($str,$nb=1,$kt=1,$ml=0)
   {
@@ -754,6 +773,14 @@ class CFiltration
   $str=str_replace($GV["sep3"],"",$str); 
   return $str;  
   }
+ //-----------------------------------------------------------------------   
+ function ReverseProcessHTML($str)
+  {
+  $str=str_replace("\r\n","",addslashes($str));
+  $str=str_replace("\r","",$str);
+  $str=str_replace("\n","",$str);   
+  return $str;  
+  }  
  //----------------------------------------------------------------------- 
  function ReverseProcessString($str)
   {
@@ -765,7 +792,7 @@ class CFiltration
  //----------------------------------------------------------------------- 
  function ReverseProcessText($text)
   {
-  $text=ereg_replace(" +"," ",trim(stripslashes(stripslashes(addslashes($text)))));  
+  //$text=ereg_replace(" +"," ",trim(stripslashes(stripslashes(addslashes($text)))));  
   return strip_tags($text);
   }                       
  //----------------------------------------------------------------------- 
@@ -783,10 +810,19 @@ class CFiltration
    };
   return $text;
   }
-  
-     
+ //-----------------------------------------------------------------------
+  function ExtractSmallText($text, $length = 255)
+  {
+  	$small_text = substr($text,0,$length);
+  	$i = strlen($small_text);
+  	while($i>0 && ($small_text[$i]!=" " && $small_text[$i]!="\n"))
+  	  $i--;
+  	return substr($small_text,0,$i);
+  }
  }; 
 /////////////////////////////////////////////////////////////////////////////
+ 
+ 
  
  
  //............................................................//
