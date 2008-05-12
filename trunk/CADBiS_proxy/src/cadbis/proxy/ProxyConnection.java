@@ -17,6 +17,9 @@ import cadbis.CADBiSThread;
 import cadbis.bl.Action;
 import cadbis.proxy.httpparser.RequestHttpParser;
 import cadbis.proxy.httpparser.ResponseHttpParser;
+import cadbis.proxy.subthreads.AccessDeniedAttemptLogger;
+import cadbis.proxy.subthreads.CategoryRecognizer;
+import cadbis.proxy.subthreads.PreCollector;
 import cadbis.utils.IOUtils;
 import cadbis.utils.StringUtils;
 
@@ -51,7 +54,9 @@ class ProxyConnection extends CADBiSThread {
 	 {
 		 boolean enabled = ProxyConfigurator.getInstance().getProperty("contentcheck").equals("enabled");
 		 String ctype = ResponseParser.GetHeader("Content-Type");
-		 return enabled && (ctype.indexOf("text/html")>=0 || ctype.indexOf("text/plain")>=0);
+		 return enabled && (ctype.indexOf("text/html")>=0 || 
+				 			ctype.indexOf("text/plain")>=0 || 
+				 			ctype.indexOf("text/xml")>=0);
 	 }
 	 
 	 protected void answerAccessDenied(List<byte[]> buffer, String UserIp, String HttpHost)
@@ -69,18 +74,8 @@ class ProxyConnection extends CADBiSThread {
 					sAvail = accDenied.length() - sAvail - 1;												
 				buffer.add(accDenied.substring(i,sAvail).getBytes());
 			}
-			 /*******************************
-			  * log the attempt in a separate thread
-			  *******************************/
-			final String fHttpHost = HttpHost;
-			final String fUserIp = UserIp;
-			 new CADBiSThread(){
-					public void run()
-					{	
-						Collector.getInstance().AddDeniedAccessAttempt(fUserIp, fHttpHost);
-						complete();
-					}
-			 }.start();		 
+			//log the attempt in a separate thread
+			new AccessDeniedAttemptLogger(HttpHost,UserIp).start();
 	 }
 	 
 	 /**
@@ -326,6 +321,8 @@ class ProxyConnection extends CADBiSThread {
 							isFullAnswer = true;
 							// answer the denied access
 							answerAccessDenied(buffer,UserIp,HttpHost);
+							// log the attempt to access denied category
+							new AccessDeniedAttemptLogger(cid, HttpHost,UserIp).start();
 						}
 					 }
 				 }

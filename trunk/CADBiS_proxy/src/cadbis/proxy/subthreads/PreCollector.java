@@ -1,10 +1,11 @@
-package cadbis.proxy;
+package cadbis.proxy.subthreads;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Date;
 
 import cadbis.CADBiSThread;
+import cadbis.proxy.Collector;
 
 public class PreCollector extends CADBiSThread {
  	private String HttpHost = "";
