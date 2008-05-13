@@ -1665,6 +1665,8 @@ function GetUrlCategories($page = 0, $pop = 10, $orderby = 'default', $orderdir 
  $sql = "select * from url_categories";
  if($orderby!='default')
  	$sql .= ' order by '.$orderby.' '.$orderdir;
+ else
+ 	$sql .= ' order by title';
  if($page > 0)
  {
  	$page--;
@@ -1733,6 +1735,13 @@ function GetUrlCategoriesDenied($gid)
 function UpdateUrlCategoryMatch($u2cid,$url, $cid)
 {
 	mysql_query(sprintf("update `url_categories_match` set cid='%s', url='%s' where u2cid=%d",$cid,$url,$u2cid));
+}
+function UpdateUrlCategoryMatchByName($url,$name)
+{
+	$sql = sprintf("select cid from `url_categories` where title='%s'",$name);
+	$cid = mysql_result(mysql_query($sql),0);
+	$sql = sprintf("update `url_categories_match` set cid=%d where url='%s'",$cid,$url);
+	mysql_query($sql);
 }
 function DeleteUrlCategoryMatch($u2cid)
 {

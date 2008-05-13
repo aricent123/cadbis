@@ -27,7 +27,12 @@
 		</div>
 		<div id="window-form-delete" style="display:none">
 			Вы уверены что хотите удалить URL?
-		</div>		
+		</div>
+		<div id="window-form-recognize"  style="display:none;height:150px;">
+			Опознание категории...
+			<img id="imgLoad" style="display:none" src="img/ajaxload.gif"/>
+			<div id="divRecognizeCat"></div>
+		</div>
 <script type="text/javascript">
 function GridsInitialized()
  {
@@ -43,9 +48,25 @@ function GridsInitialized()
 		};
  }
 Event.observe(window,'load',GridsInitialized);
+function changeCatByName(url,name){
+	var manager = <?=$emanager->client_id() ?>;
+	GridsInitialized();
+	manager.setItem('{"url":"'+url+'",'+'"name":"'+name+'"}');
+	manager.setAction('changeCatByName');
+	manager.Update();				
+}
+function recognizeAll(manager)
+{
+	GridsInitialized();
+	<?=$ajaxbuf_url_cats->client_id() ?>.show_progress(true);
+	manager.setItem('');
+	manager.setAction('recognizeAll');
+	manager.Update();
+	<?=$ajaxbuf_url_cats->client_id() ?>.show_progress(false);
+}
 function addURL(manager){
 	Dialog.confirm($('window-form-add').innerHTML,{
-		className:"alphacube", width:300, 
+		className:"alphacube", width:450, 
 		okLabel: "Добавить", 
 		cancelLabel: "Отмена", 
 		onOk: function(win){  
@@ -57,9 +78,31 @@ function addURL(manager){
 			}
 		});	
 }
+function recognizeCat(manager,url){
+	Dialog.alert($('window-form-recognize').innerHTML,{
+		className:"alphacube", width:300, height: 100,
+		okLabel: "ОК", 
+		});
+	$('imgLoad').setStyle({display:''});
+	new Ajax.Request('<?=cadbisnewurl('admin_cats_recognize') ?>&url='+url, {
+		method: 'get',
+		onSuccess: function(data) 
+		{
+			var res='';
+			if(data.responseText!='')
+			{
+				res='<br/> <a href="javascript:changeCatByName(\''+url+'\',\''+data.responseText+'\')">Изменить</a>';
+				res = data.responseText + res;
+			}
+			else
+				res = 'Нет в базе';
+			$('divRecognizeCat').innerHTML = res;
+			$('imgLoad').setStyle({display:'none'});
+		}});		
+}
 function editURL(manager,id,url,cid){
 	Dialog.confirm($('window-form-add').innerHTML,{
-		className:"alphacube", width:300, 
+		className:"alphacube", width:450, 
 		okLabel: "Сохранить", 
 		cancelLabel: "Отмена", 
 		onOk: function(win){ 
@@ -90,6 +133,7 @@ function deleteURL(manager,id){
 <? $ajaxbuf_url_cats->start(); ?>	
 	<?=$url_cats_unmatched_grid->render(); ?>
 <? $ajaxbuf_url_cats->end(); ?>
+<a href="javascript:recognizeAll(<?=$emanager->client_id() ?>);">Распознать все на странице</a>
 <h3>Сайты с назначенной категорией:</h3>
 <? $ajaxbuf_url_matched_cats->start(); ?>	
 	<?=$url_cats_matched_grid->render(); ?>
