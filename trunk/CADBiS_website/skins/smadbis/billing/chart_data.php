@@ -1,19 +1,19 @@
 <?php
-session_start();
+//session_start();
 error_reporting (0); 
-require_once("../skins/smadbis/billing/DrClass.php");
-require_once("../skins/smadbis/billing/restore_confs.php");
+require_once("DrClass.php");
+require_once("restore_confs.php");
+require_once("cadbisnew/graph/charts.php");
 $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
-//session_destroy();//СЂР°СЃРєРѕРјРµРЅС‚РёС‚СЊ, С‡С‚РѕР±С‹ РѕС‡РёСЃС‚РёС‚СЊ СЃРµСЃСЃРёСЋ
 //include charts.php in your script
-include "charts.php";
 
 
-if(isset($_GET['chart_type']))
-switch($_GET['chart_type'])
+
+if(isset($chart_type))
+switch($chart_type)
 {
 	case "loading":
-		$title = "РќР°РіСЂСѓР·РєР°";
+		$title = "Нагрузка";
 		if(!isset($_SESSION['graph_prev_values']))
 		{
 			$_SESSION['graph_prev_values'] = array($title,0);
@@ -24,15 +24,15 @@ switch($_GET['chart_type'])
 			$_SESSION['graph_prev_indexes'] = array(0,1);
 		}
 
-		//Тип графика
+		//��� �������
 		$chart [ 'chart_type' ] = "line";
-		//Шрифт легенды
+		//����� �������
 		$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma"); 
 
 		$chart[ 'chart_grid_h' ] = array ( 'alpha'=>10, 'color'=>"000000", 'thickness'=>1, 'type'=>"solid" );
 		$chart[ 'chart_grid_v' ] = array ( 'alpha'=>10, 'color'=>"000000", 'thickness'=>1, 'type'=>"solid" );
 		$chart[ 'chart_pref' ] = array ( 'line_thickness'=>2, 'point_shape'=>"none", 'fill_shape'=>false );
-		//данные для графика
+		//������ ��� �������
 		$_SESSION['graph_prev_values'][]=rand(5, 100)  ;
 		$_SESSION['graph_prev_indexes'][]=$_SESSION['graph_prev_indexes'][count($_SESSION['graph_prev_indexes'])-1]+1;
 
@@ -57,7 +57,7 @@ switch($_GET['chart_type'])
                                     'h_align'    => "center", 
                                     'v_align'    => "top", 
                                     'rotation'   => 90, 
-                                    'text'       => "Р§РёСЃР»Рѕ РїРѕС‚РѕРєРѕРІ",  
+                                    'text'       => "Число потоков",  
                                     'font'       => "Tahoma", 
                                     'bold'       => true, 
                                     'size'       => 14, 
@@ -75,7 +75,7 @@ switch($_GET['chart_type'])
                                     'h_align'    => "center", 
                                     'v_align'    => "top", 
                                     'rotation'   => -90, 
-                                    'text'       => "Р’СЂРµРјСЏ",  
+                                    'text'       => "Время",  
                                     'font'       => "Tahoma", 
                                     'bold'       => true, 
                                     'size'       => 14, 
@@ -90,13 +90,13 @@ switch($_GET['chart_type'])
 //--------------------
 	case "topurl":
 		$chart [ 'chart_type' ] = "3d pie";
-		$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma", 'size'       => 10);
-		/*взято из admin_draw.php*/
+		$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma", 'size'	=> 10);
+		/*����� �� admin_draw.php*/
 		if($uid==null || $uid=="null")
 	 $uid = null;
 	 if($uid)
 	 {$user = $BILL->GetUserData($uid);
-	 $byuser = " пользователя ".$user['fio'];
+	 $byuser = " ������������ ".$user['fio'];
 	 }
 	 else
 	 $byuser = "";
@@ -112,7 +112,7 @@ switch($_GET['chart_type'])
 	 if(!isset($hideother) || $hideother=="false")
 	 $hideother = false;
 	 $urls = $BILL->GetUrlsPopularity($sort,$uid,$limit,$gid,$groupby,$hideother);
-	  /*/взято из admin_draw.php*/
+	  /*/����� �� admin_draw.php*/
 	
 	 
 	 
@@ -134,12 +134,15 @@ switch($_GET['chart_type'])
 	 }
 	 $avg_data['ucount'] = $sum_data['ucount']/2;
 
-	 $data_other=array('data'=>0,'label'=>'Другие');
+	 $data_other=array('data'=>0,'label'=>'������');
 	 $key = substr($sort,1,strlen($sort)-1);
+	 $labels = array();
+	 $data = array();
 	 foreach($urls as $url)
 	 {
 	 	$tmp = $url[$key];
 	 	$g=($sort[0]==">")?$tmp>$avg_data[$key]:$tmp<$avg_data[$key];
+	 	
 	 	if(($g && count($data)<12)){
 	 		$data[]=$tmp;
 	 		$tmpstr=($key=="length")?make_fsize_str($tmp):$tmp;
