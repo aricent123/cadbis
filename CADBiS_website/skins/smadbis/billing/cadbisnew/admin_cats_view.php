@@ -30,4 +30,4 @@
 	</table>				
 	
 <br/><br/>
-<a href="javascript:history.back(1);">Назад</a>
+<a href="?p=smadbis">Назад</a>

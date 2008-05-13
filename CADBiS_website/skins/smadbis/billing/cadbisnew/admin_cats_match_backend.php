@@ -41,6 +41,7 @@ class cat_urls_formatter extends grid_formatter {
 		switch($this->_field){
 			case 'actions':
 				return '<a href="javascript:deleteURL('.$this->_manager.','.$data['u2cid'].');">Удалить</a>,
+						<a href="javascript:recognizeCat('.$this->_manager.',\''.$data['url'].'\');">Распознать</a>,
 						<a href="javascript:editURL('.$this->_manager.','.$data['u2cid'].',\''.
 						$data['url'].'\',\''.
 						$data['cid'].'\');">Изменить</a>';
@@ -77,11 +78,33 @@ $url_cats_matched_grid = new ajax_grid('url_cats_grid_matched',$url_cats_matched
 $url_cats_matched_grid_pager = new ajax_grid_pager('url_cats_grid_pager_matched',$BILL->GetCategoriesUrlMatchedCount());
 $url_cats_matched_grid->attach_pager($url_cats_matched_grid_pager);
 
+
 /**
  * Check if we need to make some actions
  */
 if($emanager->isAnyAction())
 {
+	//special actions
+	if($emanager->getAction()=='changeCatByName')
+	{
+		$item = json_decode($emanager->getItem());
+		$BILL->UpdateUrlCategoryMatchByName($item->url,$item->name);
+	}
+	elseif($emanager->getAction()=='recognizeAll')
+	{
+		$url_cats = $BILL->GetUrlCategoriesMatch(
+			$url_cats_unmatched_grid_pager->get_curpage(),10,			
+			$url_cats_unmatched_grid->get_current_sorting(), 
+			$url_cats_unmatched_grid->get_sort_direction(),
+			array(0),array());
+		require_once(dirname(__FILE__).'/CADBiS/recognize.php');
+		foreach($url_cats as $url)
+		{			
+			$catname = Recognizer::recognize($url['url']);
+			if(!empty($catname))
+				$BILL->UpdateUrlCategoryMatchByName($url['url'],$catname);
+		}
+	}
 	switch($emanager->getAction())
 	{
 		case $emanager->action->UPD:
@@ -95,7 +118,7 @@ if($emanager->isAnyAction())
 		case $emanager->action->ADD:
 			$item = json_decode($emanager->getItem());
 			$BILL->AddUrlCategoryMatch($item->url,$item->cid);
-		break;			
+		break;
 	}
 	$emanager->eraseAction();
 }
