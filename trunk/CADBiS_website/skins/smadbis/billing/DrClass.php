@@ -1839,7 +1839,7 @@ function GetUrlsPopularity($asort=">count", $uid = null, $limit=25,$gid=null,$gr
  $sql = "select up.cid,uc.title as cattitle,up.url,count(up.`uid`) as `ucount`, sum(up.`count`) as `count`, sum(up.`length`) as length from `url_popularity` up inner join `users` u on u.uid=up.uid left join `url_categories` uc on up.cid=uc.cid $where $groupby order by $sort $limit";
 	//die($sql);
  $result = mysql_query($sql)or die(mysql_error());
- $res = null;
+ $res = array();
  while($row = mysql_fetch_array($result))
    $res[]=$row;
  //foreach($res as $r)
