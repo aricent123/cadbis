@@ -132,14 +132,14 @@ switch($chart_type)
 
 	 $data_other=array('data'=>0,'label'=>'Другие');
 	 $key = substr($sort,1,strlen($sort)-1);
-	 $labels = array();
-	 $data = array();
+	 $labels = array("");
+	 $data = array("");
 	 foreach($urls as $url)
 	 {
 	 	$tmp = $url[$key];
 	 	$g=($sort[0]==">")?$tmp>$avg_data[$key]:$tmp<$avg_data[$key];
 	 	
-	 	if(($g && count($data)<12)){
+	 	if(($g /*&& count($data)<12*/)){
 	 		$data[]=$tmp;
 	 		$tmpstr=($key=="length")?make_fsize_str($tmp):$tmp;
 	 		$labels[]=(($groupby=='cid')?$url['cattitle']:$url['url'])." - ".$tmpstr;
