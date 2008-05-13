@@ -96,7 +96,7 @@ switch($chart_type)
 	 $uid = null;
 	 if($uid)
 	 {$user = $BILL->GetUserData($uid);
-	 $byuser = " ������������ ".$user['fio'];
+	 $byuser = " пользователя ".iconv('cp1251', 'utf-8', $user['fio']);
 	 }
 	 else
 	 $byuser = "";
@@ -113,10 +113,6 @@ switch($chart_type)
 	 $hideother = false;
 	 $urls = $BILL->GetUrlsPopularity($sort,$uid,$limit,$gid,$groupby,$hideother);
 	  /*/����� �� admin_draw.php*/
-	
-	 
-	 
-	 
 	 $title="Top $limit посещённых сайтов".$byuser;
 	 $sum_data=array('count'=>0,'length'=>0,'ucount'=>0);
 	 $avg_data=$sum_data;
@@ -134,7 +130,7 @@ switch($chart_type)
 	 }
 	 $avg_data['ucount'] = $sum_data['ucount']/2;
 
-	 $data_other=array('data'=>0,'label'=>'������');
+	 $data_other=array('data'=>0,'label'=>'Другие');
 	 $key = substr($sort,1,strlen($sort)-1);
 	 $labels = array();
 	 $data = array();
@@ -162,9 +158,9 @@ switch($chart_type)
                                     'transition' => 'slide_left',
                                     'delay'      => 0, 
                                     'duration'   => 0,
-                                    'x'          => 300, 
+                                    'x'          => 0, 
                                     'y'          => 10, 
-                                    'width'      => 300,  
+                                    'width'      => 900,  
                                     'height'     => 100, 
                                     'h_align'    => "center", 
                                     'v_align'    => "top", 
@@ -172,16 +168,16 @@ switch($chart_type)
                                     'text'       => $title,  
                                     'font'       => "Tahoma", 
                                     'bold'       => true, 
-                                    'size'       => 18, 
+                                    'size'       => 16, 
                                     'color'      => "4400ff", 
                                     'alpha'      => 90
                                   )
                                   );
-	 $chart [ 'chart_value' ] = array ('font'             =>  "Tahoma", 
-                                    'bold'             =>  true, 
-                                    'size'             =>  12,
-                                    'color'             =>  "4400ff",
-                                    'position'             =>  "cursor"
+	 $chart [ 'chart_value' ] = array ('font'	=>  "Tahoma", 
+                                    'bold'	=>  true, 
+                                    'size'	 =>  16,
+                                    'color'	=>  "4400ff",
+                                    'position'	=>  "cursor"
                                 	); 
      SendChartData ( $chart );
 	 break;
