@@ -49,8 +49,8 @@ $cats_ds = new grid_data_source(new grid_header_item_array(
 					new grid_header_item('actions','Действия',null, false, new cats_formatter('actions',$emanager))
 				));
 
-$cats_grid = new ajax_grid('cats_grid',$cats_ds,10,$ajaxbuf_cats);
-$cats_grid_pager = new ajax_grid_pager('cats_grid_pager',$BILL->GetRowsCount('url_categories'));
+$cats_grid = new ajax_grid('cats_grid',$cats_ds,$ajaxbuf_cats);
+$cats_grid_pager = new ajax_grid_pager('cats_grid_pager',$BILL->GetRowsCount('url_categories'),10);
 $cats_grid->attach_pager($cats_grid_pager);
 
 /**
