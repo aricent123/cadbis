@@ -51,10 +51,10 @@ class ajax_grid extends grid{
 										else
 											$link = "javascript:".$buffer.".set_var(\'".$sorting_name."\',\'".($sortname)."\');".$buffer.".update();";
 										echo spchr::tab2."<a href=\"$link\">".$title."</a>".spchr::endl;
-										if($direction == sorting::SORT_DIR_ASC)
-											echo "<img src=\"".$this->img_sort_desc."\"/>";
-										else
+										if($current_direction == sorting::SORT_DIR_ASC)
 											echo "<img src=\"".$this->img_sort_asc."\"/>";
+										else
+											echo "<img src=\"".$this->img_sort_desc."\"/>";
 									}
 									else
 										echo spchr::tab2.$title.spchr::endl;';
