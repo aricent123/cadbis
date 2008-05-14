@@ -1,4 +1,8 @@
 <?php
+// AJAX корректно работает только с UTF
+header("Content-Type: text/html;charset=UTF-8");
+
+// Подключаем необходимые файлы
 require_once(dirname(__FILE__)."/SMPHPToolkit/SMAjax.php");
 require_once(dirname(__FILE__)."/SMPHPToolkit/templates/templater.inc.php");
 
@@ -29,8 +33,6 @@ class mydata{
 	public static function delete($num){unset(self::$mydata[$num]);}
 }
 
-// AJAX корректно работает только с UTF
-header("Content-Type: text/html;charset=UTF-8");
 
 // Инициализируем буфер и менеджер сущностей
 $ajaxbuffer = new ajax_buffer("ajax_buffer");
