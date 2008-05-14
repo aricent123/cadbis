@@ -79,7 +79,10 @@ class grid_pager extends smphp_control{
 	{
 		$this->pager->set_pagesize($value);
 	}
-
+	public function get_pagesize()
+	{
+		return $this->pager->get_pagesize();
+	}
 	public function get_curpage()
 	{
 		return $this->pager->get_curpage();

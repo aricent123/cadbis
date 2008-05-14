@@ -36,6 +36,10 @@ class ajax_entities_manager extends smphp_control {
 	 */	
 	public $action;
 	/**
+	 * @var bool
+	 */	
+	protected $_isClientAlreadyInit = false;
+	/**
 	 * 
 	 * @param string $id
 	 * @param ajax_buffer $ajax_buf
@@ -51,6 +55,16 @@ class ajax_entities_manager extends smphp_control {
 		$this->_ajax_buf->register_var($this->actionvar);
 		$this->_ajax_buf->register_var($this->itemvar);
 		$this->_ajax_buf->register_var($this->confirmvar);
+		$this->_ajax_buf->addClientInitString($this->renderInits());		
+	}
+	
+	protected function renderInits()
+	{
+		$this->_isClientAlreadyInit = true;
+		return 	$this->client_id().' = new EntitiesManager('.$this->_ajax_buf->client_id().',
+				\''.$this->actionvar->client_id().'\',
+				\''.$this->confirmvar->client_id().'\',
+				\''.$this->itemvar->client_id().'\');';			
 	}
 	
 	/**
@@ -59,18 +73,16 @@ class ajax_entities_manager extends smphp_control {
 	 */
 	public function render_client_side()
 	{
-		return '
-		<script type="text/javascript">
-			var '.$this->client_id().' = null;
-			function '.$this->client_id().'_init(){
-			'.$this->client_id().' = new EntitiesManager('.$this->_ajax_buf->client_id().',
-				\''.$this->actionvar->client_id().'\',
-				\''.$this->confirmvar->client_id().'\',
-				\''.$this->itemvar->client_id().'\');
-			}
-			Event.observe(window,\'load\','.$this->client_id().'_init);
-		</script>
-		';
+		if(!$this->_isClientAlreadyInit)
+			return '
+			<script type="text/javascript">
+				var '.$this->client_id().' = null;
+				function '.$this->client_id().'_init(){
+				'.$this->a.'
+				Event.observe(window,\'load\','.$this->client_id().'_init);
+			</script>
+			';
+		return '';
 	}
 	
 	/**

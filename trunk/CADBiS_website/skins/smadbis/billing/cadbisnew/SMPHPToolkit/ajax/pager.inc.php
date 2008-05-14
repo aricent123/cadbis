@@ -50,6 +50,11 @@ class ajax_grid_pager extends grid_pager {
 								$paging_last&nbsp;&nbsp;";
 						';
 	//--------------------------------------------------
+	/**
+	 * Sets the ajax buffer for this ajax grid pager
+	 * @param ajax_buffer $buffer
+	 * @param int $pagenum
+	 */
 	public function reset_buffer(&$buffer,&$pagenum)
 	{
 		$this->buffer = &$buffer;
@@ -58,13 +63,16 @@ class ajax_grid_pager extends grid_pager {
 		$this->pager->recalc();
 	}
 	//--------------------------------------------------
+	/**
+	 * Creates new ajax grid pager
+	 * @param string $id
+	 * @param int $total
+	 * @param int $pagesize
+	 * @param string $template
+	 */
 	public function __construct($id, $total, $pagesize = 10, $template = null)
 	{
 		parent::__construct($id,$total,$pagesize,$template);
-//		$this->buffer = new ajax_buffer($this->UID('buffer'));
-//		$this->pagenum = new ajax_var($this->UID('pagenum'),1);
-//		$this->buffer->register_var($this->pagenum);
-//		$this->pager->set_curpage($this->pagenum->get_value());
 	}
 
 
