@@ -54,7 +54,7 @@ if($ajaxbuffer->is_post_back() &&  $emanager->isAnyAction())
 	$emanager->eraseAction();
 }
 
-// Форматтер для грида
+// Форматтер для отображения данных грида
 class my_grid_formatter extends grid_formatter {
 	protected $_field = '';
 	protected $_client_id = '';
@@ -69,8 +69,8 @@ class my_grid_formatter extends grid_formatter {
 				return '<a href="javascript:'.$this->_client_id.'.deleteItem('.$data[0].');">Удалить</a>';
 			default:
 				return parent::format($data,$type);	
-		}		
-	}	
+		}	
+	}
 };
 
 // Создаём DataSource
@@ -80,7 +80,7 @@ $datasource = new grid_data_source(new grid_header_item_array(
 					new grid_header_item('actions','Действия',null, false, new my_grid_formatter('actions', $emanager->client_id()))
 				));
 
-// Создаём новый грид и пейджер
+// Создаём новый грид и пейджер к нему
 $grid_pager = new ajax_grid_pager('my_grid_pager',mydata::get_total(),5);
 $grid = new ajax_grid('my_grid',$datasource,$ajaxbuffer,$grid_pager);
 
@@ -97,8 +97,9 @@ foreach($mydata as $data)
 			));	
 }
 
-// чтобы видно было прогресс задержим рендеринг на секунду
-sleep(1);
+// чтобы видно было прогресс задержим рендеринг постбэка на секунду
+if($ajaxbuffer->is_post_back())
+	sleep(1);
 
 // Выводим результат
 $templater  = new templater(dirname(__FILE__).'/templates/main.tpl.php');
