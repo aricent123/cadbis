@@ -21,10 +21,9 @@ class mydata{
 	// функция получения определённой страницы отсортированных данных
 	// cортировка указывается третьим параметром (true=ASC,false=DESC)
 	public static function get_page($pagesize, $page, $asc = true){
-		$mydata = array_slice(
-				self::$mydata, 
+		return array_slice(
+				($asc)?self::$mydata:array_reverse(self::$mydata), 
 				($page-1)*$pagesize, $pagesize);
-		return ($asc)?$mydata:array_reverse($mydata);
 	}
 	// так же допустим есть функция удаления строки
 	public static function delete($num){unset(self::$mydata[$num]);}
