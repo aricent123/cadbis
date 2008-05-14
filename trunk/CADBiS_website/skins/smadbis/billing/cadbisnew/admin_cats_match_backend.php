@@ -68,14 +68,16 @@ function create_ds_header($manager)
 				));
 }
 
+
+
 $url_cats_unmatched_ds = create_ds_header($emanager->client_id());
-$url_cats_unmatched_grid = new ajax_grid('url_cats_grid_unmatched',$url_cats_unmatched_ds,10,$ajaxbuf_url_cats);
-$url_cats_unmatched_grid_pager = new ajax_grid_pager('url_cats_grid_pager_unmatched',$BILL->GetCategoriesUrlUnMatchedCount());
+$url_cats_unmatched_grid = new ajax_grid('url_cats_grid_unmatched',$url_cats_unmatched_ds,$ajaxbuf_url_cats);
+$url_cats_unmatched_grid_pager = new ajax_grid_pager('url_cats_grid_pager_unmatched',$BILL->GetCategoriesUrlUnMatchedCount(),10);
 $url_cats_unmatched_grid->attach_pager($url_cats_unmatched_grid_pager);
 
 $url_cats_matched_ds = create_ds_header($emanager->client_id());
-$url_cats_matched_grid = new ajax_grid('url_cats_grid_matched',$url_cats_matched_ds,10,$ajaxbuf_url_matched_cats);
-$url_cats_matched_grid_pager = new ajax_grid_pager('url_cats_grid_pager_matched',$BILL->GetCategoriesUrlMatchedCount());
+$url_cats_matched_grid = new ajax_grid('url_cats_grid_matched',$url_cats_matched_ds,$ajaxbuf_url_matched_cats);
+$url_cats_matched_grid_pager = new ajax_grid_pager('url_cats_grid_pager_matched',$BILL->GetCategoriesUrlMatchedCount(),10);
 $url_cats_matched_grid->attach_pager($url_cats_matched_grid_pager);
 
 
