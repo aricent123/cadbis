@@ -513,7 +513,106 @@ function GetTodayUsersAccts($order=">traffic",$draw=false,$gid="all")
  	     }
 	 return $res;
 	}
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+function GetTodayUsersAcctsUTF8($order=">traffic",$draw=false,$gid="all")
+	{
+	global $GV;
+	if($gid!="all")
+	 $gidwhere=" where `gid`='".$gid."' ";else  $gidwhere="";
+        if($order==">user")
+          $uorder=" order by LOWER(`user`) desc";
+        elseif($order=="<user")
+          $uorder=" order by LOWER(`user`) asc";
+        elseif($order==">fio")
+          $uorder=" order by LOWER(`fio`) desc";
+        elseif($order=="<fio")
+          $uorder=" order by LOWER(`fio`) asc";
+        else
+          $uorder="";
 
+	$query="select user,fio,uid,nick from `".$GV["users_tbl"]."`$gidwhere".$uorder.";";
+	$result=mysql_query($query,$this->link)or die($query." : ".mysql_error());
+	if(mysql_num_rows($result)==0){return NULL;}
+	$users=NULL;
+	$k=0;
+	while($row=mysql_fetch_array($result))
+	  {$users[$k]["fio"]=$row["fio"];
+          $users[$k]["user"]=$row["user"];
+          $users[$k]["nick"]=$row["nick"];
+          $users[$k++]["uid"]=$row["uid"];}
+
+        $year=date("Y");
+        $month=date("m");
+        $day=date("d");
+        $bdate=$year."-".$month."-".($day-1)." 23:59:59";
+        $adate=$year."-".$month."-".($day+1)." 00:00:00";
+
+
+	if($draw)
+          {
+          $sum_traf=0;
+          $sum_time=0;
+
+          for($i=0;$i<count($users);++$i)
+            {
+	    $query="select sum(out_bytes),sum(in_bytes),sum(time_on) from `".$GV["actions_tbl"]."` where start_time>'".$bdate."' and stop_time<'".$adate."' and `user`='".$users[$i]["user"]."';";
+	    $result=mysql_query($query);
+	    $row=mysql_fetch_array($result);
+	    $sum_traf+=(int)$row["sum(out_bytes)"];
+	    $sum_time+=(int)$row["sum(time_on)"];
+	    }
+	    $res_others["traffic"]=0;
+	    $res_others["time"]=0;
+	    $res_others["user"]=iconv('cp1251', 'utf-8', "Другие");
+ 	  }
+        $res=array();
+        $k=0;
+	for($i=0;$i<count($users);++$i)
+	  {
+	  $query="select sum(out_bytes),sum(in_bytes),sum(time_on) from `".$GV["actions_tbl"]."` where user='".$users[$i]["user"]."' and start_time>'".$bdate."' and stop_time<'".$adate."';";
+	  //die($query);
+          $result=mysql_query($query);
+          if(mysql_num_rows($result)==0)continue;
+	  $row=mysql_fetch_array($result);
+          $traf=(int)($row["sum(out_bytes)"]);
+          $time=(int)($row["sum(time_on)"]);
+	  $ok=true;
+	  if($draw)
+	    if($traf<0.06*$sum_traf)
+ 	     {
+ 	     $ok=false;
+	     $res_others["traffic"]+=$traf;
+	     $res_others["time"]+=$time;
+	     }
+ 	    else $ok=true;
+
+	  if($ok && ($traf || $time))
+	    {
+   	    $res[$k]["traffic"]=$traf;
+   	    $res[$k]["time"]=$time;
+	    $res[$k]["user"]=iconv('cp1251', 'utf-8', $users[$i]["user"]);
+	    $res[$k]["uid"]=$users[$i]["uid"];
+	    $res[$k]["nick"]=$users[$i]["nick"];
+	    $res[$k++]["fio"]=iconv('cp1251', 'utf-8', $users[$i]["fio"]);
+	    }
+	  }
+	  if(count($res)){
+          if($order==">traffic")usort($res,"accts_compare_traffic_desc");
+          elseif($order==">time")usort($res,"accts_compare_time_desc");
+          elseif($order=="<traffic")usort($res,"accts_compare_traffic_asc");
+          elseif($order=="<time")usort($res,"accts_compare_time_asc");
+          $res=array_values($res);}
+	   if($draw && $res_others["traffic"])
+	     {
+	     $res[$k]["traffic"]=$res_others["traffic"];
+	     $res[$k]["time"]=$res_others["time"];
+	     $res[$k]["nick"]=$res_others["user"];
+	     $res[$k]["fio"]=$res_others["user"];
+	     $res[$k]["user"]=$res_others["user"];
+ 	     }
+	 return $res;
+	}
+	
 //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 function GetWeekUsersAccts($order=">traffic",$draw=false,$gid="all")
 	{
