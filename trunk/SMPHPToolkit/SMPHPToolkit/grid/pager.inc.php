@@ -3,7 +3,9 @@ require_once(dirname(__FILE__)."/../pager.inc.php");
 require_once(dirname(__FILE__)."/../control.inc.php");
 
 class grid_pager extends smphp_control{
-
+	/**
+	 * @var pager
+	 */
 	protected $pager = null;
 	protected $template;
 	protected $cl_next = "pager_next";
@@ -74,6 +76,7 @@ class grid_pager extends smphp_control{
 	public function set_total($value)
 	{
 		$this->pager->set_total($value);
+		$this->pager->recalc();
 	}	
 	public function set_pagesize($value)
 	{

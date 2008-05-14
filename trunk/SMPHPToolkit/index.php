@@ -47,7 +47,7 @@ if($ajaxbuffer->is_post_back() &&  $emanager->isAnyAction())
 			mydata::delete($emanager->getItem());
 		break;
 	}
-	// сбрасываем действие (в противном случае оно будет активно при каждом запросе)
+	// сбрасываем действие (в противном случае оно будет активно при каждом ajax запросе)
 	$emanager->eraseAction();
 }
 
