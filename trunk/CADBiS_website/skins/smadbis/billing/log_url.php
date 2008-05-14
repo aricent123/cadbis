@@ -32,13 +32,15 @@ if($BILLEVEL<3)return;
  				'default'=>'img/icons/file.png',
  				'video/'=>'img/icons/video.gif',
  				'audio/'=>'img/icons/mp3.jpg',
+ 				'application/xml'=>'img/icons/xml.png',
+ 				'application/json'=>'img/icons/js.gif',
  				);
  	$res = "";
  	foreach($ctype_ico_match as $key=>$value)
  	  if(stristr($ctype,$key))
  	  {$res = $value;break;}
  	if(!empty($res))
- 		$res = '<img src="'.$res.'" width="30px" height="30px"/>';
+ 		$res = '<img src="'.$res.'" width="30px" height="30px" title="'.$ctype.'"/>';
  	else
  		$res = $ctype;
 	return $res;
