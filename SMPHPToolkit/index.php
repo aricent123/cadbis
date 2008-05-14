@@ -30,7 +30,6 @@ class mydata{
 	public static function delete($num){unset(self::$mydata[$num]);}
 }
 
-
 // AJAX корректно работает только с UTF
 header("Content-Type: text/html;charset=UTF-8");
 
@@ -38,7 +37,6 @@ header("Content-Type: text/html;charset=UTF-8");
 $ajaxbuffer = new ajax_buffer("ajax_buffer");
 $ajaxbuffer->show_progress(true);
 $emanager = new ajax_entities_manager('entities_manager', $ajaxbuffer);
-
 
 // Если нужно выполнить какие-то действия над данными по постбэку
 if($ajaxbuffer->is_post_back() &&  $emanager->isAnyAction())
@@ -69,7 +67,7 @@ class my_grid_formatter extends grid_formatter {
 				return '<a href="javascript:'.$this->_client_id.'.deleteItem('.$data[0].');">Удалить</a>';
 			default:
 				return parent::format($data,$type);	
-		}	
+		}
 	}
 };
 
@@ -97,7 +95,7 @@ foreach($mydata as $data)
 			));	
 }
 
-// чтобы видно было прогресс задержим рендеринг постбэка на секунду
+// чтобы было видно прогресс задержим рендеринг постбэка на секунду
 if($ajaxbuffer->is_post_back())
 	sleep(1);
 
