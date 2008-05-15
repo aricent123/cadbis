@@ -1,8 +1,9 @@
 <?php
 //session_start();
-error_reporting (0); 
+//error_reporting (0);
 require_once("DrClass.php");
 require_once("restore_confs.php");
+require_once("funcs.php");
 require_once("cadbisnew/graph/charts.php");
 $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
 //include charts.php in your script
@@ -27,7 +28,7 @@ switch($chart_type)
 		//��� �������
 		$chart [ 'chart_type' ] = "line";
 		//����� �������
-		$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma"); 
+		$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma");
 
 		$chart[ 'chart_grid_h' ] = array ( 'alpha'=>10, 'color'=>"000000", 'thickness'=>1, 'type'=>"solid" );
 		$chart[ 'chart_grid_v' ] = array ( 'alpha'=>10, 'color'=>"000000", 'thickness'=>1, 'type'=>"solid" );
@@ -44,8 +45,8 @@ switch($chart_type)
 			$_SESSION['graph_prev_values'][0] = $title;
 		}
 		$chart [ 'chart_data' ] = array ( 	$_SESSION['graph_prev_indexes'],
-											$_SESSION['graph_prev_values']
-										);
+		$_SESSION['graph_prev_values']
+		);
 		$chart [ 'draw' ] = array ( array ( 'type'       => "text",
                                     'transition' => 'slide_left',
                                     'delay'      => 0, 
@@ -63,8 +64,8 @@ switch($chart_type)
                                     'size'       => 14, 
                                     'color'      => "4400ff", 
                                     'alpha'      => 90
-                                  ),
-                            array ( 'type'       => 'text',
+		),
+		array ( 'type'       => 'text',
                                     'transition' => 'slide_left',
                                     'delay'      => 0, 
                                     'duration'   => 0,
@@ -81,18 +82,18 @@ switch($chart_type)
                                     'size'       => 14, 
                                     'color'      => "4400ff", 
                                     'alpha'      => 90
-                                  )
-                                  
-                          );
+		)
+
+		);
 		$chart [ 'live_update' ] = array (   'url'    =>  $_SERVER['REQUEST_URI'], 'delay'  =>  2);
 		SendChartData ( $chart );
 		break;
 //--------------------
 	case "topurl":
-		$chart [ 'chart_type' ] = "3d pie";
-		$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma", 'size'	=> 10);
-		/*����� �� admin_draw.php*/
-		if($uid==null || $uid=="null")
+	$chart [ 'chart_type' ] = "3d pie";
+	$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma", 'size'	=> 10);
+	/*����� �� admin_draw.php*/
+	if($uid==null || $uid=="null")
 	 $uid = null;
 	 if($uid)
 	 {$user = $BILL->GetUserData($uid);
@@ -112,7 +113,7 @@ switch($chart_type)
 	 if(!isset($hideother) || $hideother=="false")
 	 $hideother = false;
 	 $urls = $BILL->GetUrlsPopularity($sort,$uid,$limit,$gid,$groupby,$hideother);
-	  /*/����� �� admin_draw.php*/
+	 /*/����� �� admin_draw.php*/
 	 $title="Top $limit посещённых сайтов".$byuser;
 	 $sum_data=array('count'=>0,'length'=>0,'ucount'=>0);
 	 $avg_data=$sum_data;
@@ -138,8 +139,8 @@ switch($chart_type)
 	 {
 	 	$tmp = $url[$key];
 	 	$g=($sort[0]==">")?$tmp>$avg_data[$key]:$tmp<$avg_data[$key];
-	 	
-	 	if(($g /*&& count($data)<12*/)){
+	 	 
+	 	if(($g && count($data)<12)){
 	 		$data[]=$tmp;
 	 		$tmpstr=($key=="length")?make_fsize_str($tmp):$tmp;
 	 		$labels[]=(($groupby=='cid')?$url['cattitle']:$url['url'])." - ".$tmpstr;
@@ -171,17 +172,192 @@ switch($chart_type)
                                     'size'       => 16, 
                                     'color'      => "4400ff", 
                                     'alpha'      => 90
-                                  )
-                                  );
-	 $chart [ 'chart_value' ] = array ('font'	=>  "Tahoma", 
+	 )
+	 );
+	 $chart [ 'chart_value' ] = array ('font'	=>  "Tahoma",
                                     'bold'	=>  true, 
                                     'size'	 =>  16,
                                     'color'	=>  "4400ff",
+	  								'suffix'        =>  " Пакетов",
                                     'position'	=>  "cursor"
-                                	); 
-     SendChartData ( $chart );
+                                    );
+
+                                    SendChartData ( $chart );
+                                    break;
+//--------------------
+	case "today": 
+		$chart [ 'chart_type' ] = "pie";
+		$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma", 'size'	=> 10);
+		$accts=$BILL->GetTodayUsersAccts(0,1,$gid);
+		$title = "Статистика на ".date("d")." ".iconv('cp1251', 'utf-8', $monthsof[date("n")-1]).", ".date("H:i:s")."";
+		$labels = array("");
+	 	$data = array("");
+		for($i=0;$i<count($accts);++$i)
+		{
+			$data[]=bytes2mb($accts[$i]["traffic"]);
+			$tmp=explode(" ",iconv('cp1251', 'utf-8', $accts[$i]["fio"]));
+			$fio=$tmp[0];
+			$labels[]=$fio." (".bytes2mb($accts[$i]["traffic"])." Мб)";
+		}
+		$chart [ 'chart_data' ] = array ($labels, $data);
+		$chart [ 'draw' ] = array ( array ( 
+									'type'       => "text",
+                                    'transition' => 'slide_left',
+                                    'delay'      => 0, 
+                                    'duration'   => 0,
+                                    'x'          => 0, 
+                                    'y'          => 10, 
+                                    'width'      => 900,  
+                                    'height'     => 100, 
+                                    'h_align'    => "center", 
+                                    'v_align'    => "top", 
+                                    'rotation'   => 90, 
+                                    'text'       => $title,  
+                                    'font'       => "Tahoma", 
+                                    'bold'       => true, 
+                                    'size'       => 16, 
+                                    'color'      => "4400ff", 
+                                    'alpha'      => 90
+		)
+		);
+	 $chart [ 'chart_value' ] = array ('font'	=>  "Tahoma",
+                                    'bold'	=>  true, 
+                                    'size'	 =>  16,
+                                    'color'	=>  "4400ff",
+	  								'suffix'        =>  " Mb",
+                                    'position'	=>  "cursor"
+                                    );		
+		
+	SendChartData ( $chart );
+	 break;
+	 //--------------------
+	case "month":
+		$accts=$BILL->GetMonthUsersAccts(0,1,$gid);
+		$title="Статистика по пользователям на ".iconv('cp1251', 'utf-8', $months[date("n")-1])." ".date("Y")." года ";
+		$labels = array("");
+	 	$data = array("");
+		for($i=0;$i<count($accts);++$i)
+		{
+			$data[$i+1]=bytes2mb($accts[$i]["traffic"]);
+			$tmp=explode(" ",$accts[$i]["fio"]);
+			$fio=$tmp[0];
+			$labels[$i+1]=iconv('cp1251', 'utf-8', $fio." (".make_fsize_str($accts[$i]["traffic"])." )");
+		}
+		$chart [ 'chart_type' ] = "3D pie";
+		$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma", 'size'	=> 10);
+		$chart [ 'chart_data' ] = array ($labels, $data);
+		$chart [ 'draw' ] = array ( array ( 
+									'type'       => "text",
+                                    'transition' => 'slide_left',
+                                    'delay'      => 0, 
+                                    'duration'   => 0,
+                                    'x'          => 0, 
+                                    'y'          => 10, 
+                                    'width'      => 900,  
+                                    'height'     => 100, 
+                                    'h_align'    => "center", 
+                                    'v_align'    => "top", 
+                                    'rotation'   => 90, 
+                                    'text'       => $title,  
+                                    'font'       => "Tahoma", 
+                                    'bold'       => true, 
+                                    'size'       => 16, 
+                                    'color'      => "4400ff", 
+                                    'alpha'      => 90
+		)
+		);
+		$chart [ 'chart_value' ] = array ('font'	=>  "Tahoma",
+                                    'bold'	=>  true, 
+                                    'size'	 =>  16,
+                                    'color'	=>  "4400ff",
+	  								'suffix'	=>  " Mb"
+                                    );
+		SendChartData ( $chart );
 	 break;
 //--------------------
+	case "week":
+		$accts=$BILL->GetWeekUsersAccts(0,1,$gid);
+		$title = "Статистика за неделю:";
+		$labels = array("");
+	 	$data = array("");
+		for($i=0;$i<count($accts);++$i)
+		{
+			$data[$i]=bytes2mb($accts[$i]["traffic"]);
+			$tmp=explode(" ",$accts[$i]["fio"]);
+			$fio=iconv('cp1251', 'utf-8', $tmp[0]);
+			$labels[$i]=$fio." (".make_fsize_str($accts[$i]["traffic"])." )";
+		}
+		$chart [ 'chart_type' ] = "3D pie";
+		$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma", 'size'	=> 10);
+		$chart [ 'chart_data' ] = array ($labels, $data);
+		$chart [ 'draw' ] = array ( array ( 
+									'type'       => "text",
+                                    'transition' => 'slide_left',
+                                    'delay'      => 0, 
+                                    'duration'   => 0,
+                                    'x'          => 0, 
+                                    'y'          => 10, 
+                                    'width'      => 900,  
+                                    'height'     => 100, 
+                                    'h_align'    => "center", 
+                                    'v_align'    => "top", 
+                                    'rotation'   => 90, 
+                                    'text'       => $title,  
+                                    'font'       => "Tahoma", 
+                                    'bold'       => true, 
+                                    'size'       => 16, 
+                                    'color'      => "4400ff", 
+                                    'alpha'      => 90
+		)
+		);
+		$chart [ 'chart_value' ] = array ('font'	=>  "Tahoma",
+                                    'bold'	=>  true, 
+                                    'size'	 =>  16,
+                                    'color'	=>  "4400ff",
+	  								'suffix'	=>  " Mb"
+                                    );
+		SendChartData ( $chart );
+		break;
+//--------------------
+	case "tarifs":
+		if(!isset($fdate))$fdate="";
+		if(!isset($tdate))$tdate="";
+		if(!isset($tarif))$tarif="!all!";
+
+		if($tarif=="!all!")
+		$accts=$BILL->GetTarifsAccts($fdate,$tdate,1);
+		else
+		{
+			$data=$BILL->GetTarifAccts($tarif,$fdate,$tdate,1);
+			$tdata=$BILL->GetTarifData($tarif);
+			$accts=NULL;
+			$accts[0]["traffic"]=$data["traffic"];
+			$accts[0]["time"]=$data["time"];
+			$accts[0]["packet"]=$tdata["packet"];
+		}
+		$cnt=count($accts);
+		if(!isset($param))$param="";
+		if($param=="traffic")
+		for($k=0;$k<$cnt;++$k)
+		{
+			$data[$k]=$accts[$k]["traffic"];
+			$labels[$k]=$accts[$k]["packet"]." (".bytes2mb($accts[$k]["traffic"])." Мб)";
+			$fdate_s=date_dmy(strtotime($fdate));
+			$tdate_s=date_dmy(strtotime($tdate));
+			$title = "Статистика тарифов по траффику за период ".$fdate_s." - ".$tdate_s;
+		}
+		else
+		for($k=0;$k<$cnt;++$k)
+		{
+			$data[$k]=$accts[$k]["time"];
+			$labels[$k]=$accts[$k]["packet"]." (".gethours($accts[$k]["time"]).":".getmins($accts[$k]["time"]).":".getsecs($accts[$k]["time"]).")";
+			$fdate_s=date_dmy(strtotime($fdate));
+			$tdate_s=date_dmy(strtotime($tdate));
+			$title = "Статистика тарифов по времени за период ".$fdate_s." - ".$tdate_s;
+		}
+
+		break;	
+//--------------------	
 	default: break;
 };
 
