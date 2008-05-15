@@ -22,7 +22,9 @@ class Recognizer{
 	protected static function page_get($url,$user_agent,$params,$proxy="")
 	{
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url.'?'.$params);
+		if(!empty($params))
+			$url .='?'.$params;
+		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		if(!empty($proxy))
 			curl_setopt($ch,CURLOPT_PROXY,$proxy);
@@ -84,7 +86,7 @@ class Recognizer{
 
 	protected static function killNewLines($content)
 	{
-		return str_ireplace(array("\r","\n"),' ',$content);
+		return str_ireplace(array("\r","\n","\t"),' ',$content);
 	}	
 	protected static function killDoubleSpaces($content)
 	{
@@ -131,7 +133,10 @@ class Recognizer{
 		$content = preg_replace("/<[^>]*>/ims", " ",$content);
 		$content = self::killNewLines($content);
 		$content = self::killDoubleSpaces($content);
-		$content = str_replace($uswords,'',$content);
+		$content = preg_replace("/\d+/ims","",$content);
+		foreach($uswords as $usword)
+			$content = str_ireplace($uswords,'',$content);
+		
 
 		echo('<b>Keywords:</b><br/>');
 		var_dump($metaKeywds);
