@@ -364,9 +364,9 @@ function GetMonthUsersAccts($order=">traffic",$draw=false,$gid="all")
 	    }
 	    $res_others["traffic"]=0;
 	    $res_others["time"]=0;
-	    $res_others["user"]="пїЅпїЅпїЅпїЅпїЅпїЅ";
+	    $res_others["user"]="Другие";
  	  }
-        $res=NULL;
+        $res=array();
         $k=0;
 	for($i=0;$i<count($users);++$i)
 	  {
@@ -546,7 +546,7 @@ function GetWeekUsersAccts($order=">traffic",$draw=false,$gid="all")
 
         get_current_week($bdate,$adate,1);
 
-        $res=NULL;
+        $res=array();
         $k=0;
 	if($draw)
           {
@@ -563,7 +563,7 @@ function GetWeekUsersAccts($order=">traffic",$draw=false,$gid="all")
 	    }
 	    $res_others["traffic"]=0;
 	    $res_others["time"]=0;
-	    $res_others["user"]="пїЅпїЅпїЅпїЅпїЅпїЅ";
+	    $res_others["user"]="Другие";
  	  }
 
 	for($i=0;$i<count($users);++$i)
@@ -776,7 +776,7 @@ function GetTarifsAccts($fdate,$tdate,$draw=0)
 	  $tarifs[$k]["prim"]=$row["prim"];
 	  $k++;
 	  }
-        $res=NULL;
+        $res=array();
         if($draw)
           {
           $res_others=NULL;
