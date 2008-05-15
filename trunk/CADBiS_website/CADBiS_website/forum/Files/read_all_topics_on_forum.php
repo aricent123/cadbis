@@ -1,0 +1,47 @@
+<?php
+		$all_themes1['title']=array();
+		$all_themes1['ext']=array();
+		$all_themes1['name']=array();
+		$all_themes1['names']=array();
+		$all_themes1['forum']=array();
+		$all_themes1['rights']=array();
+		$all_themes1['namesrights']=array();
+		$hdl=opendir($vars['dir_themes']);
+		while($file=readdir($hdl))
+			{
+			for($j=0;$j<count($forums['title']);$j++)
+				{
+				if(strstr($file,".".$forums['ext'][$j])==true)
+					{
+					$error=false;
+						$admins_f=explode(",",$forums['admins'][$j]);
+						$usr_id1=-1;
+						$okk=false;
+						for($m=0;$m<count($admins_f);$m++)
+							{
+							if($HTTP_SESSION_VARS['forum_login']==$admins_f[$m])$okk=true;
+							}
+						if($user_rights>=8)$okk=true;
+						if($okk==false)$error=true;
+						if(($user_rights>=$forums['rights'][$j])&&($error!=true))
+						{
+						$_file=file($vars['dir_themes']."/".$file);
+						$file_=implode("",$_file);
+						$file_=explode("$smb1",$file_);
+						$_file=explode("$smb",$file_[0]);
+
+						if($user_rights>=$_file[7])
+							{
+							$all_themes1['title'][]=$_file[0];	
+							$all_themes1['ext'][]=$forums['ext'][$j];
+							$all_themes1['name'][]=substr($file,0,-strlen(".".$forums['ext'][$j]));
+							$all_themes1['names'][]=$_file[9];
+							$all_themes1['namesrights'][]=$_file[8];
+							$all_themes1['rights'][]=$_file[7];
+							$all_themes1['forum'][]=$forums['title'][$j];
+							}
+						}
+					}
+				}
+			}
+?>
