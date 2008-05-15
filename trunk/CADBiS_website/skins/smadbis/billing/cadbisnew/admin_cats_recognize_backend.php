@@ -14,5 +14,5 @@ else
 	foreach($cats as $cat)
 		$cat['keywords'] = $BILL->GetUrlCategoryKeywords($cat['cid']);
 	$uswords = $BILL->GetUrlCategoriesUnsenseWords();
-	die(Recognizer::recognizeByMyself($_GET['url'], $cats));
+	die(Recognizer::recognizeByMyself($_GET['url'], $cats, $uswords));
 }
