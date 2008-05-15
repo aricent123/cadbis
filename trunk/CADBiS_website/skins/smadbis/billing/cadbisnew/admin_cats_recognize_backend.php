@@ -4,6 +4,7 @@ if(!check_auth() || $CURRENT_USER['level']<7){
 }
 require_once(dirname(__FILE__).'/CADBiS/recognize.php');
 
+
 if(!isset($_GET['myself']) || empty($_GET['myself']))
 	die(Recognizer::recognizeByUrlCheck($_GET['url']));
 else
