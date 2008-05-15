@@ -321,9 +321,9 @@ switch($chart_type)
 //--------------------
 	case "tarifs":
 		if(!isset($fdate))$fdate="";
-		$fdate.=" 00:00:00";
+		else $fdate.=" 00:00:00";
 		if(!isset($tdate))$tdate="";
-		$fdate.=" 23:59:59";
+		else $fdate.=" 23:59:59";
 		if(!isset($tarif))$tarif="!all!";
 		$labels = array("");
 	 	$data = array("");
