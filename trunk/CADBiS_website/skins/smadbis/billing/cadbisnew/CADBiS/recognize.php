@@ -1,6 +1,7 @@
 <?php
 
 class Recognizer{
+	const MINIMAL_STRLEN = 4;
 	protected static $_proxies = null;
 	protected static $_current_proxy = 0;
 	protected static $_contenttype = '';
@@ -111,10 +112,11 @@ class Recognizer{
 		echo('<b>Got content:</b><br/>');
 		echo('<textarea cols="100" rows="10">'.$content.'</textarea>');
 		echo('<hr/>');
+		$content = strtolower($content);
 		$charset = self::getCharset();
 		if($charset != 'UTF-8')
-			$content = iconv($charset,'UTF-8',$content);
-		echo('<b>Changed charset content (from '.$charset.' to UTF-8):</b><br/>');
+			$content = iconv($charset,'UTF-8',$content);			
+		echo('<b>Content with changed charset (from '.$charset.' to UTF-8) and in lowercase:</b><br/>');
 		echo('<textarea cols="100" rows="10">'.$content.'</textarea>');
 		echo('<hr/>');
 		
@@ -126,11 +128,29 @@ class Recognizer{
 		$content = preg_replace("/<script[^>.]*>.*<\/script>/ims", " ",$content);
 		$content = preg_replace("/<style[^>.]*>.*<\/style>/ims", " ",$content);
 		$content = preg_replace("/<[^>]*>/ims", " ",$content);
+		$content = preg_replace("/\d+/ims","",$content);
+		$content = str_ireplace($uswords,'',$content);		
 		$content = self::killNewLines($content);
 		$content = self::killDoubleSpaces($content);
-		$content = preg_replace("/\d+/ims","",$content);
-		$content = str_ireplace($uswords,'',$content);
-
+		
+		$cwords = explode(' ',$content);
+		$content_words = array();
+		foreach($cwords as $cword)
+		{
+			if(in_array($cword, $uswords) || strlen($cword)<self::MINIMAL_STRLEN)
+				continue;
+			if(isset($content_words[$cword]))
+				$content_words[$cword]++;
+			else
+				$content_words[$cword] = 1;
+		}
+		
+		$count_words = array();
+		foreach($content_words as $cword => $count)
+			$count_words[$count][] = $cword;
+		
+		
+		
 		echo('<b>Keywords:</b><br/>');
 		var_dump($metaKeywds);
 		echo('<hr/>');
@@ -142,6 +162,13 @@ class Recognizer{
 		echo('<hr/>');
 		echo('<b>Content:</b><br/>');
 		echo('<textarea cols="100" rows="10">'.$content.'</textarea>');
+		echo('<hr/>');
+		echo('<b>Content words:</b><br/>');
+		var_dump($content_words);
+		echo('<hr/>');
+		echo('<b>Content words counts:</b><br/>');
+		var_dump($count_words);
+		echo('<hr/>');					
 		die;
 	}	
 }
