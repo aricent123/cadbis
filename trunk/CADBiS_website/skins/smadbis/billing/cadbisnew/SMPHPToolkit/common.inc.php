@@ -49,6 +49,19 @@ class utils{
 	}
 	
 	//-----------------------------------------------------------------------
+	/**
+	 * Makes buffered var_dump
+	 * @return string
+	 * @param mixed $var
+	 */
+	public static function buffered_dump($var)
+	{	
+		ob_start();
+		var_dump($var);		
+		return ob_get_clean(); 	
+	}
+	
+	//-----------------------------------------------------------------------
 	  // returns unix timestamp for specifyed date
 	public static function makeunixtime($year,$month,$day,$hour,$min,$sec)
 	   {
