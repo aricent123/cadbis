@@ -822,8 +822,8 @@ function GetTarifsAccts($fdate,$tdate,$draw=0)
            $k++;
            $res[$k]["traffic"]=$res_others["traffic"];
            $res[$k]["time"]=$res_others["time"];
-	   $res[$k]["gid"]=0;
-           $res[$k]["packet"]="пїЅпїЅпїЅпїЅпїЅпїЅ";
+	   	   $res[$k]["gid"]=0;
+           $res[$k]["packet"]="Другие";
            $res[$k]["prim"]="";
            }
          usort($res,"accts_compare_traffic_desc");
