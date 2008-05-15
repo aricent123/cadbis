@@ -59,9 +59,9 @@ class Recognizer{
 	protected static function getKeywords($content)
 	{
 		$metaKeywords = '';
-		if(preg_match_all("/<meta name=[\"|\']keywords[\"|\'] content=[\"|\'](.*)[\"|\'][>| \/>]/i",$content,$matches))
+		if(preg_match_all("/<meta (name|http-equiv)=[\"|\']keywords[\"|\'] content=[\"|\'](.*)[\"|\'][>| \/>]/i",$content,$matches))
 		{
-			$metaKeywords = $matches[1];
+			$metaKeywords = $matches[2];
 		}
 		return $metaKeywords;
 	}
@@ -69,9 +69,9 @@ class Recognizer{
 	protected static function getDescription($content)
 	{
 		$metaDesc = '';
-		if(preg_match_all("/<meta name=[\"|\']description[\"|\'] content=[\"|\'](.*)[\"|\'][>| \/>]/i",$content,$matches))
+		if(preg_match_all("/<meta (name|http-equiv)=[\"|\']description[\"|\'] content=[\"|\'](.*)[\"|\'][>| \/>]/i",$content,$matches))
 		{
-			$metaDesc = $matches[1];
+			$metaDesc = $matches[2];
 		}
 		return $metaDesc;
 	}
@@ -100,11 +100,6 @@ class Recognizer{
 		$charset = 'UTF-8';
 		if(strstr(self::$_contenttype,'charset='))
 			$charset = substr(self::$_contenttype,strpos(self::$_contenttype,'charset=')+8);
-//		switch (strtolower($charset))
-//		{
-//			case 'windows-1251':
-//				return 'cp1251';
-//		}
 		return $charset;
 	}
 	
@@ -134,9 +129,7 @@ class Recognizer{
 		$content = self::killNewLines($content);
 		$content = self::killDoubleSpaces($content);
 		$content = preg_replace("/\d+/ims","",$content);
-		foreach($uswords as $usword)
-			$content = str_ireplace($uswords,'',$content);
-		
+		$content = str_ireplace($uswords,'',$content);
 
 		echo('<b>Keywords:</b><br/>');
 		var_dump($metaKeywds);
