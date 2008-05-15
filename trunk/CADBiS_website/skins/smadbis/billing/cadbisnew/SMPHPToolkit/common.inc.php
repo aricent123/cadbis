@@ -57,7 +57,7 @@ class utils{
 	public static function buffered_dump($var)
 	{	
 		ob_start();
-		var_dump($var);		
+		print_r($var);		
 		return ob_get_clean(); 	
 	}
 	

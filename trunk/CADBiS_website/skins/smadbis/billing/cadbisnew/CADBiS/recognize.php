@@ -96,11 +96,14 @@ class Recognizer{
 		return $content;
 	}
 	
-	protected static function getCharset()
+	protected static function getCharset($content)
 	{
 		$charset = 'UTF-8';
 		if(strstr(self::$_contenttype,'charset='))
 			$charset = substr(self::$_contenttype,strpos(self::$_contenttype,'charset=')+8);
+		if(preg_match("/<meta (name|http-equiv)=[\"|\']content-type[\"|\'] content=[\"|\'](.*)[\"|\'][>| \/>]/i",$content,$matches))
+			if(strstr($matches[2],'charset='))
+				$charset = str_replace(array(';',' '),'',substr($matches[2],strpos($matches[2],'charset=')+8));
 		return $charset;
 	}
 	
@@ -118,7 +121,7 @@ class Recognizer{
 		// <==== debug ==== //
 		
 		$content = strtolower($content);
-		$charset = self::getCharset();
+		$charset = self::getCharset($content);
 		if($charset != 'UTF-8')
 			$content = iconv($charset,'UTF-8',$content);
 
@@ -160,7 +163,7 @@ class Recognizer{
 		
 		// ==== debug ====> //
 		$result.='<b>Keywords:</b><br/>';
-		$result.=utils::buffered_dump($metaKeywds);
+		$result.='<textarea cols="70" rows="10">'.utils::buffered_dump($metaKeywds).'</textarea>';
 		$result.='<hr/>';
 		$result.='<b>Desc:</b><br/>';
 		$result.=$metaDesc;
@@ -172,10 +175,10 @@ class Recognizer{
 		$result.='<textarea cols="70" rows="10">'.$content.'</textarea>';
 		$result.='<hr/>';
 		$result.='<b>Content words:</b><br/>';
-		$result.=utils::buffered_dump($content_words);
+		$result.='<textarea cols="70" rows="10">'.utils::buffered_dump($content_words).'</textarea>';
 		$result.='<hr/>';
 		$result.='<b>Content words counts:</b><br/>';
-		$result.=utils::buffered_dump($count_words);
+		$result.='<textarea cols="70" rows="10">'.utils::buffered_dump($count_words).'</textarea>';
 		$result.='<hr/>';					
 		// <==== debug ==== //
 				

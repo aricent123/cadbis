@@ -10,12 +10,14 @@ if(isset($_GET['urlcheck']) || !empty($_GET['urlcheck']))
 else
 {
 	$result = "";	
+	$url="www.yandex.ru";
 	if(isset($_POST['btnSubmit'])){
+		$url = $_POST['tbUrl'];
 		$BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
 		$cats = $BILL->GetUrlCategories();	
 		foreach($cats as $cat)
 			$cat['keywords'] = $BILL->GetUrlCategoryKeywords($cat['cid']);
 		$uswords = $BILL->GetUrlCategoriesUnsenseWords();
-		$result = Recognizer::recognizeByMyself($_POST['tbUrl'], $cats, $uswords);
+		$result = Recognizer::recognizeByMyself($url, $cats, $uswords);
 	}
 }
