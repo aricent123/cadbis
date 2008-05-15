@@ -10,7 +10,7 @@ echo InsertChart ( "../skins/smadbis/billing/cadbisnew/graph/charts.swf", "../sk
 echo InsertChart ( "../skins/smadbis/billing/cadbisnew/graph/charts.swf", "../skins/smadbis/billing/cadbisnew/graph/charts_library", "../skins/smadbis/billing/chart_data.php?chart_type=today&uid=16&gid=6&limit=50",800, 400 );//today
 echo InsertChart ( "../skins/smadbis/billing/cadbisnew/graph/charts.swf", "../skins/smadbis/billing/cadbisnew/graph/charts_library", "../skins/smadbis/billing/chart_data.php?chart_type=month&uid=16&gid=6&limit=50",800, 400 );//month
 echo InsertChart ( "../skins/smadbis/billing/cadbisnew/graph/charts.swf", "../skins/smadbis/billing/cadbisnew/graph/charts_library", "../skins/smadbis/billing/chart_data.php?chart_type=week&uid=16&gid=6&limit=50",800, 400 );//week
-echo InsertChart ( "../skins/smadbis/billing/cadbisnew/graph/charts.swf", "../skins/smadbis/billing/cadbisnew/graph/charts_library", "../skins/smadbis/billing/chart_data.php?chart_type=tarifs&tarif=!all!&fdate=2004-01-01%2000:00:00&tdate=2008-12-15%2023:59:59",800, 400 );//tarifs
+echo InsertChart ( "../skins/smadbis/billing/cadbisnew/graph/charts.swf", "../skins/smadbis/billing/cadbisnew/graph/charts_library", "../skins/smadbis/billing/chart_data.php?chart_type=tarifs&tarif=!all!&fdate=2004-01-01&tdate=2008-12-15",800, 400 );//tarifs
 ?>
 
 </body></html>
