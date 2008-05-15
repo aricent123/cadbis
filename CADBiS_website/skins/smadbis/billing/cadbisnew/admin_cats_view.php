@@ -27,6 +27,12 @@
 				'#DDEEF3',
 				SK_DIR.'/img/bill_ctfilter.gif',
 				'Редактор соответствий.') ?>
+	<?=CADBiSNew::instance()->render_menu_item(
+				cadbisnewurl('admin_cats_recognize'),
+				'Распознаватель категорий',
+				'#F0F6F8',
+				SK_DIR.'/img/bill_ctfilter.gif',
+				'Распознаватель категорий Интернет-сайтов.') ?>				
 	</table>				
 	
 <br/><br/>

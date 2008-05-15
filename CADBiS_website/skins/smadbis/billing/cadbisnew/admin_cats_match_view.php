@@ -84,7 +84,7 @@ function recognizeCat(manager,url){
 		okLabel: "ОК", 
 		});
 	$('imgLoad').setStyle({display:''});
-	new Ajax.Request('<?=cadbisnewurl('admin_cats_recognize') ?>&url='+url, {
+	new Ajax.Request('<?=cadbisnewurl('admin_cats_recognize') ?>&url='+url+'&urlcheck=true', {
 		method: 'get',
 		onSuccess: function(data) 
 		{

@@ -106,19 +106,27 @@ class Recognizer{
 	
 	public static function recognizeByMyself($url,$cats,$uswords)
 	{
+		$result = '';
 		$user_agent="Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
 		$unrecognized = 'Неопознанная';
 		$content = self::page_get($url,$user_agent,'',$proxy);
-		echo('<b>Got content:</b><br/>');
-		echo('<textarea cols="100" rows="10">'.$content.'</textarea>');
-		echo('<hr/>');
+		
+		// ==== debug ====> //
+		$result.='<b>Got content:</b><br/>';
+		$result.='<textarea cols="70" rows="10">'.$content.'</textarea>';
+		$result.='<hr/>';
+		// <==== debug ==== //
+		
 		$content = strtolower($content);
 		$charset = self::getCharset();
 		if($charset != 'UTF-8')
-			$content = iconv($charset,'UTF-8',$content);			
-		echo('<b>Content with changed charset (from '.$charset.' to UTF-8) and in lowercase:</b><br/>');
-		echo('<textarea cols="100" rows="10">'.$content.'</textarea>');
-		echo('<hr/>');
+			$content = iconv($charset,'UTF-8',$content);
+
+		// ==== debug ====> //			
+		$result.='<b>Content with changed charset (from '.$charset.' to UTF-8) and in lowercase:</b><br/>';
+		$result.='<textarea cols="70" rows="10">'.$content.'</textarea>';
+		$result.='<hr/>';
+		// <==== debug ==== //		
 		
 		$metaKeywds = explode(',',implode('',self::getKeywords($content)));
 		foreach($metaKeywds as &$kwd)
@@ -150,25 +158,27 @@ class Recognizer{
 			$count_words[$count][] = $cword;
 		
 		
-		
-		echo('<b>Keywords:</b><br/>');
-		var_dump($metaKeywds);
-		echo('<hr/>');
-		echo('<b>Desc:</b><br/>');
-		echo($metaDesc);
-		echo('<hr/>');
-		echo('<b>Title:</b><br/>');
-		echo($title);
-		echo('<hr/>');
-		echo('<b>Content:</b><br/>');
-		echo('<textarea cols="100" rows="10">'.$content.'</textarea>');
-		echo('<hr/>');
-		echo('<b>Content words:</b><br/>');
-		var_dump($content_words);
-		echo('<hr/>');
-		echo('<b>Content words counts:</b><br/>');
-		var_dump($count_words);
-		echo('<hr/>');					
-		die;
+		// ==== debug ====> //
+		$result.='<b>Keywords:</b><br/>';
+		$result.=utils::buffered_dump($metaKeywds);
+		$result.='<hr/>';
+		$result.='<b>Desc:</b><br/>';
+		$result.=$metaDesc;
+		$result.='<hr/>';
+		$result.='<b>Title:</b><br/>';
+		$result.=$title;
+		$result.='<hr/>';
+		$result.='<b>Content:</b><br/>';
+		$result.='<textarea cols="70" rows="10">'.$content.'</textarea>';
+		$result.='<hr/>';
+		$result.='<b>Content words:</b><br/>';
+		$result.=utils::buffered_dump($content_words);
+		$result.='<hr/>';
+		$result.='<b>Content words counts:</b><br/>';
+		$result.=utils::buffered_dump($count_words);
+		$result.='<hr/>';					
+		// <==== debug ==== //
+				
+		return $result;
 	}	
 }
