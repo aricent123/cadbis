@@ -181,7 +181,26 @@ class Recognizer{
 		$result.='<textarea cols="70" rows="10">'.utils::buffered_dump($count_words).'</textarea>';
 		$result.='<hr/>';					
 		// <==== debug ==== //
-				
+		
+		
+		$cats_coefs = array();
+		foreach($cats as $cat)
+		{
+			foreach($cat['keywords'] as $keyword)
+			{
+				if(isset($cats_coefs[$cat['cid']]))
+					$cats_coefs[$cat['cid']]++;
+				else
+					$cats_coefs[$cat['cid']] = 0;
+			}
+		}
+		
+		// ==== debug ====> //		
+		$result.='<b>Categories coefs:</b><br/>';
+		$result.='<textarea cols="70" rows="10">'.utils::buffered_dump($cats_coefs).'</textarea>';
+		$result.='<hr/>';					
+		// <==== debug ==== //		
+		
 		return $result;
 	}	
 }
