@@ -14,7 +14,7 @@ if(!isset($action))$action="";
 // hack for the new system
 if($action == "cadbisnew")
 	exit(require_once "cadbisnew.php");
-elseif($act=="noskin")
+elseif($act=="noskin" || $noskinact=="smadbisrept")
   {
 	$act="smadbisrept";
 //  authenticate();

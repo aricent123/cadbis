@@ -1540,11 +1540,13 @@ function IsUserActivated($uid)
          return !$row["blocked"];
 }
 
-function GetEvents($from=null, $to=null, $sort = null)
+function GetEvents($page=null, $pagesize=null, $sort = null)
 {
 $order = "eid";
 if($sort != null) $order = $sort;
-$sql = "SELECT * from events order by ".$order." desc; " ;
+$sql = "SELECT * from events order by ".$order." desc" ;
+if($page!=null && $pagesize!=null)
+	$sql.=" limit ".($pagesize*($page-1)+1).",".$pagesize;
   //die($sql);
  $result = mysql_query($sql);
   $k=0;
@@ -2175,6 +2177,10 @@ function DeleteDiapason($id)
 	 {
 	 	mysql_query(sprintf("insert into `url_categories_denied`(cid,gid) values(%d,%d)",$dencat,$gid));
 	 }
+	}
+	function UrlCategoryAttachKeyword($cid, $keyword)
+	{
+		mysql_query(sprintf("insert into `url_categories_keywords`(cid,keyword) values(%d,'%s')",$cid,$keyword));
 	}
 	
 	function GetRowsCount($table)

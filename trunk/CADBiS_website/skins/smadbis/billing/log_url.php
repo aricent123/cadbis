@@ -56,7 +56,7 @@ if($BILLEVEL<3)return;
   */
  function log_url_pager_template($paramstr,$sort, $page, $PGR)
  {
- 	$pcount = $PGR->GetPagesCount($urls);
+ 	$pcount = $PGR->GetPagesCount();
  	$psize = $PGR->GetPOP();
  	?><div id="pager"><?
  	for($i=0;$i<$pcount;++$i)

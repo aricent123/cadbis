@@ -32,4 +32,27 @@ else
 		$uswords = $BILL->GetUrlCategoriesUnsenseWords();
 		$result = Recognizer::recognizeByMyself($url, $cats, $uswords, false);
 	}
+	
+	if(isset($result) && isset($set))
+	{
+		$conflict_cats = array();
+		foreach($result['cwords'] as $cword=>$wcount) 
+		{
+			if($wcount<Recognizer::MINIMAL_CWORD_COEF)
+				continue;
+			$c_cid = $BILL->GetUrlCategoryKeyword($cword);
+			if($c_cid>0 && $c_cid != $setcid)
+			{
+				if(isset($conflict_cats[$c_cid]['cwords']))
+					$conflict_cats[$c_cid] = array('cwords'=>array($cword));
+				else
+					$conflict_cats[$c_cid]['cwords'][] = $cword;				
+			}
+			else
+			{
+				$BILL->UrlCategoryAttachKeyword($cid, $cword);
+			}
+		}
+	}
+	
 }
