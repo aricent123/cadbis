@@ -152,6 +152,10 @@ class Recognizer{
 	{
     	return ($a['coef'] == $b['coef'])?0:($a['coef'] < $b['coef']) ? 1 : -1;		
 	}
+	protected static function sortWordCount($a,$b)
+	{
+    	return ($a['wcount'] == $b['wcount'])?0:($a['wcount'] < $b['wcount']) ? 1 : -1;		
+	}	
 	
 	public static function recognizeByMyself($url,$cats,$uswords,$debug=false)
 	{
@@ -222,7 +226,11 @@ class Recognizer{
 				$content_words[$cword] = 1;
 		}
 	
-		
+		$cword_ord =array();
+		foreach($content_words as $cword => $wcount)
+			$cword_ord[]=array('cword'=>$cword,'wcount'=>$wcount);
+		usort($cword_ord,'Recognizer::sortWordCount');
+			
 		// ==== debug ====> //
 		if($debug){
 		echo '<b>Keywords:</b><br/>';
@@ -300,6 +308,6 @@ class Recognizer{
 				
 		if($debug)
 			exit;
-		return array('coefs'=>$cats_coefs,'cwords'=>$content_words,'ordcoefs'=>$coef_by_ord);
+		return array('coefs'=>$cats_coefs,'cwords'=>$content_words,'cwordord'=>$cword_ord,'ordcoefs'=>$coef_by_ord);
 	}	
 }

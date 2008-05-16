@@ -86,9 +86,9 @@
 				<input type="submit" name="btnAttach" value="Назначить категорию"/>
 			</form>
 			<b>Частые слова контента:</b>
-			<? foreach($result['cwords'] as $cword => $wcount){?>
-				<?if($wcount>Recognizer::MINIMAL_CWORD_COEF){ ?>
-					<?=$cword ?>(<?=$wcount ?>),
+			<? foreach($result['cwordord'] as $cword){?>
+				<?if($cword['wcount']>Recognizer::MINIMAL_CWORD_COEF){ ?>
+					<?=$cword['cword'] ?>(<?=$cword['wcount'] ?>),
 				<?} ?>
 			<?} ?>
 		<?} ?>
