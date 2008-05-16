@@ -90,7 +90,7 @@ class Recognizer{
 	protected static function killPunctuation($content)
 	{
 		$punctuation = array(
-						'&lt;','&gt;','.',';',':','[',']','-',
+						'&nbsp;','&lt;','&gt;','.',';',':','[',']','-',
 						'(',')','_','/','\\','^','{','}','>','<',
 						'%','$','#','@','?','—','\'',',','!','=',
 						'+','©','"','«','»','&',

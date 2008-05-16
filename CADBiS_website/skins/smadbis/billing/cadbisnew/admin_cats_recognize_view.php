@@ -15,7 +15,10 @@
 			<b>Обнаруженные конфликты:</b>
 			<form action="<?=cadbisnewurl('admin_cats_recognize') ?>" method="post">
 				<table width="100%">
-				<tr><td><b>Ключевое слово</b></td><td><b>Конфликтная категория</b></td><td><b>Действия</b></td></tr>
+				<tr>
+					<td class="tbl1"><b>Ключевое слово</b></td>
+					<td class="tbl1"><b>Конфликтная категория</b></td>
+					<td class="tbl1"><b>Действия</b></td></tr>
 				<? foreach($result['cwords'] as $word=>$wcount) {
 					if($wcount<Recognizer::MINIMAL_CWORD_COEF)
 						continue;
@@ -24,11 +27,11 @@
 						$c_count++;				
 					?>
 					<tr>
-						<td><?=$word ?>(<?=$wcount ?>)</td>
-						<td>
+						<td class="tbl1"><?=$word ?>(<?=$wcount ?>)</td>
+						<td class="tbl1">
 							<?=$cats[$cat_by_cid[$c_cid]]['title'] ?>
 						</td>
-						<td>
+						<td class="tbl1">
 							<label><input type="radio" name="actionfor[<?=$word ?>]" value="noaction" checked>Оставить</label>
 							<label><input type="radio" name="actionfor[<?=$word ?>]" value="delete">Заменить</label>
 							<label><input type="radio" name="actionfor[<?=$word ?>]" value="unsense">Несмысловое</label>
@@ -48,22 +51,27 @@
 		<?}else{ ?>
 			<b>Предполагаемые категории:</b><br/>
 			<table width="100%">
-			<tr><td><b>Категория</b></td><td><b>Слова</b></td><td><b>Баллы</b></td><td><b>Действия</b></td></tr>
+			<tr>
+				<td class="tbl1"><b>Категория</b></td>
+				<td class="tbl1"><b>Слова</b></td>
+				<td class="tbl1"><b>Баллы</b></td>
+				<td class="tbl1"><b>Действия</b></td>
+			</tr>
 			<? foreach($result['ordcoefs'] as $ccoef)
 				if($ccoef['coef']>0){?>
 				<tr>
-					<td>
+					<td class="tbl1">
 					<?=$cats[$cat_by_cid[$ccoef['cid']]]['title'] ?>(<?=$ccoef['cid'] ?>)
 					</td>
-					<td>
+					<td class="tbl1">
 						<? foreach($ccoef['keywords'] as $keyword=>$count){ ?>
 							<?=$keyword ?>(<?=$count ?>)<br/>
 						<? } ?>
 					</td>				
-					<td>
+					<td class="tbl1">
 						<?=$ccoef['coef']?>
 					</td>
-					<td>
+					<td class="tbl1">
 					<a href="<?=cadbisnewurl('admin_cats_recognize') ?>&manualcheck=true&set=true&setcid=<?=$ccoef['cid'] ?>&url=<?=$url ?>">Назначить</a>
 					</td>
 				</tr>		
