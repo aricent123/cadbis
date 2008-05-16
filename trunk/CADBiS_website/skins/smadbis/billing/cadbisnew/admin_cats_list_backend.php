@@ -66,8 +66,16 @@ if($emanager->isAnyAction() && $ajaxbuf_cats->is_post_back())
 		break;
 		case $emanager->action->UPD:
 			$item = json_decode($emanager->getItem());
-			$item->keywords = str_replace(' ','',$item->keywords);		
-			$BILL->UpdateUrlCategoryKeywords($item->cid,explode(',',$item->keywords));
+			$item->keywords = explode(',',$item->keywords);
+			for($i=0;$i<count($item->keywords);++$i)
+			{
+				$item->keywords[$i] = rtrim(ltrim($item->keywords[$i]));
+				if(strlen($item->keywords[$i])<2 || empty($item->keywords[$i])){
+					array_splice($item->keywords,$i,1);
+					$i=0;
+				}
+			}
+			$BILL->UpdateUrlCategoryKeywords($item->cid,$item->keywords);
 			$BILL->UpdateUrlCategory($item->cid,array('title'=>$item->title));
 			
 		break;		
@@ -86,7 +94,7 @@ if($emanager->isAnyAction() && $ajaxbuf_cats->is_post_back())
 $cats = $BILL->GetUrlCategories($cats_grid_pager->get_curpage(),10,$cats_grid->get_current_sorting(), $cats_grid->get_sort_direction());
 foreach($cats as $cat)
 {
-	$cat['keywords'] = implode(",",$BILL->GetUrlCategoryKeywords($cat['cid']));
+	$cat['keywords'] = implode(", ",$BILL->GetUrlCategoryKeywords($cat['cid']));
 	$cats_ds->add_row(array(
 			$cat['cid'],
 			$cat['title'],

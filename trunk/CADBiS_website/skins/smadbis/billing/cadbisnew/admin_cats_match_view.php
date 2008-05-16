@@ -32,6 +32,7 @@
 			Опознание категории...
 			<img id="imgLoad" style="display:none" src="img/ajaxload.gif"/>
 			<div id="divRecognizeCat"></div>
+			<div id="divRecognizeManual"></div>			
 		</div>
 <script type="text/javascript">
 function GridsInitialized()
@@ -95,7 +96,10 @@ function recognizeCat(manager,url){
 				res = data.responseText + res;
 			}
 			else
+			{
 				res = 'Нет в базе';
+				$('divRecognizeManual').innerHTML='<a href="<?=cadbisnewurl('admin_cats_recognize') ?>&url='+url+'&manualcheck=true">Опознать вручную</a>';
+			}
 			$('divRecognizeCat').innerHTML = res;
 			$('imgLoad').setStyle({display:'none'});
 		}});		
