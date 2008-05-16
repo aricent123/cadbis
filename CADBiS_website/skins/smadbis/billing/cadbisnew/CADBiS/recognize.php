@@ -109,8 +109,8 @@ class Recognizer{
 		$arrayL = array('а','б','в','г','д','е','ё','ж',
 						'з','и','к','л','м','н','о','п',
 						'р','с','т','у','ф','х','ц','ч',
-						'ш','щ','ъ','ы','ь','э','ю','я');		
-		return str_ireplace($arrayU,$arrayL,$content);
+						'ш','щ','ъ','ы','ь','э','ю','я');
+		return str_replace($arrayU,$arrayL,$content);
 	}
 	
 	protected static function toLowerStringLat($content)
@@ -123,7 +123,7 @@ class Recognizer{
 						'i','j','k','l','m','n','o','p',
 						'q','r','s','t','u','v','w','x',
 						'y','z');		
-		return str_ireplace($arrayU,$arrayL,$content);
+		return str_replace($arrayU,$arrayL,$content);
 	}	
 	
 	protected static function killNewLines($content)
@@ -166,8 +166,17 @@ class Recognizer{
 		
 		// ==== debug ====> //
 		if($debug){
+		echo '
+		<style type="text/css">
+			.codeblock{
+				width:800px; 
+				border:1px dashed black;
+				height: 200px; 
+				overflow: auto;
+			}
+		</style>';
 		echo '<b>Got content:</b><br/>';
-		echo '<textarea cols="70" rows="10">'.$content.'</textarea>';
+		echo '<pre class="codeblock">'.htmlspecialchars($content).'</pre>';
 		echo '<hr/>';}
 		// <==== debug ==== //
 				
@@ -178,7 +187,7 @@ class Recognizer{
 		// ==== debug ====> //
 		if($debug){	
 		echo '<b>Content with changed charset (from '.$charset.' to UTF-8) and in lowercase:</b><br/>';
-		echo '<textarea cols="70" rows="10">'.$content.'</textarea>';
+		echo '<pre class="codeblock">'.htmlspecialchars($content).'</pre>';
 		echo '<hr/>';}
 		// <==== debug ==== //		
 		
@@ -187,14 +196,33 @@ class Recognizer{
 			$kwd = ltrim($kwd);
 		$metaDesc = implode('',self::getDescription($content));		
 		$title = self::getTitle($content);
-		$content = preg_replace("/<script[^>]*>.*<\/script>/Uims", " ",$content);		
-		$content = preg_replace("/<style[^>]*>.*<\/style>/ims", " ",$content);
+		
+		
+		$content = preg_replace("/<style[^>]*>.*<\/style>/Uims", " ",$content);
+		
+		// ==== debug ====> //
+		if($debug){	
+		echo '<b>Content after style tags replacement:</b><br/>';
+		echo '<pre class="codeblock">'.htmlspecialchars($content).'</pre>';
+		echo '<hr/>';}
+		// <==== debug ==== //			
+		
+		$content = preg_replace("/<script[^>]*>.*<\/script>/Uims", " ",$content);	
+
+		// ==== debug ====> //
+		if($debug){	
+		echo '<b>Content after script tags replacement:</b><br/>';
+		echo '<pre class="codeblock">'.htmlspecialchars($content).'</pre>';
+		echo '<hr/>';}
+		// <==== debug ==== //				
+			
+		
 		$content = preg_replace("/<[^>]*>/ims", " ",$content);				
 		
 		// ==== debug ====> //
 		if($debug){	
-		echo '<b>Content after tags replacement:</b><br/>';
-		echo '<textarea cols="70" rows="10">'.$content.'</textarea>';
+		echo '<b>Content after other tags replacement:</b><br/>';
+		echo '<pre class="codeblock">'.htmlspecialchars($content).'</pre>';
 		echo '<hr/>';}
 		// <==== debug ==== //			
 		
@@ -208,9 +236,24 @@ class Recognizer{
 		$content = preg_replace("/[0-9]/"," ",$content);
 		$content = self::killPunctuation($content);
 		$content = self::killNewLines($content);
-		$content = self::killDoubleSpaces($content);
+		$content = self::killDoubleSpaces($content);		
+		// ==== debug ====> //
+		if($debug){	
+		echo '<b>Content after killing numbers, spaces and punctuation:</b><br/>';
+		echo '<pre class="codeblock">'.htmlspecialchars($content).'</pre>';
+		echo '<hr/>';}
+		// <==== debug ==== //				
+		
 		$content = self::toLowerStringCyr($content);
-		$content = self::toLowerStringLat($content); 
+		$content = self::toLowerStringLat($content);
+
+		// ==== debug ====> //
+		if($debug){	
+		echo '<b>Content after lowerstring:</b><br/>';
+		echo '<pre class="codeblock">'.htmlspecialchars($content).'</pre>';
+		echo '<hr/>';}
+		// <==== debug ==== //					
+		
 		
 		$cwords = explode(' ',$content);
 		array_walk($cwords,'ltrim');
@@ -234,7 +277,7 @@ class Recognizer{
 		// ==== debug ====> //
 		if($debug){
 		echo '<b>Keywords:</b><br/>';
-		echo '<textarea cols="70" rows="10">'.utils::buffered_dump($metaKeywds).'</textarea>';
+		echo '<pre class="codeblock">'.utils::buffered_dump($metaKeywds).'</pre>';
 		echo '<hr/>';
 		echo '<b>Desc:</b><br/>';
 		echo $metaDesc;
@@ -243,10 +286,10 @@ class Recognizer{
 		echo $title;
 		echo '<hr/>';
 		echo '<b>Content:</b><br/>';
-		echo '<textarea cols="70" rows="10">'.$content.'</textarea>';
+		echo '<pre class="codeblock">'.htmlspecialchars($content).'</pre>';
 		echo '<hr/>';
 		echo '<b>Content words:</b><br/>';
-		echo '<textarea cols="70" rows="10">'.utils::buffered_dump($content_words).'</textarea>';
+		echo '<pre class="codeblock">'.utils::buffered_dump($content_words).'</pre>';
 		echo '<hr/>';
 		}				
 		// <==== debug ==== //
@@ -299,10 +342,10 @@ class Recognizer{
 		// ==== debug ====> //
 		if($debug){	
 		echo '<b>Categories coefs:</b><br/>';
-		echo '<textarea cols="70" rows="10">';
+		echo '<pre class="codeblock">';
 		foreach($cats_coefs as $cid => $ccoef)
 			echo $cats[$cat_by_cid[$cid]]['title'].'('.$cid.')='.$ccoef['coef']."\r\n";		
-		echo '</textarea>';
+		echo '</pre>';
 		echo '<hr/>';}					
 		// <==== debug ==== //
 				

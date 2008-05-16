@@ -180,7 +180,7 @@ if($action=="today" || $action=="week" || $action=="month")
     else
     { ?><div align=center><a href="<? OUT("?p=$p&act=$act&action=$action&draw=graph&gid=$gid&sort=$sort") ?>">Показать график</a></div><? } ?>
    </td><td width=50% align=center>
-    <div align=center><a target=_blank href="<? OUT("?act=smadbisrept&action=$action&sort=$sort&gid=$gid") ?>">Версия для печати</a></div>
+    <div align=center><a target=_blank href="<? OUT("?act=noskin&page=smadbis&noskinact=smadbisrept&action=$action&sort=$sort&gid=$gid") ?>">Версия для печати</a></div>
    </td></table>
    <br>
    <?
@@ -265,7 +265,7 @@ elseif($action=="sessions")
    if(count($accts))
    {
    ?>
-     <div align=center><a target=_blank href="<? OUT("?act=smadbisrept&action=$action&groupby=$groupby&fdate=$fdate&tdate=$tdate&user=$user") ?>">Версия для печати</a></div>
+     <div align=center><a target=_blank href="<? OUT("?act=noskin&page=smadbis&noskinact=smadbisrept&action=$action&groupby=$groupby&fdate=$fdate&tdate=$tdate&user=$user") ?>">Версия для печати</a></div>
    <?   
      switch($groupby)
       {
@@ -430,7 +430,7 @@ elseif($action=="sessions")
     if(!count($accts))OUT("<div align=center>Ничего не найдено</div>");
     else{
     ?>
-     <div align=center><a target=_blank href="<? OUT("?act=smadbisrept&action=$action&groupby=$groupby&fdate=$fdate&tdate=$tdate&user=$user") ?>">Версия для печати</a></div>
+     <div align=center><a target=_blank href="<? OUT("?act=noskin&page=smadbis&noskinact=smadbisrept&action=$action&groupby=$groupby&fdate=$fdate&tdate=$tdate&user=$user") ?>">Версия для печати</a></div>
      <?  
      } 
     } //end of mod==""    
@@ -540,7 +540,7 @@ elseif($action=="sessions")
    ?>    
    <table width=100%><td width=50% align=center>
    <td width=50% align=center>
-    <div align=center><a target=_blank href="<? OUT("?act=smadbisrept&action=$action&tarif=$tarif&fdate=$fdate&tdate=$tdate") ?>">Версия для печати</a></div>
+    <div align=center><a target=_blank href="<? OUT("?act=noskin&page=smadbis&noskinact=smadbisrept&action=$action&tarif=$tarif&fdate=$fdate&tdate=$tdate") ?>">Версия для печати</a></div>
    </td></table>
    <br>
    <? 

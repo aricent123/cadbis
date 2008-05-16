@@ -670,7 +670,7 @@ class CPageDivider
     return $res;
    }
  //-----------------------------------------------------------------------     
- function GetPagesCount($posts = null)
+ function GetPagesCount()
    {
    return ceil($this->count/$this->POP);
    }

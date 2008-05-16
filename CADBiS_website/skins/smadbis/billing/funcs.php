@@ -281,7 +281,7 @@ function get_terminate_cause_str($str)
    case "User-Request":return "По запросу";
 //    case "NAS-Request":return "По запросу NAS";
    case "Online":return "[НА ЛИНИИ]";
-   case "NAS-Request":return "Сброшен администратором";
+   case "NAS-Request":return "По запросу сервера";
    case "Port-Error":return "Произошла ошибка";
    case "User-Error":return "Произошла ошибка";
    case "NAS-Reboot":return "Перезагрузка системы";
