@@ -26,6 +26,7 @@ class tags{
 
 
 class utils{
+	
 	public static function format_value($data, $type)
 	{
 		switch($type)
@@ -48,6 +49,16 @@ class utils{
 		}			
 	}
 	
+	//-----------------------------------------------------------------------
+	/**
+	 * Escapes regular expression
+	 * @param regexp $regexp
+	 * @return string
+	 */	
+	public static function escape_regexp($regexp)
+	{
+		return preg_replace("/[\/\]\[\{\}\(\)\*\+\?\.\\\^\$\|]/", "\\\\$0", $regexp);
+	}
 	//-----------------------------------------------------------------------
 	/**
 	 * Makes buffered var_dump

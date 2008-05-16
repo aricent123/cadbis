@@ -364,7 +364,7 @@ function GetMonthUsersAccts($order=">traffic",$draw=false,$gid="all")
 	    }
 	    $res_others["traffic"]=0;
 	    $res_others["time"]=0;
-	    $res_others["user"]="Другие";
+	    $res_others["user"]="пїЅпїЅпїЅпїЅпїЅпїЅ";
  	  }
         $res=array();
         $k=0;
@@ -464,7 +464,7 @@ function GetTodayUsersAccts($order=">traffic",$draw=false,$gid="all")
 	    }
 	    $res_others["traffic"]=0;
 	    $res_others["time"]=0;
-	    $res_others["user"]="Другие";
+	    $res_others["user"]="пїЅпїЅпїЅпїЅпїЅпїЅ";
  	  }
         $res=NULL;
         $k=0;
@@ -563,7 +563,7 @@ function GetWeekUsersAccts($order=">traffic",$draw=false,$gid="all")
 	    }
 	    $res_others["traffic"]=0;
 	    $res_others["time"]=0;
-	    $res_others["user"]="Другие";
+	    $res_others["user"]="пїЅпїЅпїЅпїЅпїЅпїЅ";
  	  }
 
 	for($i=0;$i<count($users);++$i)
@@ -823,7 +823,7 @@ function GetTarifsAccts($fdate,$tdate,$draw=0)
            $res[$k]["traffic"]=$res_others["traffic"];
            $res[$k]["time"]=$res_others["time"];
 	   	   $res[$k]["gid"]=0;
-           $res[$k]["packet"]="Другие";
+           $res[$k]["packet"]="пїЅпїЅпїЅпїЅпїЅпїЅ";
            $res[$k]["prim"]="";
            }
          usort($res,"accts_compare_traffic_desc");
@@ -1704,6 +1704,11 @@ function GetUrlCategoryKeywords($cid)
  while($row = mysql_fetch_assoc($result))
  	$kwds[] = $row['keyword'];
  return $kwds;
+}
+function GetUrlCategoryKeyword($keyword)
+{
+ $result = mysql_query(sprintf("select cid from `url_categories_keywords` where keyword='%s'",$keyword));
+ return mysql_result($result,0);
 }
 function UpdateUrlCategoryKeywords($cid, $kwds)
 {

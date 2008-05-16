@@ -11,13 +11,25 @@ else
 {
 	$result = "";	
 	$url="www.yandex.ru";
-	if(isset($_POST['btnSubmit'])){
-		$url = $_POST['tbUrl'];
+	if(isset($_GET['set']) || isset($_POST['btnAttach']))
+	{
+		// TODO: trying to set cid & find conflicts
+	}
+	if(isset($_POST['btnResolveConflicts']))
+	{
+		// TODO: applying conflicts resolves		
+	}	
+	if(isset($_POST['btnSubmit']) || isset($_GET['manualcheck'])){
+		$url = $_REQUEST['url'];
 		$BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
-		$cats = $BILL->GetUrlCategories();	
-		foreach($cats as $cat)
+		$cats = $BILL->GetUrlCategories();
+		$cat_by_cid = array();$i=0;	
+		foreach($cats as &$cat)
+		{
+			$cat_by_cid[$cat['cid']] = $i++;
 			$cat['keywords'] = $BILL->GetUrlCategoryKeywords($cat['cid']);
+		}
 		$uswords = $BILL->GetUrlCategoriesUnsenseWords();
-		$result = Recognizer::recognizeByMyself($url, $cats, $uswords);
+		$result = Recognizer::recognizeByMyself($url, $cats, $uswords, false);
 	}
 }
