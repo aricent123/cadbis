@@ -53,16 +53,24 @@ public class Categorizer extends CADBiSDaemon{
 		return (Categorizer)instance;
 	}
 	
-	protected ContentCategory recognizeCategory(String content,List<ContentCategory> categories, List<String> unsenseWords){		
+	/**
+	 * Content category recognition
+	 * @param content - Content of URL
+	 * @param categories - List of categories 
+	 * @param unsenseWords - List of unsensable words (should exclude them)
+	 * @param charset - Encoding of content (e.g. UTF-8, cp1251, etc)
+	 * @return recognizedCategory
+	 */
+	protected ContentCategory recognizeCategory(String content,List<ContentCategory> categories, List<String> unsenseWords, String charset){		
 		ContentCategory res = new ContentCategory();
 		res.setCid(0);
 		res.setTitle("Other");
 		return res;
 	}
 	
-	public synchronized Integer recognizeAndAddCategory(String url, String content)
+	public synchronized Integer recognizeAndAddCategory(String url, String content, String charset)
 	{
-		ContentCategory cat = recognizeCategory(content, cats, uswords);
+		ContentCategory cat = recognizeCategory(content, cats, uswords,charset);
 		logger.info("Recognizing and adding a category for url='"+url+"' = " + cat.getTitle());
 		if(!url_cat.containsKey(url))
 		{

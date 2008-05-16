@@ -65,7 +65,7 @@ public class CategoryRecognizer extends CADBiSThread {
 			{
 				logger.error("IO error '"+e.getMessage()+"' while trying to unzip body of packet with header = "+ResponseParser.GetFullHeader());
 			}				
-		Categorizer.getInstance().recognizeAndAddCategory(HttpHost, body);		
+		Categorizer.getInstance().recognizeAndAddCategory(HttpHost, body,charset);		
 		complete();
 	}
 	
