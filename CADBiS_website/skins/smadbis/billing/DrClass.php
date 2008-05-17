@@ -2031,7 +2031,12 @@ function DeleteDiapason($id)
  *		 				CADBiS 2.0 FUNCTIONS					*
  ****************************************************************/			
 			
-	//
+	// ----------------------------------------------------
+	/**
+	 * Adds new event log
+	 *
+	 * @param string $event
+	 */
 	function AddEventString($event)
 	{
 	  global $GV,$CURRENT_USER;
@@ -2040,7 +2045,16 @@ function DeleteDiapason($id)
 	  $data["date"]=norm_date_yymmddhhmmss(time());
 	  $this->AddEvent($data);
 	}
-	 
+	// ----------------------------------------------------
+	/**
+	 * Returns categories of content
+	 *
+	 * @param int $page - page number
+	 * @param int $pop - categories per page
+	 * @param string $orderby - sort field (allowed: title,cid)
+	 * @param string $orderdir - sort direction (allowed: asc,desc)
+	 * @return array - array[$i] = array('cid'=>$cid,'title'=>$title);
+	 */ 
 	function GetUrlCategories($page = 0, $pop = 10, $orderby = 'default', $orderdir = 'asc')
 	 {
 	 $cats = array();
@@ -2059,25 +2073,58 @@ function DeleteDiapason($id)
 	 	$cats[] = $row;
 	 return $cats;
 	 }
+	 // ----------------------------------------------------
+	 /**
+	  * Returns data of the content category
+	  *
+	  * @param int $cid
+	  * @return array - array('cid'=>$cid,'title'=>$title)
+	  */
 	 function GetUrlCategoryData($cid)
 	 {
 		 $result = mysql_query(sprintf("select * from `url_categories` where cid = %d",$cid));
 		 return mysql_fetch_assoc($result);
 	 }
+	 // ----------------------------------------------------
+	/**
+	 * Adds new url category into the database
+	 *
+	 * @param array $cat - array('cid'=>$cid,'title'=>$title)
+	 */
 	function AddUrlCategory($cat)
 	{
 		mysql_query(sprintf('insert into `url_categories`(title) values(\'%s\')',$cat['title']));
 	}
+	// ----------------------------------------------------
+	/**
+	 * Deletes url category from the database
+	 *
+	 * @param int $cid
+	 */
 	function DeleteUrlCategory($cid)
 	{
 		mysql_query(sprintf('delete from `url_categories` where cid = %d',$cid));
 	}
+	// ----------------------------------------------------
+	/**
+	 * Enter description here...
+	 *
+	 * @param unknown_type $cid
+	 * @param unknown_type $cat
+	 */
 	function UpdateUrlCategory($cid,$cat)
 	{
 		$sql = sprintf('update `url_categories` set title = \'%s\' where cid = %d',$cat['title'],$cid);
 		mysql_query($sql);
 		$this->AddEventString(addslashes("���������� ��������� URL: $sql"));
 	}
+	// ----------------------------------------------------
+	/**
+	 * Returns keywords for url category
+	 *
+	 * @param int $cid
+	 * @return array
+	 */
 	function GetUrlCategoryKeywords($cid)
 	{
 	 $result = mysql_query(sprintf("select * from `url_categories_keywords` where cid=%d",$cid));
@@ -2086,17 +2133,37 @@ function DeleteDiapason($id)
 	 	$kwds[] = $row['keyword'];
 	 return $kwds;
 	}
+	// ----------------------------------------------------
+	/**
+	 * Returns url category by its keyword
+	 *
+	 * @param string $keyword
+	 * @return int - cid
+	 */
 	function GetUrlCategoryKeyword($keyword)
 	{
 	 $result = mysql_query(sprintf("select cid from `url_categories_keywords` where keyword='%s'",$keyword));
 	 return mysql_result($result,0);
 	}
+	// ----------------------------------------------------
+	/**
+	 * Updaytes url category
+	 *
+	 * @param int $cid
+	 * @param array $kwds
+	 */
 	function UpdateUrlCategoryKeywords($cid, $kwds)
 	{
 		mysql_query(sprintf("delete from `url_categories_keywords` where cid=%d",$cid));
 	 foreach($kwds as $kwd)
 		mysql_query(sprintf('insert into `url_categories_keywords`(cid,keyword) value(%d,\'%s\')',$cid,$kwd));
 	}
+	// ----------------------------------------------------
+	/**
+	 * Returns unsense words
+	 *
+	 * @return array
+	 */
 	function GetUrlCategoriesUnsenseWords()
 	{
 	 $result = mysql_query(sprintf("select * from `url_categories_unsensewords` order by keyword"));
@@ -2105,24 +2172,52 @@ function DeleteDiapason($id)
 	 	$kwds[] = $row['keyword'];
 	 return $kwds;
 	}
+	// ----------------------------------------------------
+	/**
+	 * Updates unsense words list
+	 *
+	 * @param array $kwds
+	 */
 	function UpdateUrlCategoriesUnsenseWords($kwds)
 	{
 		mysql_query(sprintf("truncate table `url_categories_unsensewords`"));
 	 foreach($kwds as $kwd)
 		mysql_query(sprintf('insert into `url_categories_unsensewords`(keyword) value(\'%s\')',$kwd));
 	}
+	// ----------------------------------------------------
+	/**
+	 * Returns denied categories for packet with gid
+	 *
+	 * @param int $gid
+	 * @return array - array of denied cids
+	 */
 	function GetUrlCategoriesDenied($gid)
 	{
 	 $result = mysql_query(sprintf("select * from `url_categories_denied` where gid=%d",$gid));
-	 $kwds = array();
+	 $cats = array();
 	 while($row = mysql_fetch_assoc($result))
-	 	$kwds[] = $row['cid'];
-	 return $kwds;
+	 	$cats[] = $row['cid'];
+	 return $cats;
 	}
+	// ----------------------------------------------------
+	/**
+	 * Updates category for the url
+	 *
+	 * @param int $u2cid
+	 * @param string $url
+	 * @param int $cid
+	 */
 	function UpdateUrlCategoryMatch($u2cid,$url, $cid)
 	{
 		mysql_query(sprintf("update `url_categories_match` set cid='%s', url='%s' where u2cid=%d",$cid,$url,$u2cid));
 	}
+	// ----------------------------------------------------
+	/**
+	 * Updates url category by the title of category
+	 *
+	 * @param string $url
+	 * @param string $name
+	 */
 	function UpdateUrlCategoryMatchByName($url,$name)
 	{
 		$sql = sprintf("select cid from `url_categories` where title='%s'",$name);
@@ -2130,15 +2225,40 @@ function DeleteDiapason($id)
 		$sql = sprintf("update `url_categories_match` set cid=%d where url='%s'",$cid,$url);
 		mysql_query($sql);
 	}
+	// ----------------------------------------------------
+	/**
+	 * Deletes category for the url
+	 *
+	 * @param int $u2cid
+	 */
 	function DeleteUrlCategoryMatch($u2cid)
 	{
 		mysql_query(sprintf("delete from `url_categories_match` where u2cid=%d",$u2cid));
 	}
+	// ----------------------------------------------------
+	/**
+	 * Attaches url for a given category with cid
+	 *
+	 * @param string $url
+	 * @param int $cid
+	 */
 	function AddUrlCategoryMatch($url, $cid)
 	{
 		$sql = sprintf("replace into `url_categories_match`(url,cid) values('%s',%d)",$url,$cid);
 		mysql_query($sql);
 	}
+	// ----------------------------------------------------
+	/**
+	 * Returns urls with their categories 
+	 *
+	 * @param int $page
+	 * @param int $pop
+	 * @param string $orderby
+	 * @param string $orderdir
+	 * @param string $include
+	 * @param string $exclude
+	 * @return array - array[$i] = array('cid'=>$cid,'url'=>$cid)
+	 */
 	function GetUrlCategoriesMatch($page = 0, $pop = 10, $orderby = 'default', $orderdir = 'asc', $include = array(), $exclude = array())
 	 {
 	 $cats = array();
@@ -2162,44 +2282,100 @@ function DeleteDiapason($id)
 	 	$urls[] = $row;
 	 return $urls;
 	 }
+	 // ----------------------------------------------------
+	/**
+	 * Returns count of the urls with cid>0 
+	 *
+	 * @return int
+	 */
 	function GetCategoriesUrlMatchedCount()
 	{
 		return mysql_result(mysql_query("select count(1) from `url_categories_match` where cid > 0"),0);
 	}
+	// ----------------------------------------------------
+	/**
+	 * Returns count of the urls with cid=0
+	 *
+	 * @return int
+	 */
 	function GetCategoriesUrlUnMatchedCount()
 	{
 		return mysql_result(mysql_query("select count(1) from `url_categories_match` where cid = 0"),0);
 	}
+	// ----------------------------------------------------
+	/**
+	 * Sets denied categories for the packet with gid
+	 *
+	 * @param int $gid
+	 * @param array $dencats
+	 */
 	function SetUrlCategoriesDenied($gid,$dencats)
 	{
 	 mysql_query(sprintf("delete from `url_categories_denied` where gid=%d",$gid));
 	 foreach($dencats as $dencat)
-	 {
 	 	mysql_query(sprintf("insert into `url_categories_denied`(cid,gid) values(%d,%d)",$dencat,$gid));
-	 }
 	}
+	// ----------------------------------------------------
+	/**
+	 * Attaches keyword for the category
+	 *
+	 * @param int $cid
+	 * @param string $keyword
+	 */
 	function UrlCategoryAttachKeyword($cid, $keyword)
 	{
 		$sql = sprintf("insert into `url_categories_keywords`(cid,keyword) values(%d,'%s')",$cid,$keyword);
 		mysql_query($sql);
 	}
+	// ----------------------------------------------------
+	/**
+	 * Deletes keyword from the category
+	 *
+	 * @param string $keyword
+	 */
 	function DeleteUrlCategoryKeyword($keyword)
 	{
 		mysql_query(sprintf("delete from `url_categories_keywords` where keyword='%s'",$keyword));
 	}
+	// ----------------------------------------------------
+	/**
+	 * Changes category for the keyword
+	 *
+	 * @param string $keyword
+	 * @param int $cid
+	 */
 	function ReplaceUrlCategoryKeyword($keyword, $cid)
 	{
 		mysql_query(sprintf("update `url_categories_keywords` set cid=%d where keyword='%s'",$cid,$keyword));
-	}	
+	}
+	// ----------------------------------------------------
+	/**
+	 * Adds new unsense word
+	 *
+	 * @param string $keyword
+	 */
 	function AddUrlCategoryUnsenseword($keyword)
 	{
 		mysql_query(sprintf('insert into `url_categories_unsensewords`(keyword) value(\'%s\')',$keyword));
-	}				
+	}
+	// ----------------------------------------------------
+	/**
+	 * Returns category(cid) by the url
+	 *
+	 * @param string $url
+	 * @return int
+	 */
 	function GetUrlCategory($url)
 	{
 		return mysql_result(mysql_query(sprintf("select cid from `url_categories_match` where url = '%s'",$url)),0);
 	}
-	
+	// ----------------------------------------------------
+	/**
+	 * Returns count of rows in table
+	 *
+	 * @param string $table
+	 * @return int
+	 */
 	function GetRowsCount($table)
 	{
 		return mysql_result(mysql_query("select count(*) from `$table`"),0);

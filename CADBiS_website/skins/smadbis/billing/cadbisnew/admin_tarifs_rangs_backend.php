@@ -4,7 +4,7 @@ if(!check_auth() || $CURRENT_USER['level']<7){
 }
 require_once(dirname(__FILE__)."/SMPHPToolkit/SMAjax.php");
 require_once(dirname(__FILE__)."/CADBiS/PacketsTodayLimits.php");
-CADBiSNew::instance()->script_src("js/ajax/engine.js");
+CADBiSNew::instance()->script_src('js/ajax/buffer.js');
 
 $ajaxbuf = new ajax_buffer("update_buffer");
 $ajaxbuf->show_progress(true);

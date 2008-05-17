@@ -37,11 +37,13 @@
 <script type="text/javascript">
 function GridsInitialized()
  {
+ 	if(<?=$ajaxbuf_url_matched_cats->client_id()?>!=null)
 	<?=$ajaxbuf_url_matched_cats->client_id()?>.onSuccess = function()
 		{
 			<?=$ajaxbuf_url_cats->client_id()?>.update();
 			<?=$ajaxbuf_url_matched_cats->client_id()?>.onSuccess = function(){};
 		};
+	if(<?=$ajaxbuf_url_cats->client_id()?>!=null)
 	<?=$ajaxbuf_url_cats->client_id()?>.onSuccess = function()
 		{
 			<?=$ajaxbuf_url_matched_cats->client_id()?>.update();
@@ -82,7 +84,7 @@ function addURL(manager){
 function recognizeCat(manager,url){
 	Dialog.alert($('window-form-recognize').innerHTML,{
 		className:"alphacube", width:300, height: 100,
-		okLabel: "ОК", 
+		okLabel: "ОК"
 		});
 	$('imgLoad').setStyle({display:''});
 	new Ajax.Request('<?=cadbisnewurl('admin_cats_recognize') ?>&url='+url+'&urlcheck=true', {

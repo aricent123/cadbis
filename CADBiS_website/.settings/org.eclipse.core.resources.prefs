@@ -1,8 +1,9 @@
-#Fri May 16 21:53:42 MSD 2008
+#Sun May 18 00:38:23 MSD 2008
 eclipse.preferences.version=1
 encoding//db/CADBiS_ctfilter.sql=UTF-8
 encoding//db/unsensewords.txt=UTF-8
 encoding//js/ajax/manager.js=UTF-8
+encoding//skins/smadbis/billing/DrClass.php=CP1251
 encoding//skins/smadbis/billing/cadbisnew.php=UTF-8
 encoding//skins/smadbis/billing/cadbisnew/CADBiS/recognize.php=UTF-8
 encoding//skins/smadbis/billing/cadbisnew/admin_cats_backend.php=UTF-8
