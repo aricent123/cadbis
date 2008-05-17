@@ -23,9 +23,9 @@ if(isset($_POST['selected_kwds'])){
 			$keyword = $BILL->GetUrlCategoryConflictKeyword($word);
 			$BILL->ReplaceUrlCategoryKeyword($word, $keyword['forcid']);
 			$BILL->ResolveUrlCategoryConflict($word);
-		}elseif(isset($_POST['btnUnsense'])){
-			$BILL->DeleteUrlCategoryKeyword($word);
+		}elseif(isset($_POST['btnUnsense'])){			
 			$BILL->AddUrlCategoryUnsenseword($word);
+			$BILL->DeleteUrlCategoryKeyword($word);
 			$BILL->ResolveUrlCategoryConflict($word);
 		}
 	}
