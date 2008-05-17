@@ -28,6 +28,11 @@ class ajax_buffer extends smphp_control{
 	protected $method = ajax_buffer_method::REPLACE;
 	protected $onClientSuccess = "";
 	protected $_additional_inits = array();
+	/**
+	 * Class of the window to show progress
+	 * @var bool
+	 */
+	protected $_progressClass = 'alphacube';	
 	//--------------------------------------------------
 	/**
 	 * Sets the client onComplete method
@@ -96,6 +101,7 @@ class ajax_buffer extends smphp_control{
 			'.$this->client_id().' = new ajax_buffer(\''.$this->client_id().'\',\''.$this->postback_url.'\',\''.ajax_common::AJAX_VAR_HIDDEN_PF.'\');'.spchr::endl.'
 			'.$this->client_id().'.show_progress('.(($this->show_progress)?'true':'false').');'.'
 			'.$this->client_id().'.set_method(\''.($this->method).'\');'.'
+			'.$this->client_id().'.set_progress_class(\''.($this->_progressClass).'\');'.'			
 			'.(!empty($this->onClientSuccess)?$this->client_id().'.onSuccess='.$this->onClientSuccess:'').';
 			'.$this->renderAdditionalInits().'
 			'.$this->client_side_vars().'

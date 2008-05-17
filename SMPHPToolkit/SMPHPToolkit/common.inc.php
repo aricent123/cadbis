@@ -26,6 +26,7 @@ class tags{
 
 
 class utils{
+	
 	public static function format_value($data, $type)
 	{
 		switch($type)
@@ -46,6 +47,29 @@ class utils{
 				return make_url_str($data,true);
 				
 		}			
+	}
+	
+	//-----------------------------------------------------------------------
+	/**
+	 * Escapes regular expression
+	 * @param regexp $regexp
+	 * @return string
+	 */	
+	public static function escape_regexp($regexp)
+	{
+		return preg_replace("/[\/\]\[\{\}\(\)\*\+\?\.\\\^\$\|]/", "\\\\$0", $regexp);
+	}
+	//-----------------------------------------------------------------------
+	/**
+	 * Makes buffered var_dump
+	 * @return string
+	 * @param mixed $var
+	 */
+	public static function buffered_dump($var)
+	{	
+		ob_start();
+		print_r($var);		
+		return ob_get_clean(); 	
 	}
 	
 	//-----------------------------------------------------------------------

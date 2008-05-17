@@ -229,10 +229,10 @@ class grid extends smphp_control {
 	protected $_default_header_template = 'if($sortable)
 											{
 												echo spchr::tab2."<a href=\"$base_url?$sortby_param=$sortname&$direction_param=$direction&".$params."\">".$title."</a>".spchr::endl;
-												if($current_direction == sorting::SORT_DIR_ASC)
-													echo "<img src=\"".$this->img_sort_asc."\"/>";
-												else
+												if($direction == sorting::SORT_DIR_ASC)
 													echo "<img src=\"".$this->img_sort_desc."\"/>";
+												else
+													echo "<img src=\"".$this->img_sort_asc."\"/>";
 											}
 											else
 												echo spchr::tab2.$title.spchr::endl;';
@@ -400,8 +400,7 @@ class grid extends smphp_control {
 				$sortable = $hitem->is_sortable();
 				$sortname = $hitem->get_name();
 				$title = $hitem->get_title();
-								
-				$direction = ($current_direction!=sorting::SORT_DIR_DESC)?sorting::SORT_DIR_DESC:sorting::SORT_DIR_ASC;
+				$direction = ($current_sorting==$hitem->get_name() && $current_direction!=sorting::SORT_DIR_DESC)?sorting::SORT_DIR_DESC:sorting::SORT_DIR_ASC;
 				$params = $this->url_params($sortby_param,$direction_param);
 				ob_start();
 				eval($this->header_template);
