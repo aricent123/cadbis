@@ -9,30 +9,53 @@ if(isset($_GET['urlcheck']) || !empty($_GET['urlcheck']))
 	die(Recognizer::recognizeByUrlCheck($_GET['url']));
 else
 {
+	$BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
 	$result = "";	
 	$url="www.yandex.ru";
+	if(isset($_REQUEST['url']))
+		$url = $_REQUEST['url'];
+	$current_cid = $BILL->GetUrlCategory($url);
+	$cats = $BILL->GetUrlCategories();
+	$cat_by_cid = array();$i=0;	
+	foreach($cats as &$cat)
+	{
+		$cat_by_cid[$cat['cid']] = $i++;
+		$cat['keywords'] = $BILL->GetUrlCategoryKeywords($cat['cid']);
+	}	
+	
+	// Setting url category
 	if(isset($_GET['set']) || isset($_POST['btnAttach']))
 	{
-		// TODO: trying to set cid & find conflicts
+		if($setcid > 0 && !empty($url))
+			$BILL->AddUrlCategoryMatch($url,$setcid);		
 	}
+	// Applying conflicts resolves
 	if(isset($_POST['btnResolveConflicts']))
 	{
-		// TODO: applying conflicts resolves		
-	}	
-	if(isset($_POST['btnSubmit']) || isset($_GET['manualcheck'])){
-		$url = $_REQUEST['url'];
-		$BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
-		$cats = $BILL->GetUrlCategories();
-		$cat_by_cid = array();$i=0;	
-		foreach($cats as &$cat)
-		{
-			$cat_by_cid[$cat['cid']] = $i++;
-			$cat['keywords'] = $BILL->GetUrlCategoryKeywords($cat['cid']);
+		$actionfor = $_POST['actionfor'];
+		foreach($actionfor as $word => $action)
+		{		
+			switch($action)
+			{
+				case 'delete':
+					$BILL->DeleteUrlCategoryKeyword($word);
+					break;
+				case 'replace':
+					$BILL->ReplaceUrlCategoryKeyword($word, $setcid);
+					break;
+				case 'unsense':
+					$BILL->DeleteUrlCategoryKeyword($word);
+					$BILL->AddUrlCategoryUnsenseword($word);
+					break;
+			}
 		}
+	}	
+	// Recognize content	
+	if(isset($_POST['btnSubmit']) || isset($_GET['manualcheck'])){
 		$uswords = $BILL->GetUrlCategoriesUnsenseWords();
 		$result = Recognizer::recognizeByMyself($url, $cats, $uswords, false);
 	}
-	
+	// Other (finding conflicts etc)
 	if(isset($result) && isset($set))
 	{
 		$conflict_cats = array();
@@ -41,16 +64,15 @@ else
 			if($wcount<Recognizer::MINIMAL_CWORD_COEF)
 				continue;
 			$c_cid = $BILL->GetUrlCategoryKeyword($cword);
-			if($c_cid>0 && $c_cid != $setcid)
+			if($c_cid>0)
 			{
-				if(isset($conflict_cats[$c_cid]['cwords']))
-					$conflict_cats[$c_cid] = array('cwords'=>array($cword));
-				else
-					$conflict_cats[$c_cid]['cwords'][] = $cword;				
+				if($c_cid != $setcid)
+					$conflict_cats[$c_cid][$cword]= $wcount;
 			}
 			else
 			{
-				$BILL->UrlCategoryAttachKeyword($cid, $cword);
+				//echo('Adding '.$cword.' to '.$cats[$cat_by_cid[$setcid]]['title'].'<br/>');
+				$BILL->UrlCategoryAttachKeyword($setcid, $cword);
 			}
 		}
 	}

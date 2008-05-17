@@ -1,7 +1,7 @@
 <?php
 
 
-//списки таблиц
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 $GV["users_tbl"]="users";
 //$GV["dbname"]="nibs";
 $GV["groups_tbl"]="packets";
@@ -53,14 +53,14 @@ return $date;
 
 class CBilling
 {
-//переменные члены класса
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 var $server;
 var $database;
 var $login;
 var $password;
 var $link;
 
-//конструктор
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function CBilling($server,$database,$login,$password)
          {
 	    $this->server=$server;
@@ -97,28 +97,28 @@ function GetCountry($ip)
  return array('ctry'=>strtolower($res['ctry']),'country'=>$res['country']);  
  }
 
-//добавление пользователя
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function AddUser($user)
 	{
 	global $GV,$CURRENT_USER;
 
 	/*
-	uid - ДЗПУ (скорее всего используется функция time() ) -
+	uid - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ time() ) -
 	user                                                   +
 	password                                                 +
-	crypt_method - взять один из них (посмотреть как сделано в NIBS и что при этом добавляется в -
-	таблицу. Лучше использовать MD5)
+	crypt_method - пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ NIBS пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ -
+	пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ MD5)
         gid                 +
         fio         +
         phone        +
         address       +
-        prim - ДЗПУ    +
+        prim - пїЅпїЅпїЅпїЅ    +
         add_date        +
         add_uid ( Alter table users add (`add_uid` after `add_date`);... ) +
-        expired - ДЗПУ        +
+        expired - пїЅпїЅпїЅпїЅ        +
 	*/
 
-	 if($this->IsUserExists($user['user']))return "Ошибка, данный логин уже занят!";
+	 if($this->IsUserExists($user['user']))return "пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 
 	$query="Insert into `".$GV["users_tbl"].
         "`(`user`,`password`,`gid`,`fio`,`phone`,`address`,`prim`,`add_uid`,`nick`,`gender`,`email`,`icq`,`url`,`rang`,`group`,`city`,`country`,`raiting`,`signature`,`info`,`add_date`
@@ -129,16 +129,16 @@ function AddUser($user)
 	  .norm_date_yymmdd(time())."',".$user['max_total_traffic'].",".$user['max_month_traffic'].",".$user['max_week_traffic'].",".$user['max_day_traffic'].",".$user['simultaneous_use'].");";
         $result=mysql_query($query,$this->link)or die("Invalid query(Add User): " . mysql_error());
 
-        //Журналирование событий
+        //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         $data["uid"]=$CURRENT_USER["id"];
-        $data["event"]="Добавление пользователя: ".$user["user"];
+        $data["event"]="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: ".$user["user"];
         $data["date"]=norm_date_yymmddhhmmss(time());
         $this->AddEvent($data);
         radius_restart();
 	return "";
 	}
 
-//Есть ли такой пользователь
+//пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function IsUserExists($login)
 	{
 	 global $GV;
@@ -150,7 +150,7 @@ function IsUserExists($login)
          return ($cnt==1);
 	}
 
-//Есть ли такой пользователь по uid
+//пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ uid
 function IsUserExistsByUid($uid)
 	{
 	 global $GV;
@@ -163,7 +163,7 @@ function IsUserExistsByUid($uid)
 	}
 
 
-//Количество пользователей
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function UsersCount()
 	{
 	 global $GV;
@@ -176,7 +176,7 @@ function UsersCount()
 
 }
 
-//Взять количество всех пользователей тарифа
+//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 function GetCountUsersOfTarif($gid)
 	{
 	 global $GV;
@@ -188,7 +188,7 @@ function GetCountUsersOfTarif($gid)
          return $cnt;
 	}
 
-//Взять всех пользователей тарифа
+//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 function GetUsersOfTarif($gid)
 	{
 	global $GV;
@@ -202,7 +202,7 @@ function GetUsersOfTarif($gid)
          return $res;
 	}
 
-//посчитать общее время и траффик пользователя
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function GetUserTotalAcctsData($uid)
 {
     global $GV;
@@ -223,7 +223,7 @@ function GetUserTotalAcctsData($uid)
 
 }
 
-//Взять суммарный трафик и время тарифа
+//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 function GetTarifTotalAccts($gid)
 	{
 	global $GV;
@@ -273,7 +273,7 @@ function GetMonthMaxAccts()
  }
 
 /**
- * Трафик Пользователей за месяц
+ * пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
  *
  * @return array
  */
@@ -298,7 +298,7 @@ function GetMonthTotalAccts()
 	}
 
 
-//Трафик Пользователей за период
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 function GetPeriodTotalAccts($fdate,$tdate)
 	{
 	global $GV;
@@ -311,7 +311,7 @@ function GetPeriodTotalAccts($fdate,$tdate)
 	return $res;
 	}
 
-//Трафик Пользователей за месяц
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 function GetMonthUsersAccts($order=">traffic",$draw=false,$gid="all")
 	{
 	global $GV;
@@ -364,7 +364,7 @@ function GetMonthUsersAccts($order=">traffic",$draw=false,$gid="all")
 	    }
 	    $res_others["traffic"]=0;
 	    $res_others["time"]=0;
-	    $res_others["user"]="другие";
+	    $res_others["user"]="пїЅпїЅпїЅпїЅпїЅпїЅ";
  	  }
         $res=NULL;
         $k=0;
@@ -414,7 +414,7 @@ function GetMonthUsersAccts($order=">traffic",$draw=false,$gid="all")
 	}
 
 	
-//Трафик Пользователей за сегодня
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function GetTodayUsersAccts($order=">traffic",$draw=false,$gid="all")
 	{
 	global $GV;
@@ -464,7 +464,7 @@ function GetTodayUsersAccts($order=">traffic",$draw=false,$gid="all")
 	    }
 	    $res_others["traffic"]=0;
 	    $res_others["time"]=0;
-	    $res_others["user"]="другие";
+	    $res_others["user"]="пїЅпїЅпїЅпїЅпїЅпїЅ";
  	  }
         $res=NULL;
         $k=0;
@@ -514,7 +514,7 @@ function GetTodayUsersAccts($order=">traffic",$draw=false,$gid="all")
 	 return $res;
 	}
 
-//Трафик Пользователей за неделю
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 function GetWeekUsersAccts($order=">traffic",$draw=false,$gid="all")
 	{
 	global $GV;
@@ -562,7 +562,7 @@ function GetWeekUsersAccts($order=">traffic",$draw=false,$gid="all")
 	    }
 	    $res_others["traffic"]=0;
 	    $res_others["time"]=0;
-	    $res_others["user"]="другие";
+	    $res_others["user"]="пїЅпїЅпїЅпїЅпїЅпїЅ";
  	  }
 
 	for($i=0;$i<count($users);++$i)
@@ -609,7 +609,7 @@ function GetWeekUsersAccts($order=">traffic",$draw=false,$gid="all")
 	 return $res;
 	}
 
-//Сессии за период времени
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function GetSessions($fdate,$tdate)
 	{
 	global $GV;
@@ -627,7 +627,7 @@ function GetSessions($fdate,$tdate)
 	 return $res;
 	}
 
-//Сессии за период времени с группировкой по дням
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ
 function GetSessionsByDay($fdate,$tdate)
 	{
 	global $GV;
@@ -646,7 +646,7 @@ function GetSessionsByDay($fdate,$tdate)
 	}
 
 
-//Сессии всеъ Пользователей за период времени
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function GetUsersSessions($fdate,$tdate)
 	{
 	global $GV;
@@ -686,7 +686,7 @@ function GetUsersSessions($fdate,$tdate)
 
 
 
-//Сессии Пользователя за период времени
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function GetUserSessions($user,$fdate,$tdate)//
 	{
 	global $GV;
@@ -704,8 +704,8 @@ function GetUserSessions($user,$fdate,$tdate)//
 	 return $res;
 	}
 
-/////////новое
-//Исправления админом за период времени
+/////////пїЅпїЅпїЅпїЅпїЅ
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 /*function GetUserSessions($user,$fdate,$tdate)//GetAdminEvents select * from events  where `event` like '%goga%';
 	{
 	global $GV;
@@ -725,11 +725,11 @@ function GetUserSessions($user,$fdate,$tdate)//
 	 return $res;
 	}*/
 
-////////конец нового
+////////пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 
 
 
-//Взять суммарный траффик и время тарифа за определённый период
+//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 function GetTarifAccts($gid,$fdate,$tdate,$draw=0)
 	{
 	global $GV;
@@ -759,7 +759,7 @@ function GetTarifAccts($gid,$fdate,$tdate,$draw=0)
 	}
 
 
-//Взять суммарный трафик и время тарифов за определённый период
+//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 function GetTarifsAccts($fdate,$tdate,$draw=0)
 	{
 	global $GV;
@@ -822,7 +822,7 @@ function GetTarifsAccts($fdate,$tdate,$draw=0)
            $res[$k]["traffic"]=$res_others["traffic"];
            $res[$k]["time"]=$res_others["time"];
 	   $res[$k]["gid"]=0;
-           $res[$k]["packet"]="Другие";
+           $res[$k]["packet"]="пїЅпїЅпїЅпїЅпїЅпїЅ";
            $res[$k]["prim"]="";
            }
          usort($res,"accts_compare_traffic_desc");
@@ -833,7 +833,7 @@ function GetTarifsAccts($fdate,$tdate,$draw=0)
 
 
 
-//Есть ли такой пользователь
+//пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function IsTarifExists($packet)
 	{
 	 $temp_query="select count(packet) from ".$GV["groups_tbl"]." where packet='".$packet."';";
@@ -845,7 +845,7 @@ function IsTarifExists($packet)
          return ($cnt==1);
 	}
 
-//Получить ID  пользователя
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ID  пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function GetUidByLogin($login)
 	{
 	 global $GV;
@@ -858,7 +858,7 @@ function GetUidByLogin($login)
          return $row["uid"];
 	}
 
-//Получить Login пользователя by ID
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Login пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ by ID
 function GetLoginByUid($uid)
 	{
 	global $GV;
@@ -873,19 +873,19 @@ function GetLoginByUid($uid)
 
 
 
-//удаление пользователя
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function DeleteUser($uid)
 	{
 		
-        //журналирование событий
+        //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         global $CURRENT_USER;
 	$data["uid"]=$CURRENT_USER["id"];
-        $data["event"]="Попытка удаления пользователя: ".$this->GetLoginByUid($uid);
+        $data["event"]="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: ".$this->GetLoginByUid($uid);
         $data["date"]=norm_date_yymmddhhmmss(time());
         $this->AddEvent($data);
 		
-	 //проверка
-	if(!$this->IsUserExists($this->GetLoginByUid($uid))) return "Ошибка, Такого пользователя нет!";
+	 //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	if(!$this->IsUserExists($this->GetLoginByUid($uid))) return "пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ!";
 	global $GV,$CURRENT_USER;
 	$query="Delete from `".$GV["users_tbl"]."` where uid='$uid';";
 	$result=mysql_query($query,$this->link)or die("Invalid query(DeleteUser): " . mysql_error());
@@ -897,7 +897,7 @@ function DeleteUser($uid)
 	}
 
 
-//список пользователей
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function FindUsers($searchstr,$see,$gid="all")
 	{
 	global $GV;
@@ -933,7 +933,7 @@ function FindUsers($searchstr,$see,$gid="all")
       return $res;
         }
 
-//список пользователей
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function GetUsersList($sort="date")
 	{
 	global $GV;
@@ -950,18 +950,18 @@ function GetUsersList($sort="date")
                 return NULL;
 
        $res=NULL;
-    // До тех пор, пока в результате содержатся ряды, помещаем их в
-    // ассоциативный массив.
-    // Заметка: если запрос возвращает только один ряд -- нет нужды в цикле.
-    // Заметка: если вы добавите extract($row); в начало цикла, вы сделаете
-    //          доступными переменные $userid, $fullname, $userstatus.
+    // пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ -- пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ.
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ extract($row); пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    //          пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ $userid, $fullname, $userstatus.
     while ($row = mysql_fetch_assoc($result))
         {$res[]=$row["uid"];}
 
       return $res;
         }
 
-//информация о всех пользователях
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function GetUsers()
 	{
 	global $GV;
@@ -972,11 +972,11 @@ function GetUsers()
           return false;
 
        $tmp=NULL;
-    // До тех пор, пока в результате содержатся ряды, помещаем их в
-    // ассоциативный массив.
-    // Заметка: если запрос возвращает только один ряд -- нет нужды в цикле.
-    // Заметка: если вы добавите extract($row); в начало цикла, вы сделаете
-    //          доступными переменные $userid, $fullname, $userstatus.
+    // пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ -- пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ.
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ extract($row); пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    //          пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ $userid, $fullname, $userstatus.
     $k=0;
     while ($row = mysql_fetch_assoc($result))
         {
@@ -1013,7 +1013,7 @@ function GetUsers()
 
 
 
-//информация о 1
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ 1
 function GetUserData($uid)
 {     global $GV;
 	$query="SELECT * from `".$GV["users_tbl"]."`where uid='".$uid."';";
@@ -1058,7 +1058,7 @@ function GetUserData($uid)
 
 
 
-//обновление пользователя
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function UpdateUser($uid,$data)
 	{
 	global $GV;
@@ -1086,7 +1086,7 @@ function UpdateUser($uid,$data)
 
         global $CURRENT_USER;
 	$data["uid"]=$CURRENT_USER["id"];
-        $data["event"]="Обновление пользователя: ".$this->GetLoginByUid($uid);
+        $data["event"]="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: ".$this->GetLoginByUid($uid);
         $data["date"]=norm_date_yymmddhhmmss(time());
         $this->AddEvent($data);
         radius_restart();
@@ -1095,7 +1095,7 @@ function UpdateUser($uid,$data)
 
 
 
-//список Тарифов
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function GetTarifs()
 	{
 		global $GV;
@@ -1143,7 +1143,7 @@ function GetTarifs()
 
 
 
-//список групп
+//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 function GetTarifsList()
 	{
 	global $GV;
@@ -1163,7 +1163,7 @@ function GetTarifsList()
 	}
 
 
-//информация о запрещенных IP
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ IP
 function GetBlackList()
 	{
 	global $GV;
@@ -1174,11 +1174,11 @@ function GetBlackList()
                   return NULL;
 
        $res=array();
-       // До тех пор, пока в результате содержатся ряды, помещаем их в
-       // ассоциативный массив.
-       // Заметка: если запрос возвращает только один ряд -- нет нужды в цикле.
-       // Заметка: если вы добавите extract($row); в начало цикла, вы сделаете
-       //          доступными переменные $userid, $fullname, $userstatus.
+       // пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ
+       // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+       // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ -- пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ.
+       // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ extract($row); пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+       //          пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ $userid, $fullname, $userstatus.
        $k=0;
        while ($row = mysql_fetch_assoc($result))
              { $res[$k]["user"]=$row["user"];
@@ -1189,7 +1189,7 @@ function GetBlackList()
 	}
 
 
-//информация об 1 группе
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 1 пїЅпїЅпїЅпїЅпїЅпїЅ
 function GetTarifData($gid)
 	{
 	global $GV;
@@ -1222,7 +1222,7 @@ function GetTarifData($gid)
          return $res;
 }
 
-//Изменение информации конкретной группы
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 function UpdateTarif($gid,$data)
 	{		
 		
@@ -1251,7 +1251,7 @@ function UpdateTarif($gid,$data)
 
 	global $CURRENT_USER;
 	$data["uid"]=$CURRENT_USER["id"];
-        $data["event"]="Обновление тарифа: ".$data["packet"];
+        $data["event"]="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ: ".$data["packet"];
         $data["date"]=norm_date_yymmddhhmmss(time());
         $this->AddEvent($data);
        
@@ -1261,12 +1261,12 @@ function UpdateTarif($gid,$data)
 
 
 
-//Добавить тариф
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 function AddTarif($data)
 	{
 	global $GV;
 
-	 //if($this->IsTarifExists($data["packet"]))return "Ошибка, данный тариф уже занят!";
+	 //if($this->IsTarifExists($data["packet"]))return "пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!";
 
 	$query="Insert into `".$GV["groups_tbl"].
         "`(`packet`,`direction`,`activation_time`,
@@ -1285,7 +1285,7 @@ function AddTarif($data)
 
 	global $CURRENT_USER;
 	$data["uid"]=$CURRENT_USER["id"];
-        $data["event"]="Добавление тарифа: ".$data["packet"];
+        $data["event"]="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ: ".$data["packet"];
         $data["date"]=norm_date_yymmddhhmmss(time());
         $this->AddEvent($data);
 	radius_restart();
@@ -1294,20 +1294,20 @@ function AddTarif($data)
 
 
 	/*
-	gid - ДЗПУ (скорее всего time() )
+	gid - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ time() )
 	packet
-	prefix - ДЗПУ
-	deposit - ДЗПУ
-	credit - ДЗПУ
-	tos - ДЗПУ (трафик)
-	do_with_tos - ДЗПУ (не снимать с депозита)
-	direction - ДЗПУ (Входящий)
-	fixed - ДЗПУ (NULL)
-	fixed_cost - ДЗПУ (NULL)
-	activated - ДЗПУ (активирован)
+	prefix - пїЅпїЅпїЅпїЅ
+	deposit - пїЅпїЅпїЅпїЅ
+	credit - пїЅпїЅпїЅпїЅ
+	tos - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ)
+	do_with_tos - пїЅпїЅпїЅпїЅ (пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+	direction - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+	fixed - пїЅпїЅпїЅпїЅ (NULL)
+	fixed_cost - пїЅпїЅпїЅпїЅ (NULL)
+	activated - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
 	activation_time
 	blocked
-	total_time_limit - ДЗПУ (?)
+	total_time_limit - пїЅпїЅпїЅпїЅ (?)
 	month_time_limit
 	week_time_limit
 	day_time_limit
@@ -1321,18 +1321,18 @@ function AddTarif($data)
 	day_money_limit
 	login_time
 	huntgroup_name
-	simultaneous_use - ДЗПУ (нибс)
+	simultaneous_use - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ)
 	port_limit
 	session_timeout
-	idle_timeout - ДЗПУ (нибс)
-	allowed_prefixes - ДЗПУ (нибс)
-	framed_ip - ДЗПУ (нибс)
-	framed_mask - ДЗПУ (нибс)
-	no_pass - ДЗПУ (нельзя)
-	no_acct - ДЗПУ (надо)
-	allow_callback - ДЗПУ (нибс)
-	other_params - ДЗПУ
-	create_system_user - ДЗПУ
+	idle_timeout - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ)
+	allowed_prefixes - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ)
+	framed_ip - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ)
+	framed_mask - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ)
+	no_pass - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ)
+	no_acct - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ)
+	allow_callback - пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ)
+	other_params - пїЅпїЅпїЅпїЅ
+	create_system_user - пїЅпїЅпїЅпїЅ
 	+
 	description
 	level
@@ -1341,14 +1341,14 @@ function AddTarif($data)
 
 	}
 
-//Удалить тариф
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 function DeleteTarif($gid)
 	{
 	global $GV;
         global $CURRENT_USER;
 		$data["uid"]=$CURRENT_USER["id"];
 		$packet = $this->GetTarifData($gid);
-        $data["event"]="Удаление тарифа: ".$packet['packet'];
+        $data["event"]="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ: ".$packet['packet'];
         $data["date"]=norm_date_yymmddhhmmss(time());
         $this->AddEvent($data);
 	
@@ -1359,7 +1359,7 @@ function DeleteTarif($gid)
 
 
 
-//информация о online пользователях
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ online пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function GetOnlineUsersList()
 	{
 	global $GV;
@@ -1370,11 +1370,11 @@ function GetOnlineUsersList()
           return NULL;
 
        $res=array();
-    // До тех пор, пока в результате содержатся ряды, помещаем их в
-    // ассоциативный массив.
-    // Заметка: если запрос возвращает только один ряд -- нет нужды в цикле.
-    // Заметка: если вы добавите extract($row); в начало цикла, вы сделаете
-    //          доступными переменные $userid, $fullname, $userstatus.
+    // пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ -- пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ.
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ extract($row); пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    //          пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ $userid, $fullname, $userstatus.
     $k=0;
     while ($row = mysql_fetch_assoc($result))
         {
@@ -1385,7 +1385,7 @@ function GetOnlineUsersList()
       }
 
 
-//информация о online пользователях
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ online пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function GetOnlineUsersData($sort="start_time")
 	{
 	global $GV;
@@ -1403,11 +1403,11 @@ function GetOnlineUsersData($sort="start_time")
           return NULL;
 
        $res=NULL;
-    // До тех пор, пока в результате содержатся ряды, помещаем их в
-    // ассоциативный массив.
-    // Заметка: если запрос возвращает только один ряд -- нет нужды в цикле.
-    // Заметка: если вы добавите extract($row); в начало цикла, вы сделаете
-    //          доступными переменные $userid, $fullname, $userstatus.
+    // пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ -- пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ.
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ extract($row); пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    //          пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ $userid, $fullname, $userstatus.
     $k=0;
     while ($row = mysql_fetch_assoc($result))
         {
@@ -1443,7 +1443,7 @@ function GetOnlineUsersData($sort="start_time")
 
 
 
-//История пользователя
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function GetUserHistory($login)
 	{
 	global $GV;
@@ -1478,12 +1478,12 @@ global $GV,$CURRENT_USER;
   $result=mysql_query($query,$this->link)or die("Invalid query(".$query."): " . mysql_error());
 /*  global $CURRENT_USER;
   $data["uid"]=$CURRENT_USER["id"];
-  $data["event"]="Убийство пользователя: ".$user;
+  $data["event"]="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: ".$user;
   $data["date"]=norm_date_yymmddhhmmss(time());
   $this->AddEvent($data);*/
   }
 
-//Удаление не активных пользователей
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function KillInactiveUsers()
 	{
         global $GV;
@@ -1493,8 +1493,8 @@ function KillInactiveUsers()
         }
 
 
-//всё связанное с событиями
-//добавление события
+//пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function AddEvent($data)
 	{
 	global $GV,$CURRENT_USER;
@@ -1502,17 +1502,17 @@ function AddEvent($data)
         $result=mysql_query($query,$this->link)or die("Invalid query(Add Event): " . mysql_error());
 	}
 
-//протоколирование убийства пользователя
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function AddEventKillUser($user)
 {
   global $GV,$CURRENT_USER;
   $data["uid"]=$CURRENT_USER["id"];
-  $data["event"]="Убийство пользователя: ".$user;
+  $data["event"]="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ: ".$user;
   $data["date"]=norm_date_yymmddhhmmss(time());
   $this->AddEvent($data);
 }
 
-//блокировка пользователя
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function BlockUser($uid)
 {
 	global $GV,$CURRENT_USER;
@@ -1520,7 +1520,7 @@ function BlockUser($uid)
         $result=mysql_query($query,$this->link)or die("Invalid query(Add Event): " . mysql_error());
 }
 
-//блокировка пользователя
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function ActivateUser($uid)
 {
 	global $GV,$CURRENT_USER;
@@ -1792,16 +1792,16 @@ function GetDeniedLog($uid)
 }
 
 /////////////////////////////////////////////////////////////
-//надо ещё добавить протоколирование!!!!!!!!!!!!!!!!!!!!!!!!
+//пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!!!!!!!!!!!!!!!!!!!!!!!!
 /*
-url_popularity - РЕЙТИНГ ВСЕХ КОГДА-ЛИБО ПОСЕЩЁННЫХ САЙТОВ
-url_denied - ЗАПРЕЩЁННЫЕ УРЛЫ ДЛЯ РАЗЛИЧНЫХ ТАРИФОВ
-url_denied_log - ЛОГ ЗАПРЕТОВ НА ПОСЕЩЕНИЯ (ПО СЕССИЯМ)
-url_log - ОПЕРАТИВНЫЕ ДАННЫЕ О ПОСЕЩЕНИЯХ (В ПОСЛЕДСТВИИ АГРЕГИРУЮТСЯ)
-protocols - ДОЛГОСРОЧНЫЕ ПРОТОКОЛЫ СЕССИЙ
+url_popularity - пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅЩЁпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+url_denied - пїЅпїЅпїЅпїЅпїЅЩЁпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+url_denied_log - пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+url_log - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
+protocols - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 */
 
-//добавление запрещенного URL
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ URL
 function AddDeniedURL($gid,$URL)
 	{
 	global $GV;
@@ -1809,7 +1809,7 @@ function AddDeniedURL($gid,$URL)
         $result=mysql_query($query,$this->link)or die("Invalid query(Add Denied URL): " . mysql_error());
 	}
 
-//Есть ли такой запрещенный URl
+//пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ URl
 function IsDeniedURLExists($duid)
 	{
 	 global $GV;
@@ -1821,7 +1821,7 @@ function IsDeniedURLExists($duid)
          return ($cnt==1);
 	}
 
-//удаление запрещенного URL
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ URL
 function DeleteDeniedURL($duid)
 {
 	global $GV,$CURRENT_USER;
@@ -1914,7 +1914,7 @@ function SaveTarifDeniedURLs($gid,$urls)
 		}
 	}
 
-//запрещенные URL
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ URL
 function GetTarifDeniedURLs($gid)
 {
 	if(!$gid)
@@ -2076,7 +2076,7 @@ function DeleteDiapason($id)
 	{
 		$sql = sprintf('update `url_categories` set title = \'%s\' where cid = %d',$cat['title'],$cid);
 		mysql_query($sql);
-		$this->AddEventString(addslashes("Обновление категории URL: $sql"));
+		$this->AddEventString(addslashes("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ URL: $sql"));
 	}
 	function GetUrlCategoryKeywords($cid)
 	{
@@ -2136,7 +2136,7 @@ function DeleteDiapason($id)
 	}
 	function AddUrlCategoryMatch($url, $cid)
 	{
-		$sql = sprintf("insert into `url_categories_match`(url,cid) values('%s',%d)",$url,$cid);
+		$sql = sprintf("replace into `url_categories_match`(url,cid) values('%s',%d)",$url,$cid);
 		mysql_query($sql);
 	}
 	function GetUrlCategoriesMatch($page = 0, $pop = 10, $orderby = 'default', $orderdir = 'asc', $include = array(), $exclude = array())
@@ -2180,7 +2180,24 @@ function DeleteDiapason($id)
 	}
 	function UrlCategoryAttachKeyword($cid, $keyword)
 	{
-		mysql_query(sprintf("insert into `url_categories_keywords`(cid,keyword) values(%d,'%s')",$cid,$keyword));
+		$sql = sprintf("insert into `url_categories_keywords`(cid,keyword) values(%d,'%s')",$cid,$keyword);
+		mysql_query($sql);
+	}
+	function DeleteUrlCategoryKeyword($keyword)
+	{
+		mysql_query(sprintf("delete from `url_categories_keywords` where keyword='%s'",$keyword));
+	}
+	function ReplaceUrlCategoryKeyword($keyword, $cid)
+	{
+		mysql_query(sprintf("update `url_categories_keywords` set cid=%d where keyword='%s'",$cid,$keyword));
+	}	
+	function AddUrlCategoryUnsenseword($keyword)
+	{
+		mysql_query(sprintf('insert into `url_categories_unsensewords`(keyword) value(\'%s\')',$keyword));
+	}				
+	function GetUrlCategory($url)
+	{
+		return mysql_result(mysql_query(sprintf("select cid from `url_categories_match` where url = '%s'",$url)),0);
 	}
 	
 	function GetRowsCount($table)

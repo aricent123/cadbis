@@ -2,7 +2,7 @@
 
 class Recognizer{
 	const MINIMAL_CWORD_COEF = 2;
-	const MINIMAL_STRLEN = 4;
+	const MINIMAL_KWLEN = 6;
 	const META_KWD_COEF = 20;
 	protected static $_proxies = null;
 	protected static $_current_proxy = 0;
@@ -90,10 +90,10 @@ class Recognizer{
 	protected static function killPunctuation($content)
 	{
 		$punctuation = array(
-						'&nbsp;','&lt;','&gt;','.',';',':','[',']','-',
-						'(',')','_','/','\\','^','{','}','>','<',
-						'%','$','#','@','?','—','\'',',','!','=',
-						'+','©','"','«','»','&',
+						'&nbsp;','&lt;','&gt;','&laquo;','&raquo;','&middot;',
+						'.',';',':','[',']','-','(',')','_','/',
+						'\\','^','{','}','>','<','%','$','#','@','?',
+						'—','\'',',','!','=','+','©','"','«','»','&',
 						'…',
 						);
 		return str_ireplace($punctuation,' ',$content);
@@ -261,7 +261,7 @@ class Recognizer{
 		$content_words = array();
 		foreach($cwords as $cword)
 		{
-			if(in_array($cword, $uswords) || strlen($cword)<self::MINIMAL_STRLEN)
+			if(in_array($cword, $uswords) || strlen($cword)<self::MINIMAL_KWLEN)
 				continue;
 			if(isset($content_words[$cword]))
 				$content_words[$cword]++;
