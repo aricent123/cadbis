@@ -39,21 +39,28 @@ function addCat(){
 			}
 		});	
 }
-function editCat(id,title,keywords){
+function editCat(id,title){
 	var manager = <?=$emanager->client_id() ?>;	
-	Dialog.confirm($('window-form-add').innerHTML,{
-		className:"alphacube", width:300, 
-		okLabel: "Сохранить", 
-		cancelLabel: "Отмена", 
-		onOk: function(win){ 
-				manager.updateItem(
-						'{"cid":'+id+',"title":"'+$('txtCatTitle').value+'",'+
-						'"keywords":"'+$('txtCatKeywords').value+'"}');
-				win.hide();
-			}
-		});
-	$('txtCatTitle').value = title;
-	$('txtCatKeywords').value = keywords;
+	new Ajax.Request('<?=cadbisnewurl('admin_cats_list') ?>&renderkwdsfor='+id, {
+		method: 'get',
+		onSuccess: function(data) 
+		{			
+			Dialog.confirm($('window-form-add').innerHTML,{
+				className:"alphacube", width:300, 
+				okLabel: "Сохранить", 
+				cancelLabel: "Отмена", 
+				onOk: function(win){ 
+						manager.updateItem(
+								'{"cid":'+id+',"title":"'+$('txtCatTitle').value+'",'+
+								'"keywords":"'+$('txtCatKeywords').value+'"}');
+						win.hide();
+					}
+				});
+			$('txtCatTitle').value = title;
+			$('txtCatKeywords').value = data.responseText;			
+		}});	
+	
+
 }
 function deleteCat(id){
 	var manager = <?=$emanager->client_id() ?>;

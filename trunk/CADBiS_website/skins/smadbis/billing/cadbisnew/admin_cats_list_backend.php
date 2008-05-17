@@ -10,6 +10,11 @@ CADBiSNew::instance()->link_href('skins/smadbis/css/grid.css');
 $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
 
 
+if(isset($_REQUEST['renderkwdsfor'])){
+	$cid = $_REQUEST['renderkwdsfor'];
+	die(implode(", ",$BILL->GetUrlCategoryKeywords($cid)));
+}
+
 $ajaxbuf_cats = new ajax_buffer("update_buffer_cats");
 $emanager = new ajax_entities_manager('entities_manager', $ajaxbuf_cats);
 
@@ -34,8 +39,7 @@ class cats_formatter extends grid_formatter {
 			case 'actions':
 				return '<a href="javascript:deleteCat('.$data['cid'].');">Удалить</a>,
 						<a href="javascript:editCat('.$data['cid'].',\''.
-						$data['title'].'\',\''.
-						$data['keywords'].'\');">Изменить</a>';
+						$data['title'].'\');">Изменить</a>';
 			default:
 				return parent::format($data,$type);	
 		}

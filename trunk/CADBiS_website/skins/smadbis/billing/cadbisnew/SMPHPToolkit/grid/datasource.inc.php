@@ -22,6 +22,11 @@ class grid_data_source{
 		return $this->values;
 	}
 	
+	public function get_rows_count()
+	{
+		return count($this->values);
+	}	
+	
 	public function set_values($value)
 	{
 	  $this->values = $value;

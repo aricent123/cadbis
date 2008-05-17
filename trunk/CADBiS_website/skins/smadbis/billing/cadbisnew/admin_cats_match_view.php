@@ -83,14 +83,15 @@ function addURL(manager){
 }
 function recognizeCat(manager,url){
 	Dialog.alert($('window-form-recognize').innerHTML,{
-		className:"alphacube", width:300, height: 100,
+		className:"alphacube", width:300, height: 120,
 		okLabel: "ОК"
 		});
 	$('imgLoad').setStyle({display:''});
+	$('divRecognizeManual').innerHTML='<br/><a href="<?=cadbisnewurl('admin_cats_recognize') ?>&url='+url+'&manualcheck=true">Опознать вручную</a>';
 	new Ajax.Request('<?=cadbisnewurl('admin_cats_recognize') ?>&url='+url+'&urlcheck=true', {
 		method: 'get',
 		onSuccess: function(data) 
-		{
+		{			
 			var res='';
 			if(data.responseText!='')
 			{
@@ -100,7 +101,6 @@ function recognizeCat(manager,url){
 			else
 			{
 				res = 'Нет в базе';
-				$('divRecognizeManual').innerHTML='<a href="<?=cadbisnewurl('admin_cats_recognize') ?>&url='+url+'&manualcheck=true">Опознать вручную</a>';
 			}
 			$('divRecognizeCat').innerHTML = res;
 			$('imgLoad').setStyle({display:'none'});
