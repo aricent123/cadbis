@@ -37,9 +37,14 @@ class ajax_grid extends grid{
 	protected $sortdir;
 	/**
 	 * Indicates that grid uses external ajax buffer
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $_isExternalBuffer = false;
+	/**
+	 * Render the pager at the top of the grid?
+	 * @var bool
+	 */
+	protected $_renderPagerTop = false;
 	/**
 	 * Grid header template
 	 * @var string
@@ -51,10 +56,10 @@ class ajax_grid extends grid{
 										else
 											$link = "javascript:".$buffer.".set_var(\'".$sorting_name."\',\'".($sortname)."\');".$buffer.".update();";
 										echo spchr::tab2."<a href=\"$link\">".$title."</a>".spchr::endl;
-										if($current_direction == sorting::SORT_DIR_ASC)
-											echo "<img src=\"".$this->img_sort_asc."\"/>";
-										else
+										if($direction == sorting::SORT_DIR_ASC)
 											echo "<img src=\"".$this->img_sort_desc."\"/>";
+										else
+											echo "<img src=\"".$this->img_sort_asc."\"/>";
 									}
 									else
 										echo spchr::tab2.$title.spchr::endl;';
@@ -152,6 +157,15 @@ class ajax_grid extends grid{
 	}
 	//--------------------------------------------------
 	/**
+	 * If true then pager will be rendered also at the top of the grid
+	 * @param bool $set
+	 */
+	public function render_pager_top($set)
+	{
+		$this->_renderPagerTop = $set;
+	}
+	//--------------------------------------------------
+	/**
 	 * Sets the show progress variable (true/false) for internal ajax buffer
 	 * If set to true, the window showing ajax progress will be shown
 	 * on each ajax request
@@ -171,6 +185,9 @@ class ajax_grid extends grid{
 		$sortdir_name = $this->sortdir->client_id();
 		if(!$this->_isExternalBuffer)
 			$this->buffer->start();
+		if(!is_null($this->pager) && $this->_renderPagerTop)
+			echo $this->pager->render();
+			
 		echo parent::render(
 						array(
 							'buffer'=>$this->buffer->client_id(),
