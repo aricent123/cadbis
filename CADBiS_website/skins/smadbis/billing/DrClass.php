@@ -2369,7 +2369,8 @@ function DeleteDiapason($id)
 	 */
 	public function AddUrlCategoryUnsenseword($keyword)
 	{
-		mysql_query(sprintf('insert into `url_categories_unsensewords`(keyword) value(\'%s\')',$keyword));
+		$sql = sprintf('insert into `url_categories_unsensewords`(keyword) value(\'%s\')',$keyword);
+		mysql_query($sql);
 	}
 	// ----------------------------------------------------
 	/**

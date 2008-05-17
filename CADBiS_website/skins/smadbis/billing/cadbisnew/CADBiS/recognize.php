@@ -18,6 +18,7 @@ class Recognizer{
 		curl_setopt($ch,CURLOPT_POSTFIELDS,$params);
 		curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
 		$result=curl_exec($ch);
+		self::$_contenttype = curl_getinfo($ch,CURLINFO_CONTENT_TYPE);
 		curl_close($ch);
 		return $result;
 	}
