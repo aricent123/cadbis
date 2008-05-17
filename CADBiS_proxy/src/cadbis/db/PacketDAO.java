@@ -30,6 +30,6 @@ public class PacketDAO extends AbstractDAO<Packet> {
 	
 	public Long getDayTraffic(Integer gid)
 	{
-		return ((BigDecimal)getSingleValueByQuery(String.format("select sum(a.in_bytes) as traffic from `actions` a  where UNIX_TIMESTAMP(a.start_time) > '%s 00:00:00' and UNIX_TIMESTAMP(a.end_time) < '%s 23:59:59' and gid=%d",DateUtils.getDateForSql(),DateUtils.getDateForSql(),gid),"traffic")).longValue();
+		return ((BigDecimal)getSingleValueByQuery(String.format("select sum(a.in_bytes) as traffic from `actions` a  where UNIX_TIMESTAMP(a.start_time) > '%s 00:00:00' and UNIX_TIMESTAMP(a.stop_time) < '%s 23:59:59' and gid=%d",DateUtils.getDateForSql(),DateUtils.getDateForSql(),gid),"traffic")).longValue();
 	}	
 }
