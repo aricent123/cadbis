@@ -39,13 +39,16 @@ else
 			{
 				case 'delete':
 					$BILL->DeleteUrlCategoryKeyword($word);
+					$BILL->ResolveUrlCategoryConflict($word);
 					break;
 				case 'replace':
 					$BILL->ReplaceUrlCategoryKeyword($word, $setcid);
+					$BILL->ResolveUrlCategoryConflict($word);
 					break;
 				case 'unsense':
 					$BILL->DeleteUrlCategoryKeyword($word);
 					$BILL->AddUrlCategoryUnsenseword($word);
+					$BILL->ResolveUrlCategoryConflict($word);
 					break;
 			}
 		}
@@ -67,7 +70,10 @@ else
 			if($c_cid>0)
 			{
 				if($c_cid != $setcid)
+				{
 					$conflict_cats[$c_cid][$cword]= $wcount;
+					$BILL->AddUrlCategoryConflict($cword,$setcid,$c_cid,$url);
+				}
 			}
 			else
 			{
