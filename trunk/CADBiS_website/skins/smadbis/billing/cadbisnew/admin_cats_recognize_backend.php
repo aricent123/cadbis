@@ -56,7 +56,7 @@ else
 	// Recognize content	
 	if(isset($_POST['btnSubmit']) || isset($_GET['manualcheck'])){
 		$uswords = $BILL->GetUrlCategoriesUnsenseWords();
-		$result = Recognizer::recognizeByMyself($url, $cats, $uswords, false);
+		$result = Recognizer::recognizeByMyself($url, $cats, $uswords, true);
 	}
 	// Other (finding conflicts etc)
 	if(isset($result) && isset($set))

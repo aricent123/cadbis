@@ -1315,45 +1315,19 @@ if(!class_exists("CArticles"))
             if(isset($editor) && $editor=="html")
              {
             ?>
-            <input type="hidden" name="text">
-            </TD></TR>
-            </form>                        
-            <TR><TD height="1" bgcolor="#dddddd"></TD></TR>
-            <TR><TD height="25" bgcolor="#dddddd"><div id="tools"></div></TD></TR>
-            <TR><TD height="25" bgcolor="#dddddd">
-            Шрифт
-            <div id="fonts">        
-            <select id="fface" onchange="SetFace()">
-            <option value="Arial">Arial
-            <option value="Courier New">Courier New
-            <option value="Tahoma">Tahoma
-            <option value="Times New Roman">Times New Roman
-            <option value="Verdana" selected>Verdana
-            </select>
-            Размер
-            <select id="fsize" style="width:40" onchange="SetSize()">
-            <option value="1">1
-            <option value="2" selected>2
-            <option value="3">3
-            <option value="4">4
-            <option value="5">5
-            <option value="6">6
-            <option value="7">7
-            </select>
-            </div>
-            <IFRAME id="EditFrame" width="100%" height=400px frameborder="0" style="border-width:1px; border-color:#000000; border-style: solid;" contenteditable="true"></IFRAME>         
-            <script>
-               var Content; 
-                Content="<? OUT(str_replace("\r\n","",addslashes($text))) ?>";
-            </script>
-            <SCRIPT src="js/editor.js"></SCRIPT>          
+			<?php 
+            $oFCKeditor = new FCKeditor('text') ;
+			$oFCKeditor->BasePath	= "js/fckeditor/" ;
+			$oFCKeditor->Value		= $text;
+			$oFCKeditor->Height = 500;
+			$oFCKeditor->Create() ;		
+            ?>          
             </td></tr> 
             <tr><td align=left>
             Редактор: | <b>HTML</b> | <a href="<? OUT("?p=$p&act=$act&a=$a&type=$type&topic=$topic&id=$id") ?>">Обычный</a>
             <br>(<small><b>Внимание!</b> При нажатии на эти ссылки теряются все несохранённые данные!</small>) 
             </td></tr>           
-            </table>
-            <div align=center><input type="button" class="button" value="Сохранить" onclick="Save()"></div>
+            </table>            
             <?                          
              }
              else
@@ -1368,11 +1342,11 @@ if(!class_exists("CArticles"))
             <input type=checkbox name=nb unchecked>Переводить переход на новую строку в &lt;br&gt;? <br>  
             <input type=checkbox name=kt unchecked>Отключить HTML-теги ?                    
             </td></tr></table>
-            <div align=center><input type=submit value="Сохранить" class=button></div>              
             <?
 
              }
             ?>   
+            <div align=center><input type=submit value="Сохранить" class=button></div>
             <br><br><div align=center><a href="<? OUT("?p=$p&act=$act") ?>">Назад</a></div>                   
             <?
           }
