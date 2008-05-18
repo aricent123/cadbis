@@ -716,7 +716,7 @@ class CUsers
     ?>
     <div align=center><b>Личное меню:</b><br>
      <a href="?p=users&act=profile">Профиль</a><br>
-     <a href="?p=users&act=private">Приват</a><br>
+     <a href="?p=smadbis">Статистика</a><br>
      <a href="?act=logout">Выход</a>
     </div>
 

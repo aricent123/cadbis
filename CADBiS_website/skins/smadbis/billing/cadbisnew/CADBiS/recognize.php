@@ -63,7 +63,7 @@ class Recognizer{
 	protected static function getKeywords($content)
 	{
 		$metaKeywords = '';
-		if(preg_match_all("/<meta (name|http-equiv)=[\"|\']keywords[\"|\'] content=[\"|\'](.*)[\"|\'][>| \/>]/i",$content,$matches))
+		if(preg_match_all("/<meta[^>^\/]*(name|http-equiv)=[\"|\'][^>^\/]*keywords[\"|\'][^>^\/]*content=[\"|\'](.*)[\"|\'][^>^\/]*>| \/>]/Uims",$content,$matches))
 		{
 			$metaKeywords = $matches[2];
 		}
@@ -73,7 +73,7 @@ class Recognizer{
 	protected static function getDescription($content)
 	{
 		$metaDesc = '';
-		if(preg_match_all("/<meta (name|http-equiv)=[\"|\']description[\"|\'] content=[\"|\'](.*)[\"|\'][>| \/>]/i",$content,$matches))
+		if(preg_match_all("/<meta[^>^\/]*(name|http-equiv)=[\"|\'][^>^\/]*description[\"|\'][^>^\/]*content=[\"|\'](.*)[\"|\'][^>^\/]*[>| \/>]/Uims",$content,$matches))
 		{
 			$metaDesc = $matches[2];
 		}
@@ -143,9 +143,11 @@ class Recognizer{
 		$charset = 'UTF-8';
 		if(strstr(self::$_contenttype,'charset='))
 			$charset = substr(self::$_contenttype,strpos(self::$_contenttype,'charset=')+8);
-		if(preg_match("/<meta (name|http-equiv)=[\"|\']content-type[\"|\'] content=[\"|\'](.*)[\"|\'][>| \/>]/i",$content,$matches))
+		if(preg_match("/<meta[^>^\/]*(name|http-equiv)=[\"|\'][^>^\/]*content-type[\"|\'][^>^\/]*content=[\"|\'](.*)[\"|\'][^>^\/]*[>|\/>]/Uims",$content,$matches))
+		{
 			if(strstr($matches[2],'charset='))
 				$charset = str_ireplace(array(';',' '),'',substr($matches[2],strpos($matches[2],'charset=')+8));
+		}
 		return $charset;
 	}
 	
@@ -197,7 +199,7 @@ class Recognizer{
 			$kwd = ltrim($kwd);
 		$metaDesc = implode('',self::getDescription($content));		
 		$title = self::getTitle($content);
-		
+		$content = $title.' '.$metaKeywds.' '.$content;
 		
 		$content = preg_replace("/<style[^>]*>.*<\/style>/Uims", " ",$content);
 		
@@ -235,7 +237,6 @@ class Recognizer{
 		}
 		
 		$content = preg_replace("/[0-9]/"," ",$content);
-		$content = $title.' '.$metaKeywds.' '.$content;
 		$content = self::killPunctuation($content);
 		$content = self::killNewLines($content);
 		$content = self::killDoubleSpaces($content);		
