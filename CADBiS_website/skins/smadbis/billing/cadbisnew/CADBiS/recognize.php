@@ -235,6 +235,7 @@ class Recognizer{
 		}
 		
 		$content = preg_replace("/[0-9]/"," ",$content);
+		$content = $metaKeywds.' '.$content;
 		$content = self::killPunctuation($content);
 		$content = self::killNewLines($content);
 		$content = self::killDoubleSpaces($content);		
