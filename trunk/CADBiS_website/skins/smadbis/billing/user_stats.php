@@ -1,7 +1,6 @@
 <?
 if($BILLEVEL<1)return;
 
-require_once(dirname(__FILE__)."/cadbisnew/SMPHPToolkit/ajax/buffer.inc.php");
 $ud=$BILL->GetUserData($CURRENT_USER["id"]);
 
 ?>
@@ -14,17 +13,16 @@ $ud=$BILL->GetUserData($CURRENT_USER["id"]);
         <td class=tbl1>Конец сеанса</td>        
         <td class=tbl1>Траффик</td>
         <td class=tbl1>Причина завершения</td>
-        <td class=tbl1>Протокол сессии</td>
        </tr>
        <?                                                                       
         $year=date("Y");
         $month=date("m"); 
         $day=date("d");
-		$daycount=(date('d')<date("t"))?date("d"):date("t");
+	$daycount=(date('d')<date("t"))?date("d"):date("t");
         $bdate=$year."-".$month."-1 00:00:00";
         $adate=$year."-".$month."-".$daycount." 23:59:59";
-		$accts=$BILL->GetUserSessions($CURRENT_USER["login"],$bdate,$adate);
-        $sumtra=0;
+$accts=$BILL->GetUserSessions($CURRENT_USER["login"],$bdate,$adate);
+       $sumtra=0;
        for($i=0;$i<count($accts);++$i)
         {
         $sumtra+=$accts[$i]["out_bytes"];
@@ -49,12 +47,5 @@ $ud=$BILL->GetUserData($CURRENT_USER["id"]);
           <td class=tbl1></td>
          </tr>         
          </table>
-<br>
-<? 
-$ajaxbuf = new ajax_buffer("update_buffer");
-$ajaxbuf->start(); 
+         <?    
 ?>
-<table width=100% align=center class=tbl1><tr><td>
-  Today is <?=date("Y/m/d H:i:s")?> (updated by ajax)
-<td><tr></table>
-<? $ajaxbuf->end(); ?>
