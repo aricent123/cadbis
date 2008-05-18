@@ -1,6 +1,7 @@
 package cadbis.utils;
 
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -33,6 +34,21 @@ public class StringUtils {
 		return cb.array();
 	}
 	
+	public static char[] getCharsInCp1251(byte[] bytes) {
+		Charset cs = Charset.forName ("Cp1251");
+		ByteBuffer bb = ByteBuffer.allocate(bytes.length);
+		bb.put (bytes);
+			bb.flip ();
+		CharBuffer cb = cs.decode (bb);
+		
+		return cb.array();
+	}	
+
+	public static String readAsUTF8(String str) throws UnsupportedEncodingException
+	{
+		return new String(str.getBytes(),"UTF-8");
+	}
+	
 	public static byte[] getBytes (char[] chars) {
 		Charset cs = Charset.forName ("UTF-8");
 		CharBuffer cb = CharBuffer.allocate (chars.length);
@@ -45,9 +61,9 @@ public class StringUtils {
 
 	public static String KillTags(String where)
 	{
-		where = where.replaceAll("(?s)<script[^>]*>.*<\\/script>", "");
-		where = where.replaceAll("(?s)<style[^>]*>.*<\\/style>", "");
-		where = where.replaceAll("(?s)<[^>]*>", "");
+		where = where.replaceAll("(?ims)<script[^>]*>.*<\\/script>", " ");
+		where = where.replaceAll("(?ims)<style[^>]*>.*<\\/style>", " ");
+		where = where.replaceAll("(?s)<[^>]*>", " ");
 		return where;
 	}
 }
