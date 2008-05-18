@@ -689,7 +689,7 @@ function GetUsersSessions($fdate,$tdate)
 function GetUserSessions($user,$fdate,$tdate)//
 	{
 	global $GV;
-        $res=NULL;
+        $res=array();
 	  $query="select * from `".$GV["actions_tbl"]."` where user='".$user."' and start_time>='".$fdate."' and stop_time<='".$tdate."'  order by `start_time` desc;";
 	  $result=mysql_query($query);
           $k=0;
