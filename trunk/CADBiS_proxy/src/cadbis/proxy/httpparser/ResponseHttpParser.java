@@ -34,11 +34,7 @@ public class ResponseHttpParser extends AbstractHttpParser {
 		String ctype = GetHeader("Content-Type");
 		Integer iofcharset = ctype.indexOf("charset=");
 		if(!ctype.isEmpty() && iofcharset>=0)
-		{
 			res = ctype.substring(iofcharset + 8);
-			if(res.toLowerCase().equals("windows-1251"))
-				res = "Cp1251";
-		}
 		return res;
 	}
 	

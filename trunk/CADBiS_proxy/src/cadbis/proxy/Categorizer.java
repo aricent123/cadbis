@@ -1,5 +1,7 @@
 package cadbis.proxy;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.CharacterCodingException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +14,7 @@ import cadbis.bl.UrlCategoryMatch;
 import cadbis.db.UrlCategoryDeniedDAO;
 import cadbis.db.ContentCategoryDAO;
 import cadbis.db.UrlCategoryMatchDAO;
+import cadbis.proxy.httpparser.ContentAnalyzer;
 
 public class Categorizer extends CADBiSDaemon{
 	protected HashMap<String, Integer> url_cat = null;
@@ -61,7 +64,20 @@ public class Categorizer extends CADBiSDaemon{
 	 * @param charset - Encoding of content (e.g. UTF-8, cp1251, etc)
 	 * @return recognizedCategory
 	 */
-	protected ContentCategory recognizeCategory(String content,List<ContentCategory> categories, List<String> unsenseWords, String charset){		
+	protected ContentCategory recognizeCategory(String content,List<ContentCategory> categories, List<String> unsenseWords, String charset){
+		
+		logger.info("Trying to convert from " + charset + " to UTF: ");
+		try{			
+			ContentAnalyzer.Analyze(content, charset);
+		}
+		catch(CharacterCodingException e)
+		{
+			logger.error("Error converting content to utf: " + e.getMessage());
+		}
+		catch(UnsupportedEncodingException e)
+		{
+			logger.error("Error converting content to utf: unsupported charset: " + e.getMessage());
+		}
 		ContentCategory res = new ContentCategory();
 		res.setCid(0);
 		res.setTitle("Other");
@@ -74,8 +90,8 @@ public class Categorizer extends CADBiSDaemon{
 		logger.info("Recognizing and adding a category for url='"+url+"' = " + cat.getTitle());
 		if(!url_cat.containsKey(url))
 		{
-			new ContentCategoryDAO().execSql(String.format("insert into url_categories_match(url,cid) values('%s',%d)",url,cat.getCid()));
-			url_cat.put(url, cat.getCid());
+			//new ContentCategoryDAO().execSql(String.format("insert into url_categories_match(url,cid) values('%s',%d)",url,cat.getCid()));
+			//url_cat.put(url, cat.getCid());
 		}
 		return cat.getCid();
 	}

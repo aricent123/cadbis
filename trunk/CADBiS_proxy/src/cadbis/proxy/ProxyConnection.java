@@ -152,7 +152,6 @@ class ProxyConnection extends CADBiSThread {
 				 logger.error("Recieving data client->proxy error: "+e.getMessage());
 			 }
 			 
-			 
 			 /*******************************
 			  * Parsing request
 			  *******************************/	
@@ -168,7 +167,7 @@ class ProxyConnection extends CADBiSThread {
 				RequestParser.setEncodingAcceptable(false);
 				buffer.set(0, RequestParser.GetFixedPacket(buffer.get(0)));
 				HttpHost = RequestParser.getHttpHost();
-				HttpPort = RequestParser.getHttpPort();		
+				HttpPort = RequestParser.getHttpPort();	
 			 }
 
 			 
@@ -292,7 +291,7 @@ class ProxyConnection extends CADBiSThread {
 					  */
 					 if(fullResponseBuffer.length() < max_resp_size)
 						 for(int i=0;i<buffer.size();++i)
-							 fullResponseBuffer.append(StringUtils.getChars(buffer.get(i)));
+							 fullResponseBuffer.append(StringUtils.getCharsInCp1251(buffer.get(i)));
 					 
 					 /**
 					  * we must do it only if the content 
@@ -314,7 +313,7 @@ class ProxyConnection extends CADBiSThread {
 					 if(act != null)
 					 {
 						boolean access = Categorizer.getInstance().checkAccessToCategory(act.getGid(), cid);
-						logger.info("Checking access of "+act.getUser()+" to cid="+cid+" = "+ access +"...");
+						logger.info("Checking access of "+act.getUser()+" to ("+HttpHost+")cid="+cid+" = "+ access +"...");
 						if(!access)
 						{
 							// indicating that we have finished the answer

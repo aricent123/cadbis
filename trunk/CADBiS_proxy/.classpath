@@ -8,5 +8,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-simple-1.5.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.12.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mysql-connector-java-5.1.6-bin.jar"/>
+	<classpathentry kind="lib" path="lib/htmlparser.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

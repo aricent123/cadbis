@@ -27,14 +27,6 @@ public class CategoryRecognizer extends CADBiSThread {
 		String body = fullResponse.toString();
 		logger.info("Content charset = '"+ResponseParser.GetCharset()+"'");
 		String charset = ResponseParser.GetCharset();
-		if(!charset.toUpperCase().equals("UTF-8"))
-		{
-			try {
-				body = new String(body.getBytes(ResponseParser.GetCharset()), "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				logger.error("Response contains unsupported encoding '"+charset+"':"+e.getMessage());
-			}
-		}
 			try
 			{					
 				Integer headerEnd = body.indexOf("\r\n\r\n");
