@@ -2,7 +2,6 @@ package cadbis.db;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import cadbis.bl.Packet;
 import cadbis.utils.DateUtils;
 
