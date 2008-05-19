@@ -4,12 +4,19 @@ package cadbis.utils;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.util.List;
 import java.util.regex.Pattern;
 
+import cadbis.proxy.exc.AnalyzeException;
+
 public class StringUtils {	
+	public static final String DEFAULT_CHARSET = "Cp1251"; 
 	// Returns a pattern where all punctuation characters are escaped.
-    static Pattern escaper = Pattern.compile("([^a-zA-z0-9])");
+    static Pattern escaper = Pattern.compile("([\\^\\(\\)\\]\\[\\.\\+\\*\\?\\/\\\\\\{\\}\\|\\_])");
     public static String escapeRE(String str) {
         return escaper.matcher(str).replaceAll("\\\\$1");
     }	
@@ -24,6 +31,18 @@ public class StringUtils {
 		return res;
 	  }
 	
+	public static String replaceAll(String[] needle, String haystack) throws AnalyzeException
+	{
+		for(String sym : needle )
+		{
+			try{
+			sym = escapeRE(sym);
+			haystack = haystack.replaceAll(sym, " ");
+			}catch(Exception e){ throw new AnalyzeException("error replacing '"+sym+"' : " + e.getMessage());}
+		}
+		return haystack;		
+	}
+	
 	public static char[] getChars (byte[] bytes) {
 		Charset cs = Charset.forName ("UTF-8");
 		ByteBuffer bb = ByteBuffer.allocate (bytes.length);
@@ -34,8 +53,8 @@ public class StringUtils {
 		return cb.array();
 	}
 	
-	public static char[] getCharsInCp1251(byte[] bytes) {
-		Charset cs = Charset.forName ("Cp1251");
+	public static char[] getCharsInDefaultCharset(byte[] bytes) {
+		Charset cs = Charset.forName (StringUtils.DEFAULT_CHARSET);
 		ByteBuffer bb = ByteBuffer.allocate(bytes.length);
 		bb.put (bytes);
 			bb.flip ();
@@ -49,6 +68,15 @@ public class StringUtils {
 		return new String(str.getBytes(),"UTF-8");
 	}
 	
+	
+	public static String ConvertCharset(String content, String charsetFrom, String charsetTo) throws CharacterCodingException, UnsupportedEncodingException
+	{ 
+			CharsetDecoder decoderFrom = Charset.forName(charsetFrom).newDecoder();
+		    ByteBuffer bbuf = ByteBuffer.wrap(content.getBytes(charsetFrom));
+		    CharBuffer cbuf = decoderFrom.decode(bbuf);	
+	        return cbuf.toString();
+	}	
+	
 	public static byte[] getBytes (char[] chars) {
 		Charset cs = Charset.forName ("UTF-8");
 		CharBuffer cb = CharBuffer.allocate (chars.length);
@@ -57,13 +85,14 @@ public class StringUtils {
 		ByteBuffer bb = cs.encode (cb);
 		
 		return bb.array();
-        }	
-
-	public static String KillTags(String where)
+        }
+	
+	public static String join(String delimiter, List<String> array)
 	{
-		where = where.replaceAll("(?ims)<script[^>]*>.*<\\/script>", " ");
-		where = where.replaceAll("(?ims)<style[^>]*>.*<\\/style>", " ");
-		where = where.replaceAll("(?s)<[^>]*>", " ");
-		return where;
+		String res = "";
+		for(int i=0;i<array.size();++i)
+			res += ((res.isEmpty())?"":delimiter) + array.get(i);
+		return res;
 	}
+
 }
