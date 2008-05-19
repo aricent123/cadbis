@@ -199,7 +199,7 @@ class Recognizer{
 			$kwd = ltrim($kwd);
 		$metaDesc = implode('',self::getDescription($content));		
 		$title = self::getTitle($content);
-		$content = $title.' '.$metaKeywds.' '.$content;
+		$content = $title.' '.implode(' ',$metaKeywds).' '.$content;
 		
 		$content = preg_replace("/<style[^>]*>.*<\/style>/Uims", " ",$content);
 		
