@@ -68,7 +68,8 @@ public class Categorizer extends CADBiSDaemon{
 		
 		logger.info("Trying to convert from " + charset + " to UTF: ");
 		try{			
-			ContentAnalyzer.Analyze(content, charset);
+			List<ContentCategory> cats = new ContentCategoryDAO().getCategoriesWithWords();
+			ContentAnalyzer.Analyze(content, cats, charset);
 		}
 		catch(CharacterCodingException e)
 		{

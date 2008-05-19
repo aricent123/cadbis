@@ -291,7 +291,7 @@ class ProxyConnection extends CADBiSThread {
 					  */
 					 if(fullResponseBuffer.length() < max_resp_size)
 						 for(int i=0;i<buffer.size();++i)
-							 fullResponseBuffer.append(StringUtils.getCharsInCp1251(buffer.get(i)));
+							 fullResponseBuffer.append(StringUtils.getCharsInDefaultCharset(buffer.get(i)));
 					 
 					 /**
 					  * we must do it only if the content 
