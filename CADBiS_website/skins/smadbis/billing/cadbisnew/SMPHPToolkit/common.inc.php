@@ -1,4 +1,7 @@
 <?php
+require_once(dirname(__FILE__)."/common/array.inc.php");
+require_once(dirname(__FILE__)."/common/closure.inc.php");
+
 class type{
 	const STRING = 0x0001;
 	const TEXT = 0x0002;
