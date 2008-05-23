@@ -7,14 +7,13 @@ import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import cadbis.proxy.exc.AnalyzeException;
 
 public class StringUtils {	
-	public static final String DEFAULT_CHARSET = "Cp1251"; 
+	public static final String DEFAULT_CHARSET = Charset.defaultCharset().name(); 
 	// Returns a pattern where all punctuation characters are escaped.
     static Pattern escaper = Pattern.compile("([\\^\\(\\)\\]\\[\\.\\+\\*\\?\\/\\\\\\{\\}\\|\\_])");
     public static String escapeRE(String str) {
@@ -63,11 +62,20 @@ public class StringUtils {
 		return cb.array();
 	}	
 
-	public static String readAsUTF8(String str) throws UnsupportedEncodingException
+	public static String readAsUTF8(String str,String encoding) throws UnsupportedEncodingException
 	{
-		return new String(str.getBytes(),"UTF-8");
+		return new String(str.getBytes(encoding),"UTF-8");
 	}
 	
+	public static String readAsUTF8(String str) throws UnsupportedEncodingException
+	{
+		return new String(str.getBytes(DEFAULT_CHARSET),"UTF-8");
+	}	
+	
+	public static String readInDefaultCharset(String str, String encoding) throws UnsupportedEncodingException
+	{
+		return new String(str.getBytes(encoding),DEFAULT_CHARSET);
+	}		
 	
 	public static String ConvertCharset(String content, String charsetFrom, String charsetTo) throws CharacterCodingException, UnsupportedEncodingException
 	{ 
