@@ -15,6 +15,7 @@ import cadbis.db.UrlCategoryDeniedDAO;
 import cadbis.db.ContentCategoryDAO;
 import cadbis.db.UrlCategoryMatchDAO;
 import cadbis.proxy.httpparser.ContentAnalyzer;
+import cadbis.utils.StringUtils;
 
 public class Categorizer extends CADBiSDaemon{
 	protected HashMap<String, Integer> url_cat = null;
@@ -39,6 +40,20 @@ public class Categorizer extends CADBiSDaemon{
 			
 			cats  = new ContentCategoryDAO().getCategoriesWithWords();
 			uswords = new ContentCategoryDAO().getUnsenseWords();
+			
+			for(ContentCategory cat : cats)
+			{
+				List<String> kwds = cat.getKeywords();
+				for(String kwd : kwds)
+				{
+					try{
+						kwd =  StringUtils.readAsUTF8(kwd, "ISO-8859-1");
+					}
+					catch(UnsupportedEncodingException e)
+					{logger.error("Unsupported encoding!" + e.getMessage());}
+					logger.info(cat.getTitle()+"/"+ kwd);
+				}
+			}
 			
 			catsAccessDenied = new HashSet<String>();
 			List<UrlCategoryDenied> catDenied = 

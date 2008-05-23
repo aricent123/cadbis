@@ -286,7 +286,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		try
 		{
 		   rs = getResultSet(query);
-		   if(rs!=null && rs.next ())
+		   while(rs!=null && rs.next ())
 			   res.add(rs.getString(key));
 		}
 		catch(SQLException e)

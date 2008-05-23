@@ -1,7 +1,6 @@
 package cadbis.proxy.subthreads;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.zip.DataFormatException;
 
 import cadbis.CADBiSThread;
