@@ -1,4 +1,13 @@
 <h2>Запрещённые категории:</h2>
+<script type="text/javascript">
+	function checkAll()
+	{
+		var els = document.getElementsByTagName('input');
+		for(var i=0;i<els.length;++i)
+			if(els[i].type=='checkbox')
+				els[i].checked=!els[i].checked;
+	}
+</script>
 <a href="<?=cadbisnewurl('admin_cats') ?>">Назад</a>
 	<form action="" method="post">
 		Выбрать тариф:
@@ -13,6 +22,7 @@
 	</form>
 <? if($packet != null){ ?>
 	<form action="" method="post">
+	<a href="javascript:checkAll()">Отметить все</a><br/>
 	<input type="hidden" name="hdnGid" value="<?=$packet['gid'] ?>"/>
 	<input type="submit" name="btnSave" value="Сохранить"/><br/>
 		<b><?=utils::cp2utf($packet['packet']) ?></b>:<br/>
@@ -25,6 +35,7 @@
 		<?} ?><br/><br/>
 
 	<br/>
+	<a href="javascript:checkAll()">Отметить все</a><br/>
 	<input type="submit" name="btnSave" value="Сохранить"/>
 	</form>
 <? } ?>
