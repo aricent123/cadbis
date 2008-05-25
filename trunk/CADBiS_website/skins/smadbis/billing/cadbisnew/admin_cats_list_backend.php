@@ -12,10 +12,11 @@ $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"])
 
 if(isset($_REQUEST['renderkwdsfor'])){
 	$cid = $_REQUEST['renderkwdsfor'];
-	die(implode(", ",$BILL->GetUrlCategoryKeywords($cid)));
+	die(implode(", ",$BILL->GetUrlCategoryKeywordsWithWeights($cid)));
 }
 
 $ajaxbuf_cats = new ajax_buffer("update_buffer_cats");
+$ajaxbuf_cats->show_progress(true);
 $emanager = new ajax_entities_manager('entities_manager', $ajaxbuf_cats);
 
 class cats_formatter extends grid_formatter {
@@ -39,7 +40,8 @@ class cats_formatter extends grid_formatter {
 			case 'actions':
 				return '<a href="javascript:deleteCat('.$data['cid'].');">Удалить</a>,
 						<a href="javascript:editCat('.$data['cid'].',\''.
-						$data['title'].'\');">Изменить</a>';
+						$data['title'].'\',\''.
+						$data['title_ru'].'\');">Изменить</a>';
 			default:
 				return parent::format($data,$type);	
 		}
@@ -50,11 +52,12 @@ class cats_formatter extends grid_formatter {
 $cats_ds = new grid_data_source(new grid_header_item_array(
 					new grid_header_item('cid','Id',type::STRING, true),
 					new grid_header_item('title','Категория',type::STRING, true),
+					new grid_header_item('title_ru','Название',type::STRING, true),
 					new grid_header_item('actions','Действия',null, false, new cats_formatter('actions',$emanager))
 				));
 
 $cats_grid = new ajax_grid('cats_grid',$cats_ds,$ajaxbuf_cats);
-$cats_grid_pager = new ajax_grid_pager('cats_grid_pager',$BILL->GetRowsCount('url_categories'),10);
+$cats_grid_pager = new ajax_grid_pager('cats_grid_pager',$BILL->GetRowsCount('url_categories'),20);
 $cats_grid->attach_pager($cats_grid_pager);
 
 /**
@@ -66,7 +69,7 @@ if($emanager->isAnyAction() && $ajaxbuf_cats->is_post_back())
 	{
 		case $emanager->action->ADD:
 			$item = json_decode($emanager->getItem());
-			$BILL->AddUrlCategory(array('title'=>$item->title));
+			$BILL->AddUrlCategory(array('title'=>$item->title,'title_ru'=>$item->title_ru));
 		break;
 		case $emanager->action->UPD:
 			$item = json_decode($emanager->getItem());
@@ -74,13 +77,13 @@ if($emanager->isAnyAction() && $ajaxbuf_cats->is_post_back())
 			for($i=0;$i<count($item->keywords);++$i)
 			{
 				$item->keywords[$i] = rtrim(ltrim($item->keywords[$i]));
-				if(strlen($item->keywords[$i])<2 || empty($item->keywords[$i])){
+				if(strlen($item->keywords[$i])<4 || empty($item->keywords[$i])){
 					array_splice($item->keywords,$i,1);
 					$i=0;
 				}
 			}
 			$BILL->UpdateUrlCategoryKeywords($item->cid,$item->keywords);
-			$BILL->UpdateUrlCategory($item->cid,array('title'=>$item->title));
+			$BILL->UpdateUrlCategory($item->cid,array('title'=>$item->title,'title_ru'=>$item->title_ru));
 			
 		break;		
 		case $emanager->action->DEL:
@@ -95,13 +98,14 @@ if($emanager->isAnyAction() && $ajaxbuf_cats->is_post_back())
 /**
  * Retrieve categories from the database
  */
-$cats = $BILL->GetUrlCategories($cats_grid_pager->get_curpage(),10,$cats_grid->get_current_sorting(), $cats_grid->get_sort_direction());
+$cats = $BILL->GetUrlCategories($cats_grid_pager->get_curpage(),$cats_grid_pager->get_pagesize(),$cats_grid->get_current_sorting(), $cats_grid->get_sort_direction());
 foreach($cats as $cat)
 {
 	$cat['keywords'] = implode(", ",$BILL->GetUrlCategoryKeywords($cat['cid']));
 	$cats_ds->add_row(array(
 			$cat['cid'],
 			$cat['title'],
+			$cat['title_ru'],
 			$cat,
 			));	
 }
