@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 
@@ -39,15 +38,15 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	
 	private String getString(ResultSet rs, String key) throws SQLException
 	{
-		String res = "";
-//		try {			
-//			res = new String(rs.getBytes(key),StringUtils.UTF_CHARSET);
-			res = rs.getString(key);
+		return StringUtils.cyrUtf2Win(rs.getString(key));
+//		String res = "";
+//		try {						
+//			res = new String(rs.getBytes(key),StringUtils.DEFAULT_CHARSET);
 //		}
 //	   catch (UnsupportedEncodingException e) {
 //			e.printStackTrace();
 //		}
-	   return res;
+//	   return res;
 	}
 	
 	protected void closeRsState(ResultSet rs, Statement s )

@@ -31,7 +31,7 @@ public class CategoryRecognizer extends CADBiSThread {
 				Integer headerEnd = body.indexOf("\r\n\r\n");
 				if(headerEnd > -1)
 				{
-					logger.info("Splitting the header from body header = '"+body.substring(0, headerEnd)+"'");
+					logger.debug("Splitting the header from body header = '"+body.substring(0, headerEnd)+"'");
 					body = body.substring(headerEnd + 4);
 					if(!ResponseParser.GetHeader("Content-Length").isEmpty()){
 						Integer content_length = Integer.valueOf(ResponseParser.GetHeader("Content-Length"));

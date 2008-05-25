@@ -54,9 +54,13 @@ class ProxyConnection extends CADBiSThread {
 	 {
 		 boolean enabled = ProxyConfigurator.getInstance().getProperty("contentcheck").equals("enabled");
 		 String ctype = ResponseParser.GetHeader("Content-Type");
-		 return enabled && (ctype.indexOf("text/html")>=0 || 
-				 			ctype.indexOf("text/plain")>=0 || 
-				 			ctype.indexOf("text/xml")>=0);
+		 String sctypes = ProxyConfigurator.getInstance().getProperty("categorizer_ctypes");
+		 String[] ctypes = sctypes.split(",");
+		 boolean ctype_match = false;
+		 for(String cctype : ctypes)
+			 if(ctype.indexOf(cctype)>=0)
+				 ctype_match = true;
+		 return enabled && (ctype_match) && ResponseParser.getRespStatus()==200;
 	 }
 	 
 	 protected void answerAccessDenied(List<byte[]> buffer, String UserIp, String HttpHost)
@@ -267,8 +271,8 @@ class ProxyConnection extends CADBiSThread {
 			 if(buffer.size()>0 && !firstResponsePacketParser.isResponseParsed())
 			 {
 				 firstResponsePacketParser.ParseResponseHeaders(new String(StringUtils.getChars(buffer.get(0))));				 
-				 logger.info("first.content-type="+firstResponsePacketParser.GetHeader("Content-Type"));
 				 NeedToCheckContent = isNeedToCheckContent(firstResponsePacketParser);
+				 logger.info("ctype="+firstResponsePacketParser.GetHeader("Content-Type")+", status="+firstResponsePacketParser.getRespStatus()+", need2check="+NeedToCheckContent);
 			 }
 			 /***************************************
 			  * Analyzing the response to define the access

@@ -51,7 +51,9 @@ public class DBConnection {
 	            connInfo.put("user",userName);
 	            connInfo.put("password",password);
 	            connInfo.put("useUnicode","true");
-	            connInfo.put("characterEncoding","UTF-8");
+	            connInfo.put("characterEncoding","utf8");
+	            connInfo.put("characterSetResults","utf8");
+	            connInfo.put("charSet", "utf8");
 	            connection = DriverManager.getConnection(jdbcUrl, connInfo);
 	            
 	            logger.info("Database connected: " + jdbcUrl);

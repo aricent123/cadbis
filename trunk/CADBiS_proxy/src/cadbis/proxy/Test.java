@@ -1,14 +1,15 @@
 package cadbis.proxy;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cadbis.bl.ContentCategory;
+import cadbis.db.ContentCategoryDAO;
+import cadbis.utils.StringUtils;
 
 
 class Test {	
-  protected static final Logger logger = LoggerFactory.getLogger("TestLogger");
   public static void main (String[] args)
   {
-	  // jdk1.5
-	  System.out.println(java.nio.charset.Charset.defaultCharset().name()); 
+	  String fuck="спгти,спгти(ту),gti,технологический институт, технический университет, спбгти(ту), спбгти(ту), российский вуз, наука, технология,  техноложка, высшее образование, химия, кибернетика, менделеев, профессор, доктор, московский, информация, новости, лицензия, аспирантура, докторантура, факультет, кафедра, второе высшее, отрасль, обучение, посмотреть по карте";
+	  String fuckw="наука";
+	  System.out.println(fuck.matches("(?ims)[^\\w]"+fuckw+"[^\\w]"));
   }
 }

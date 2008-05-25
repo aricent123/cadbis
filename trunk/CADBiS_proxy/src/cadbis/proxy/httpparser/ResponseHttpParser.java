@@ -6,6 +6,7 @@ import cadbis.utils.StringUtils;
 
 public class ResponseHttpParser extends AbstractHttpParser {
 	private boolean isResponseParsed = false;
+	protected int respStatus = 200;
 	
 	public void ParseResponseHeaders(String FullHeader)
 	{
@@ -13,7 +14,18 @@ public class ResponseHttpParser extends AbstractHttpParser {
 		this.FullHeader = HeadBody[0];
 		if(HeadBody.length > 1)
 			this.Body = HeadBody[1];
-		ParseHeaders(this.FullHeader.split("\r\n"));
+		String[] lines = this.FullHeader.split("\r\n");
+		int spPos = lines[0].indexOf(" ");
+		if(spPos>0)
+		{
+			int spPos2 = lines[0].indexOf(" ",spPos+2);
+			try{
+				respStatus = Integer.parseInt(lines[0].substring(spPos+1,spPos2));
+			}
+			catch(NumberFormatException e){logger.debug("Resp status recognition failed for: '"+lines[0]+"'("+spPos2+")("+spPos+")");}
+			catch(StringIndexOutOfBoundsException e){logger.debug("Resp status recognition failed for: '"+lines[0]+"'("+spPos2+")("+spPos+")");}
+		}
+		ParseHeaders(lines);
 		isResponseParsed = true;
 	}
 
@@ -29,13 +41,12 @@ public class ResponseHttpParser extends AbstractHttpParser {
 
 	public String GetCharset()
 	{
-		//text/html; charset=windows-1251
-		String res = "UTF-8";
-		String ctype = GetHeader("Content-Type");
-		Integer iofcharset = ctype.indexOf("charset=");
-		if(!ctype.isEmpty() && iofcharset>=0)
-			res = ctype.substring(iofcharset + 8);
-		return res;
+		return StringUtils.getCharset(GetHeader("Content-Type"));
+	}
+
+
+	public int getRespStatus() {
+		return respStatus;
 	}
 	
 }
