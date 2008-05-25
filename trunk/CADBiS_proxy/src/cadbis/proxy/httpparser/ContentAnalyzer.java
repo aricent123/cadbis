@@ -170,7 +170,7 @@ public class ContentAnalyzer {
 			String res = "";			
 			try{
 				for(int i=0;i<catkwds.size();++i)
-					res += ((res.isEmpty())?"":",") + StringUtils.ConvertCharset(catkwds.get(i),"Cp1251",charset);
+					res += ((res.isEmpty())?"":",") + StringUtils.decodeCharset(catkwds.get(i),StringUtils.DEFAULT_CHARSET);
 			}catch(Exception e){logger.error("Error converting data: " + e.getMessage());}
 	    	logger.info(cat.getTitle()+" = {"+res+"}");
 			
