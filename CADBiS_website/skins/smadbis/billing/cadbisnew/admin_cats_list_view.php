@@ -12,10 +12,18 @@
 		</tr>
 		<tr>
 			<td>
+				Название категории (RU)
+			</td>
+			<td>
+				<input type="text" id="txtCatTitleRU" value=""/>
+			</td>
+		</tr>		
+		<tr>
+			<td>
 				Ключевые слова
 			</td>
 			<td>
-				<textarea cols="25" rows="5" id="txtCatKeywords"></textarea>
+				<textarea cols="45" rows="10" id="txtCatKeywords"></textarea>
 			</td>
 		</tr>
 		
@@ -28,35 +36,38 @@
 function addCat(){
 	var manager = <?=$emanager->client_id() ?>;
 	Dialog.confirm($('window-form-add').innerHTML,{
-		className:"alphacube", width:300, 
+		className:"alphacube", width:500, 
 		okLabel: "Добавить", 
 		cancelLabel: "Отмена", 
 		onOk: function(win){  
 				manager.addItem(
 							'{"title":"'+$('txtCatTitle').value+'",'+
+							'"title_ru":"'+$('txtCatTitleRU').value+'",'+
 							'"keywords":"'+$('txtCatKeywords').value+'"}');
 				win.hide();
 			}
 		});	
 }
-function editCat(id,title){
+function editCat(id,title,title_ru){
 	var manager = <?=$emanager->client_id() ?>;	
 	new Ajax.Request('<?=cadbisnewurl('admin_cats_list') ?>&renderkwdsfor='+id, {
 		method: 'get',
 		onSuccess: function(data) 
 		{			
 			Dialog.confirm($('window-form-add').innerHTML,{
-				className:"alphacube", width:300, 
+				className:"alphacube", width:500, 
 				okLabel: "Сохранить", 
 				cancelLabel: "Отмена", 
 				onOk: function(win){ 
 						manager.updateItem(
 								'{"cid":'+id+',"title":"'+$('txtCatTitle').value+'",'+
+								'"title_ru":"'+$('txtCatTitleRU').value+'",'+
 								'"keywords":"'+$('txtCatKeywords').value+'"}');
 						win.hide();
 					}
 				});
 			$('txtCatTitle').value = title;
+			$('txtCatTitleRU').value = title_ru;
 			$('txtCatKeywords').value = data.responseText;			
 		}});	
 	

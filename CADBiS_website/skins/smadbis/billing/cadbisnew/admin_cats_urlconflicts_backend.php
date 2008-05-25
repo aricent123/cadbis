@@ -1,5 +1,5 @@
 <?
-define('COUNT_ON_PAGE',15);
+define('COUNT_ON_PAGE',30);
 if(!check_auth() || $CURRENT_USER['level']<7){	
 	die("Access denied!");
 }

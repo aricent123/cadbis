@@ -2107,7 +2107,7 @@ function DeleteDiapason($id)
 	 */
 	public function AddUrlCategory($cat)
 	{
-		mysql_query(sprintf('insert into `url_categories`(title) values(\'%s\')',$cat['title']));
+		mysql_query(sprintf('insert into `url_categories`(title,title_ru) values(\'%s\',\'%s\')',$cat['title'],$cat['title_ru']));
 	}
 	// ----------------------------------------------------
 	/**
@@ -2128,8 +2128,23 @@ function DeleteDiapason($id)
 	 */
 	public function UpdateUrlCategory($cid,$cat)
 	{
-		$sql = sprintf('update `url_categories` set title = \'%s\' where cid = %d',$cat['title'],$cid);
+		$sql = sprintf('update `url_categories` set title = \'%s\',title_ru = \'%s\' where cid = %d',$cat['title'],$cat['title_ru'],$cid);
 		mysql_query($sql);
+	}
+	// ----------------------------------------------------
+	/**
+	 * Returns keywords with their weights for url category
+	 *
+	 * @param int $cid
+	 * @return array
+	 */
+	public function GetUrlCategoryKeywordsWithWeights($cid)
+	{
+	 $result = mysql_query(sprintf("select * from `url_categories_keywords` where cid=%d order by keyword",$cid));
+	 $kwds = array();
+	 while($row = mysql_fetch_assoc($result))
+	 	$kwds[] = $row['keyword'].'/'.$row['weight'];
+	 return $kwds;
 	}
 	// ----------------------------------------------------
 	/**
@@ -2145,7 +2160,21 @@ function DeleteDiapason($id)
 	 while($row = mysql_fetch_assoc($result))
 	 	$kwds[] = $row['keyword'];
 	 return $kwds;
-	}
+	}	
+	// ----------------------------------------------------
+	/**
+	 * Returns weights for keywords
+	 *
+	 * @return array
+	 */
+	public function GetKeywordsWeights()
+	{
+	 $result = mysql_query(sprintf("select * from `url_categories_keywords`"));
+	 $kwds = array();
+	 while($row = mysql_fetch_assoc($result))
+	 	$kwds[$row['keyword']] = $row['weight'];
+	 return $kwds;
+	}		
 	// ----------------------------------------------------
 	/**
 	 * Returns url category by its keyword
@@ -2168,8 +2197,16 @@ function DeleteDiapason($id)
 	public function UpdateUrlCategoryKeywords($cid, $kwds)
 	{
 		mysql_query(sprintf("delete from `url_categories_keywords` where cid=%d",$cid));
-	 foreach($kwds as $kwd)
-		mysql_query(sprintf('insert into `url_categories_keywords`(cid,keyword) value(%d,\'%s\')',$cid,$kwd));
+	 	foreach($kwds as $kwd){
+	 		$tmp = explode('/',$kwd);
+	 		$keyword = $tmp[0];
+	 		if(!empty($tmp[1]) && $tmp[1]>0)
+	 			$weight = $tmp[1];
+	 		else
+	 			$weight = 1;
+	 		$sql = sprintf('insert into `url_categories_keywords`(cid,keyword,weight) value(%d,\'%s\',%d)',$cid,$keyword,$weight);
+			mysql_query($sql);
+	 	}
 	}
 	// ----------------------------------------------------
 	/**

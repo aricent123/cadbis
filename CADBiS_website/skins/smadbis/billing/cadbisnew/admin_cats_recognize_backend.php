@@ -16,11 +16,12 @@ else
 		$url = $_REQUEST['url'];
 	$current_cid = $BILL->GetUrlCategory($url);
 	$cats = $BILL->GetUrlCategories();
+	$kwds_weights = $BILL->GetKeywordsWeights();		 
 	$cat_by_cid = array();$i=0;	
 	foreach($cats as &$cat)
 	{
 		$cat_by_cid[$cat['cid']] = $i++;
-		$cat['keywords'] = $BILL->GetUrlCategoryKeywords($cat['cid']);
+		$cat['keywords'] = $BILL->GetUrlCategoryKeywords($cat['cid']);		
 	}	
 	
 	// Setting url category
@@ -56,7 +57,7 @@ else
 	// Recognize content	
 	if(isset($_POST['btnSubmit']) || isset($_GET['manualcheck'])){
 		$uswords = $BILL->GetUrlCategoriesUnsenseWords();
-		$result = Recognizer::recognizeByMyself($url, $cats, $uswords, isset($_REQUEST['debug']));
+		$result = Recognizer::recognizeByMyself($url, $cats, $uswords, $kwds_weights, isset($_REQUEST['debug']));
 	}
 	// Other (finding conflicts etc)
 	if(isset($result) && isset($set))

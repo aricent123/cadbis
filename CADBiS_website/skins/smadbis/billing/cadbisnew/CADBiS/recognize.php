@@ -160,7 +160,7 @@ class Recognizer{
     	return ($a['wcount'] == $b['wcount'])?0:($a['wcount'] < $b['wcount']) ? 1 : -1;		
 	}	
 	
-	public static function recognizeByMyself($url,$cats,$uswords,$debug=false)
+	public static function recognizeByMyself($url,$cats,$uswords,$kwds_weights,$debug=false)
 	{
 		$result = '';
 		$user_agent="Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
@@ -313,12 +313,12 @@ class Recognizer{
 					}
 					// <==== debug ==== //
 					$added = $content_words[$keyword];
-					$cats_coefs[$cat['cid']]['coef']+=$content_words[$keyword];
+					$cats_coefs[$cat['cid']]['coef']+=$content_words[$keyword]*$kwds_weights[$keyword];
 				}
 				if(in_array($keyword,$metaKeywds))
 				{
 					$added = self::META_KWD_COEF;
-					$cats_coefs[$cat['cid']]['coef']+= self::META_KWD_COEF;
+					$cats_coefs[$cat['cid']]['coef']+= self::META_KWD_COEF*$kwds_weights[$keyword];
 				}
 				if($added>0)
 				{
