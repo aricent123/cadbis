@@ -6,7 +6,6 @@ import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import cadbis.proxy.exc.AnalyzeException;
 import cadbis.utils.StringUtils;
+import cadbis.bl.ContentAnalyzeResult;
 import cadbis.bl.ContentCategory;
 
 public class ContentAnalyzer {
@@ -48,7 +48,7 @@ public class ContentAnalyzer {
 	protected static String killUnsenseWords(String content, List<String> uswords)
 	{
 		try{
-			content = StringUtils.replaceAll(uswords,content);
+			content = StringUtils.replaceAllFullWords(uswords,content);
 		}catch(AnalyzeException e)
 		{logger.error("killUnsenseWords error: " + e.getMessage());}
 		return content;		
@@ -151,12 +151,36 @@ public class ContentAnalyzer {
 		return content;
 	}
 	
-	public static void Analyze(String content, List<ContentCategory> cats, List<String> uswords, String charset) throws CharacterCodingException, UnsupportedEncodingException
+	protected static String killNonLetters(String content)
+	{
+		  String allowedChars = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghiklmnopqrstuvwxyz ";
+		  for(int i=0;i<content.length();++i)
+		  {
+			  String tChar = content.substring(i,i+1);
+			  if(allowedChars.indexOf(tChar)<0){
+				  content = content.replaceAll(tChar, " ");
+				  i = 0;
+			  }
+		  }
+		return content;
+	}
+	
+	/**
+	 * Analyzes the content and returns the categories coefs
+	 * @param content
+	 * @param cats
+	 * @param uswords
+	 * @param charset
+	 * @return cid
+	 * @throws CharacterCodingException
+	 * @throws UnsupportedEncodingException
+	 */
+	public static ContentAnalyzeResult Analyze(String content, List<ContentCategory> cats, List<String> uswords, HashMap<String, Integer> kwds_weights, String charset) throws CharacterCodingException, UnsupportedEncodingException
 	{		
 		String metaCharset = getCharset(content.toLowerCase());
 		if(!metaCharset.isEmpty())
 			charset = metaCharset;
-		logger.info("Converting charset from '"+charset+"'...");
+		logger.debug("Converting charset from '"+charset+"'...");		
 		content = ContentAnalyzer.ConvertToUTF(content, charset).toLowerCase();
 		String metaKeywords = getKeywords(content);
 		String metaDescription = getDescription(content);
@@ -164,11 +188,12 @@ public class ContentAnalyzer {
 		content = killNumbers(content);
 		content = killPunctuation(content);
 		content = killUnsenseWords(content,uswords);
+		content = killNonLetters(content);
 		content = killNewLines(content);
 		content = killDoubleSpaces(content);
-		HashMap<String, Integer> keywords = new HashMap<String, Integer>();
-		String[] arrKeywords = content.split(" ");
 		
+		String[] arrKeywords = content.split(" ");
+		HashMap<String, Integer> keywords = new HashMap<String, Integer>();
 		for(String keyword:arrKeywords)
 		{
 			if(MINIMAL_WORDLEN<=keyword.length()){
@@ -181,46 +206,44 @@ public class ContentAnalyzer {
 
 		
 		Iterator<String> kIterator = keywords.keySet().iterator();
+		String tmp = "";
 	    while (kIterator.hasNext()) {
 	    	String keyword = kIterator.next();
-	    	logger.info(keyword+"("+keywords.get(keyword)+")");
+	    	tmp += keyword+"("+keywords.get(keyword)+")";
 		}
+	    logger.debug(tmp);
 		
 		
 		
 		HashMap<Integer, Integer> cats_coefs = new HashMap<Integer, Integer>();
+		cats_coefs.put(0, 0);
 	    for(ContentCategory cat : cats)
-	    {	    	
+	    {
+	    	cats_coefs.put(cat.getCid(), 0);
 	    	List<String> catkwds = cat.getKeywords();
-			Iterator<String> kwIterator = keywords.keySet().iterator();
 		    for(String catkw : catkwds)
-		    {
+		    {		    	
+	    		Integer weight = 1;
+    			if(kwds_weights.containsKey(catkw)){
+	    			weight = kwds_weights.get(catkw);
+	    		}    	    		
 		    	int coef = 0;
+		    	Iterator<String> kwIterator = keywords.keySet().iterator();
 		    	while (kwIterator.hasNext()) {
 			    	String keyword = kwIterator.next();
-			    	if(catkw.equals(keyword))
-			    		coef += keywords.get(keyword);
+			    	if(catkw.equals(keyword)){			    		
+			    		coef += keywords.get(keyword) * weight;			    		
+			    	}
 		    	}
 	    		if(metaKeywords.matches("(?ims).*, *"+catkw+" *,.*") || metaDescription.matches("(?ims).* *"+catkw+" *.*"))
-	    			coef += META_KWD_COEF;
-    			if(cats_coefs.containsKey(cat.getCid()))
-    				cats_coefs.put(cat.getCid(),cats_coefs.get(cat.getCid())+coef);
-    			else
-    				cats_coefs.put(cat.getCid(), coef);
+	    			coef += META_KWD_COEF * weight;
+    				cats_coefs.put(cat.getCid(),cats_coefs.get(cat.getCid())+coef);    				
+	    		
+    			if(coef>0)
+    				logger.debug("'"+catkw+"' +"+coef+" for '"+cat.getTitle()+"'");
 	    	}
 	    }
 	    
-	    HashMap<Integer, ContentCategory> cats_by_cid = new HashMap<Integer, ContentCategory>();
-	    for(ContentCategory cat : cats)
-	    	cats_by_cid.put(cat.getCid(),cat);
-	    
-		logger.info("Keywrods: "+ metaKeywords);
-		logger.info("Description: "+ metaDescription);
-		Iterator<Integer> iter = cats_coefs.keySet().iterator();
-	    while (iter.hasNext()) {
-	    	Integer cid = iter.next();
-	    	ContentCategory cat = cats_by_cid.get(cid);
-	    	logger.info("'"+cat.getTitle()+"'="+cats_coefs.get(cid));
-	    }	    
+	    return new ContentAnalyzeResult(cats_coefs, keywords);
 	}
 }

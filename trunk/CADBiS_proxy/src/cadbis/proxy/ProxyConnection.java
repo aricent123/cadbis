@@ -153,7 +153,7 @@ class ProxyConnection extends CADBiSThread {
 			 catch(IOException e)
 			 {
 				 ErrorsCount++;
-				 logger.error("Recieving data client->proxy error: "+e.getMessage());
+				 logger.warn("Recieving data client->proxy error: "+e.getMessage());
 			 }
 			 
 			 /*******************************
@@ -237,7 +237,7 @@ class ProxyConnection extends CADBiSThread {
 			 catch(IOException e)
 			 {
 				 ErrorsCount++;
-				 logger.error("Sending data proxy->squid("+toServer.getInetAddress().getHostName()+":"+toServer.getPort()+") error: " + e.getMessage());
+				 logger.warn("Sending data proxy->squid("+toServer.getInetAddress().getHostName()+":"+toServer.getPort()+") error: " + e.getMessage());
 			 }			 
 			 
 			 
@@ -272,7 +272,7 @@ class ProxyConnection extends CADBiSThread {
 			 {
 				 firstResponsePacketParser.ParseResponseHeaders(new String(StringUtils.getChars(buffer.get(0))));				 
 				 NeedToCheckContent = isNeedToCheckContent(firstResponsePacketParser);
-				 logger.info("ctype="+firstResponsePacketParser.GetHeader("Content-Type")+", status="+firstResponsePacketParser.getRespStatus()+", need2check="+NeedToCheckContent);
+				 logger.debug("ctype="+firstResponsePacketParser.GetHeader("Content-Type")+", status="+firstResponsePacketParser.getRespStatus()+", need2check="+NeedToCheckContent);
 			 }
 			 /***************************************
 			  * Analyzing the response to define the access
@@ -366,7 +366,7 @@ class ProxyConnection extends CADBiSThread {
 			 catch(IOException e)
 			 {
 				 ErrorsCount++;
-				 logger.error("Sending proxy->client("+fromClient.getInetAddress().getHostName()+":"+fromClient.getPort()+") error: " + e.getMessage());
+				 logger.warn("Sending proxy->client("+fromClient.getInetAddress().getHostName()+":"+fromClient.getPort()+") error: " + e.getMessage());
 			 }
 			
 

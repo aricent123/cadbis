@@ -24,7 +24,7 @@ public class CategoryRecognizer extends CADBiSThread {
 	{	
 		logger.debug("Category unknown, have to parse whole response... " );
 		String body = fullResponse.toString();
-		logger.info("Content charset = '"+ResponseParser.GetCharset()+"'");
+		logger.debug("Content charset = '"+ResponseParser.GetCharset()+"'");
 		String charset = ResponseParser.GetCharset();
 			try
 			{					

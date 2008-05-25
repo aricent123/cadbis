@@ -36,17 +36,14 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		return paramClass;
 	}
 	
-	private String getString(ResultSet rs, String key) throws SQLException
+	protected String setStringUtf(String str)
 	{
-		return StringUtils.cyrUtf2Win(rs.getString(key));
-//		String res = "";
-//		try {						
-//			res = new String(rs.getBytes(key),StringUtils.DEFAULT_CHARSET);
-//		}
-//	   catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
-//	   return res;
+		return StringUtils.cyrUtfWin(str,false);
+	}
+	
+	protected String getString(ResultSet rs, String key) throws SQLException
+	{
+		return StringUtils.cyrUtfWin(rs.getString(key),true);
 	}
 	
 	protected void closeRsState(ResultSet rs, Statement s )

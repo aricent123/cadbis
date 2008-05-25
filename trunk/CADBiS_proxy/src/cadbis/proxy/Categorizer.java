@@ -4,10 +4,12 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.CharacterCodingException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import cadbis.CADBiSDaemon;
+import cadbis.bl.ContentAnalyzeResult;
 import cadbis.bl.ContentCategory;
 import cadbis.bl.UrlCategoryDenied;
 import cadbis.bl.UrlCategoryMatch;
@@ -20,6 +22,7 @@ public class Categorizer extends CADBiSDaemon{
 	protected HashMap<String, Integer> url_cat = null;
 	protected List<ContentCategory> cats = null;
 	protected List<String> uswords = null;
+	protected HashMap<String, Integer> kwds_weights = null;
 	protected Set<String> catsAccessDenied = null; 
 	private static Categorizer instance = null;
 	protected static Object rwLock = new Object(); 
@@ -36,10 +39,10 @@ public class Categorizer extends CADBiSDaemon{
 			for(UrlCategoryMatch match : lst)
 				if(!url_cat.containsKey(match.getUrl()))
 					url_cat.put(match.getUrl(), match.getCid());
-			
-			cats  = new ContentCategoryDAO().getCategoriesWithWords();
-			uswords = new ContentCategoryDAO().getUnsenseWords();
-			
+			ContentCategoryDAO dao = new ContentCategoryDAO();
+			cats  = dao.getCategoriesWithWords();
+			uswords = dao.getUnsenseWords();
+			kwds_weights = dao.getKeywordsWeights();
 			catsAccessDenied = new HashSet<String>();
 			List<UrlCategoryDenied> catDenied = 
 				new UrlCategoryDeniedDAO().getItemsByQuery("select * from url_categories_denied");
@@ -64,12 +67,11 @@ public class Categorizer extends CADBiSDaemon{
 	 * @param charset - Encoding of content (e.g. UTF-8, cp1251, etc)
 	 * @return recognizedCategory
 	 */
-	protected ContentCategory recognizeCategory(String content,List<ContentCategory> categories, List<String> unsenseWords, String charset){
-		
-		logger.info("Trying to convert from " + charset + " to UTF: ");
+	protected ContentCategory recognizeCategory(String url,String content,List<ContentCategory> categories, List<String> unsenseWords, String charset){
+		ContentAnalyzeResult res = new ContentAnalyzeResult();
+	    // analyze the content
 		try{			
-			List<ContentCategory> cats = new ContentCategoryDAO().getCategoriesWithWords();
-			ContentAnalyzer.Analyze(content, cats,uswords, charset);
+			res = ContentAnalyzer.Analyze(content,cats, uswords,kwds_weights, charset);
 		}
 		catch(CharacterCodingException e)
 		{
@@ -79,20 +81,53 @@ public class Categorizer extends CADBiSDaemon{
 		{
 			logger.error("Error converting content to utf: unsupported charset: " + e.getMessage());
 		}
-		ContentCategory res = new ContentCategory();
-		res.setCid(0);
-		res.setTitle("Other");
-		return res;
+			
+	    HashMap<Integer, ContentCategory> cats_by_cid = new HashMap<Integer, ContentCategory>();
+	    for(ContentCategory cat : cats)
+	    	cats_by_cid.put(cat.getCid(),cat);
+	    
+	    // find the most suitable category
+		Iterator<Integer> iter_max = res.cats_coefs.keySet().iterator();
+		Integer cidMax = 0;
+	    while (iter_max.hasNext()) {
+	    	Integer cid = iter_max.next();
+	    	ContentCategory cat = cats_by_cid.get(cid);
+	    	logger.debug("'"+cat.getTitle()+"'="+res.cats_coefs.get(cid));
+	    	if(res.cats_coefs.get(cid) > res.cats_coefs.get(cidMax))
+	    		cidMax = cid;
+	    }
+	    
+	    ContentCategoryDAO dao = new ContentCategoryDAO();
+		Iterator<String> iter = res.keywords.keySet().iterator();
+	    while (iter.hasNext()) 
+	    {
+	    	String keyword = iter.next();
+	    	Integer confCid = 0;
+	    	for(int i=0;i<cats.size();++i)
+	    	{
+	    		if(cats.get(i).getKeywords().contains(keyword))
+	    			confCid = cats.get(i).getCid();
+	    	}
+	    	
+	    	if(confCid != cidMax){
+		    	if(confCid!=0) // conflict
+		    		dao.addUrlCategoryConflict(keyword, cidMax, confCid, url);
+		    	else if(cidMax != 0)// no conflicts
+		    		dao.attachUrlCategoryKeyword(cidMax, keyword);
+	    	}
+	    }
+	    
+	    logger.info("Found cid with max rang: '"+cats_by_cid.get(cidMax).getTitle()+"'="+res.cats_coefs.get(cidMax));
+		return cats_by_cid.get(cidMax);
 	}
 	
 	public synchronized Integer recognizeAndAddCategory(String url, String content, String charset)
 	{
-		ContentCategory cat = recognizeCategory(content, cats, uswords,charset);
+		ContentCategory cat = recognizeCategory(url, content, cats, uswords,charset);
 		logger.info("Recognizing and adding a category for url='"+url+"' = " + cat.getTitle());
-		if(!url_cat.containsKey(url))
-		{
-			//new ContentCategoryDAO().execSql(String.format("insert into url_categories_match(url,cid) values('%s',%d)",url,cat.getCid()));
-			//url_cat.put(url, cat.getCid());
+		if(!url_cat.containsKey(url)){
+			url_cat.put(url, cat.getCid());
+			new ContentCategoryDAO().addUrlCategoryMatch(url, cat.getCid());
 		}
 		return cat.getCid();
 	}
@@ -107,7 +142,7 @@ public class Categorizer extends CADBiSDaemon{
 			reloadData();
 		}
 		else
-			logger.info("Category recognized, = " + url_cat.get(url));
+			logger.debug("Category recognized, = " + url_cat.get(url));
 		return url_cat.get(url);
 	}
 	

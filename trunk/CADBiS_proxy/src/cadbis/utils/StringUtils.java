@@ -47,13 +47,13 @@ public class StringUtils {
 		return haystack;		
 	}
 	
-	public static String replaceAll(List<String> needle, String haystack) throws AnalyzeException
+	public static String replaceAllFullWords(List<String> needle, String haystack) throws AnalyzeException
 	{
 		for(String sym : needle )
 		{
 			try{
 			sym = escapeRE(sym);
-			haystack = haystack.replaceAll(sym, " ");
+			haystack = haystack.replaceAll(" "+sym+" ", " ");
 			}catch(Exception e){ throw new AnalyzeException("error replacing '"+sym+"' : " + e.getMessage());}
 		}
 		return haystack;		
@@ -129,7 +129,7 @@ public class StringUtils {
 		return res;
 	}
 	
-	public static String cyrUtf2Win(String str)
+	public static String cyrUtfWin(String str, boolean fromUtf)
 	{
 		String encAlpha = "Ð°Ð±Ð²Ð³Ð´ÐµÑ‘Ð¶Ð·Ð¸Ð¹ÐºÐ»Ð¼Ð½Ð¾Ð¿Ñ€ÑÑ‚ÑƒÑ„Ñ…Ñ†Ñ‡ÑˆÑ‰ÑŠÑ‹ÑŒÑÑŽÑ";
 		String utfAlpha = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
@@ -137,7 +137,10 @@ public class StringUtils {
 		  {
 			String letter = encAlpha.substring(i,i+2);
 			String letterUTF = utfAlpha.substring(i/2,i/2+1);
-			str = str.replaceAll(letter,letterUTF);		  
+			if(fromUtf)
+				str = str.replaceAll(letter,letterUTF);
+			else
+				str = str.replaceAll(letterUTF,letter);
 		  }
 		return str;
 	}
