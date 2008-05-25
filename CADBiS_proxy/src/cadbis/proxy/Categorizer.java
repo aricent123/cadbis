@@ -1,5 +1,6 @@
 package cadbis.proxy;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.CharacterCodingException;
 import java.util.HashMap;
@@ -45,13 +46,17 @@ public class Categorizer extends CADBiSDaemon{
 			{
 				List<String> kwds = cat.getKeywords();
 				for(String kwd : kwds)
-				{
+				{		
+					String kwd2 = "";
 					try{
-						kwd =  StringUtils.readAsUTF8(kwd, "ISO-8859-1");
+						kwd2 = new String(kwd.getBytes(StringUtils.UTF_CHARSET), StringUtils.ISO_CHARSET);
 					}
 					catch(UnsupportedEncodingException e)
 					{logger.error("Unsupported encoding!" + e.getMessage());}
-					logger.info(cat.getTitle()+"/"+ kwd);
+//					catch(CharacterCodingException e)
+//					{logger.error("CharacterCodingException!" + e.getMessage());}
+					
+					logger.info(cat.getTitle()+"/"+ kwd2);
 				}
 			}
 			

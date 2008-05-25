@@ -3,6 +3,7 @@ package cadbis.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,13 @@ public class DBConnection {
 	        try
 	        {
 	            Class.forName (jdbcDriver).newInstance ();
-	            connection = DriverManager.getConnection (jdbcUrl, userName, password);
+	            Properties connInfo = new Properties();
+	            connInfo.put("user",userName);
+	            connInfo.put("password",password);
+	            connInfo.put("useUnicode","true");
+	            connInfo.put("characterEncoding","UTF-8");
+	            connection = DriverManager.getConnection(jdbcUrl, connInfo);
+	            
 	            logger.info("Database connected: " + jdbcUrl);
 	            result = true;
 	        }

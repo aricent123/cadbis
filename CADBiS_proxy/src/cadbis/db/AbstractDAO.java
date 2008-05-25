@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cadbis.bl.BusinessObject;
+import cadbis.utils.StringUtils;
 
 
 public abstract class AbstractDAO<objT extends BusinessObject> {
@@ -33,6 +35,19 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	
 	public Class<objT> getParamClass() {
 		return paramClass;
+	}
+	
+	private String getString(ResultSet rs, String key) throws SQLException
+	{
+		String res = "";
+//		try {			
+//			res = new String(rs.getBytes(key),StringUtils.UTF_CHARSET);
+			res = rs.getString(key);
+//		}
+//	   catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
+	   return res;
 	}
 	
 	protected void closeRsState(ResultSet rs, Statement s )
@@ -127,7 +142,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 							   par[0] = Class.forName("java.lang."+persistFields[i][1]);
 							   Method mthd=row.getClass().getMethod("set"+persistName,par);
 							   if(persistFields[i][1] == "String")
-								   mthd.invoke(row, rs.getString(persistFields[i][0]));
+								   mthd.invoke(row, getString(rs,persistFields[i][0]));
 							   else if(persistFields[i][1] == "Integer")
 								   mthd.invoke(row, rs.getInt(persistFields[i][0]));
 							   else if(persistFields[i][1] == "Long")
@@ -287,7 +302,7 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 		{
 		   rs = getResultSet(query);
 		   while(rs!=null && rs.next ())
-			   res.add(rs.getString(key));
+			   res.add(getString(rs,key));
 		}
 		catch(SQLException e)
 		{

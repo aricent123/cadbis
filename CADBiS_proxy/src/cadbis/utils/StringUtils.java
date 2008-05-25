@@ -7,13 +7,17 @@ import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import cadbis.proxy.exc.AnalyzeException;
 
 public class StringUtils {	
-	public static final String DEFAULT_CHARSET = Charset.defaultCharset().name(); 
+	public static final String DEFAULT_CHARSET = Charset.defaultCharset().name();
+	public static final String UTF_CHARSET = "UTF-8";
+	public static final String ISO_CHARSET = "ISO-8859-1";
+	
 	// Returns a pattern where all punctuation characters are escaped.
     static Pattern escaper = Pattern.compile("([\\^\\(\\)\\]\\[\\.\\+\\*\\?\\/\\\\\\{\\}\\|\\_])");
     public static String escapeRE(String str) {
@@ -43,7 +47,7 @@ public class StringUtils {
 	}
 	
 	public static char[] getChars (byte[] bytes) {
-		Charset cs = Charset.forName ("UTF-8");
+		Charset cs = Charset.forName (UTF_CHARSET);
 		ByteBuffer bb = ByteBuffer.allocate (bytes.length);
 		bb.put (bytes);
 			bb.flip ();
@@ -64,12 +68,12 @@ public class StringUtils {
 
 	public static String readAsUTF8(String str,String encoding) throws UnsupportedEncodingException
 	{
-		return new String(str.getBytes(encoding),"UTF-8");
+		return new String(str.getBytes(encoding),UTF_CHARSET);
 	}
 	
 	public static String readAsUTF8(String str) throws UnsupportedEncodingException
 	{
-		return new String(str.getBytes(DEFAULT_CHARSET),"UTF-8");
+		return new String(str.getBytes(DEFAULT_CHARSET),UTF_CHARSET);
 	}	
 	
 	public static String readInDefaultCharset(String str, String encoding) throws UnsupportedEncodingException
@@ -77,7 +81,7 @@ public class StringUtils {
 		return new String(str.getBytes(encoding),DEFAULT_CHARSET);
 	}		
 	
-	public static String ConvertCharset(String content, String charsetFrom, String charsetTo) throws CharacterCodingException, UnsupportedEncodingException
+	public static String decodeCharset(String content, String charsetFrom) throws CharacterCodingException, UnsupportedEncodingException
 	{ 
 			CharsetDecoder decoderFrom = Charset.forName(charsetFrom).newDecoder();
 		    ByteBuffer bbuf = ByteBuffer.wrap(content.getBytes(charsetFrom));
@@ -85,8 +89,16 @@ public class StringUtils {
 	        return cbuf.toString();
 	}	
 	
+	public static String encodeWithCharset(String content, String charsetWith) throws CharacterCodingException, UnsupportedEncodingException
+	{ 
+			CharsetEncoder encoderTo = Charset.forName(charsetWith).newEncoder();
+			CharBuffer fbuf = CharBuffer.wrap(content.toCharArray());
+		    ByteBuffer tbuf = encoderTo.encode(fbuf);
+	        return tbuf.toString();
+	}			
+	
 	public static byte[] getBytes (char[] chars) {
-		Charset cs = Charset.forName ("UTF-8");
+		Charset cs = Charset.forName (UTF_CHARSET);
 		CharBuffer cb = CharBuffer.allocate (chars.length);
 		cb.put (chars);
 			cb.flip ();
@@ -102,5 +114,6 @@ public class StringUtils {
 			res += ((res.isEmpty())?"":delimiter) + array.get(i);
 		return res;
 	}
+		
 
 }
