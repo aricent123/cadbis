@@ -39,7 +39,7 @@ class conflicts_cat_formatter extends grid_formatter {
 	protected $_cats = null;
 	public function __construct($cats){$this->_cats = $cats;}
 	public function format($data, $type, $number = 0, $columns = null)
-	{return $this->_cats[$data]['title'];}	
+	{return (!empty($this->_cats[$data]['title_ru'])?$this->_cats[$data]['title_ru']:$this->_cats[$data]['title']);}	
 };
 
 

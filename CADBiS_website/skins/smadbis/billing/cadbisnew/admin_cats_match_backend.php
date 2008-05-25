@@ -9,10 +9,10 @@ CADBiSNew::instance()->script_src('js/ajax/manager.js');
 CADBiSNew::instance()->link_href('skins/smadbis/css/grid.css');
 $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
 $cats = $BILL->GetUrlCategories();
-global $cats_cid_title;
+global $cats_cid;
 $cats_cid_title = array();
 foreach($cats as $cat)
-	$cats_cid_title[$cat['cid']] = $cat['title'];
+	$cats_cid[$cat['cid']] = $cat;
 
 $ajaxbuf_url_cats = new ajax_buffer("update_buffer_cats");
 $emanager = new ajax_entities_manager('entities_manager', $ajaxbuf_url_cats);
@@ -31,9 +31,9 @@ class cat_urls_formatter extends grid_formatter {
 	 * @param string $field
 	 * @param ajax_entities_manager $entities_manager
 	 */
-	public function __construct($field,$cats_cid_title,$manager){
+	public function __construct($field,$cats_cid,$manager){
 		$this->_field = $field;
-		$this->_cats_cid_title = $cats_cid_title;
+		$this->_cats_cid = $cats_cid;
 		$this->_manager = $manager;
 	}
 	public function format($data, $type, $number = 0, $columns = null)
@@ -46,7 +46,7 @@ class cat_urls_formatter extends grid_formatter {
 						$data['url'].'\',\''.
 						$data['cid'].'\');">Изменить</a>';
 			case 'category':
-				return $this->_cats_cid_title[$data];
+				return (!empty($this->_cats_cid[$data]['title_ru']))?$this->_cats_cid[$data]['title_ru']:$this->_cats_cid[$data]['title'];
 			default:
 				return parent::format($data,$type);	
 		}
@@ -59,12 +59,12 @@ class cat_urls_formatter extends grid_formatter {
  */
 function create_ds_header($manager)
 {
-	global $cats_cid_title;
+	global $cats_cid;
 	return new grid_data_source(new grid_header_item_array(
 					new grid_header_item('u2cid','Id',type::STRING, true),
 					new grid_header_item('url','URL',type::LINK_NEWWIN, true),
-					new grid_header_item('cid','Категория',type::STRING, true, new cat_urls_formatter('category',$cats_cid_title,$manager)),
-					new grid_header_item('actions','Действия',null, false, new cat_urls_formatter('actions',$cats_cid_title,$manager))
+					new grid_header_item('cid','Категория',type::STRING, true, new cat_urls_formatter('category',$cats_cid,$manager)),
+					new grid_header_item('actions','Действия',null, false, new cat_urls_formatter('actions',$cats_cid,$manager))
 				));
 }
 
