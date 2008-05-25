@@ -11,6 +11,7 @@ import java.nio.charset.CharsetEncoder;
 import java.util.List;
 import java.util.regex.Pattern;
 
+
 import cadbis.proxy.exc.AnalyzeException;
 
 public class StringUtils {	
@@ -45,6 +46,19 @@ public class StringUtils {
 		}
 		return haystack;		
 	}
+	
+	public static String replaceAll(List<String> needle, String haystack) throws AnalyzeException
+	{
+		for(String sym : needle )
+		{
+			try{
+			sym = escapeRE(sym);
+			haystack = haystack.replaceAll(sym, " ");
+			}catch(Exception e){ throw new AnalyzeException("error replacing '"+sym+"' : " + e.getMessage());}
+		}
+		return haystack;		
+	}
+		
 	
 	public static char[] getChars (byte[] bytes) {
 		Charset cs = Charset.forName (UTF_CHARSET);
@@ -114,6 +128,27 @@ public class StringUtils {
 			res += ((res.isEmpty())?"":delimiter) + array.get(i);
 		return res;
 	}
+	
+	public static String cyrUtf2Win(String str)
+	{
+		String encAlpha = "Ð°Ð±Ð²Ð³Ð´ÐµÑ‘Ð¶Ð·Ð¸Ð¹ÐºÐ»Ð¼Ð½Ð¾Ð¿Ñ€ÑÑ‚ÑƒÑ„Ñ…Ñ†Ñ‡ÑˆÑ‰ÑŠÑ‹ÑŒÑÑŽÑ";
+		String utfAlpha = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+		  for(int i=0;i<encAlpha.length();i+=2)
+		  {
+			String letter = encAlpha.substring(i,i+2);
+			String letterUTF = utfAlpha.substring(i/2,i/2+1);
+			str = str.replaceAll(letter,letterUTF);		  
+		  }
+		return str;
+	}
 		
+	public static String getCharset(String ctype)
+	{
+		String res = UTF_CHARSET;
+		Integer iofcharset = ctype.lastIndexOf("charset=");
+		if(!ctype.isEmpty() && iofcharset>=0)
+			res = ctype.substring(iofcharset + 8);
+		return res;
+	}
 
 }

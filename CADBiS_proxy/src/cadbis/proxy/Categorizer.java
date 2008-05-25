@@ -1,6 +1,5 @@
 package cadbis.proxy;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.CharacterCodingException;
 import java.util.HashMap;
@@ -16,7 +15,6 @@ import cadbis.db.UrlCategoryDeniedDAO;
 import cadbis.db.ContentCategoryDAO;
 import cadbis.db.UrlCategoryMatchDAO;
 import cadbis.proxy.httpparser.ContentAnalyzer;
-import cadbis.utils.StringUtils;
 
 public class Categorizer extends CADBiSDaemon{
 	protected HashMap<String, Integer> url_cat = null;
@@ -41,24 +39,6 @@ public class Categorizer extends CADBiSDaemon{
 			
 			cats  = new ContentCategoryDAO().getCategoriesWithWords();
 			uswords = new ContentCategoryDAO().getUnsenseWords();
-			
-			for(ContentCategory cat : cats)
-			{
-				List<String> kwds = cat.getKeywords();
-				for(String kwd : kwds)
-				{		
-					String kwd2 = "";
-					try{
-						kwd2 = new String(kwd.getBytes(StringUtils.UTF_CHARSET), StringUtils.ISO_CHARSET);
-					}
-					catch(UnsupportedEncodingException e)
-					{logger.error("Unsupported encoding!" + e.getMessage());}
-//					catch(CharacterCodingException e)
-//					{logger.error("CharacterCodingException!" + e.getMessage());}
-					
-					logger.info(cat.getTitle()+"/"+ kwd2);
-				}
-			}
 			
 			catsAccessDenied = new HashSet<String>();
 			List<UrlCategoryDenied> catDenied = 
@@ -89,7 +69,7 @@ public class Categorizer extends CADBiSDaemon{
 		logger.info("Trying to convert from " + charset + " to UTF: ");
 		try{			
 			List<ContentCategory> cats = new ContentCategoryDAO().getCategoriesWithWords();
-			ContentAnalyzer.Analyze(content, cats, charset);
+			ContentAnalyzer.Analyze(content, cats,uswords, charset);
 		}
 		catch(CharacterCodingException e)
 		{
