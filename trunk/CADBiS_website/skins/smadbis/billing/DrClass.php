@@ -69,7 +69,7 @@ function CBilling($server,$database,$login,$password)
 	    $this->link = mysql_connect($server,$login, $password)
                         or die("Could not connect: " . mysql_error());
             mysql_select_db($this->database) or die("Could not select database");
-	   $this->squid_porno_file = "./DB3fsdi2382ofdo0r20u23jidf/squid/porno";
+	   $this->squid_porno_file = "./squid/porno";
 	   }
 
 
