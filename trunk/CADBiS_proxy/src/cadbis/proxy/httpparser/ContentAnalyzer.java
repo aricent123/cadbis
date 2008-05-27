@@ -159,7 +159,7 @@ public class ContentAnalyzer {
 		  {
 			  String tChar = content.substring(i,i+1);
 			  if(allowedChars.indexOf(tChar)<0){
-				  content = content.replaceAll(tChar, " ");
+				  content = content.replaceAll(StringUtils.escapeRE(tChar), " ");
 				  i = 0;
 			  }
 		  }
