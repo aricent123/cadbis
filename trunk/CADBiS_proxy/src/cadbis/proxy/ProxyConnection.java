@@ -218,10 +218,32 @@ class ProxyConnection extends CADBiSThread {
 			 * Sending data proxy->squid
 			 ******************************/
 			 try{
-				if(toServer!=null && buffer.size()>0)
+				if(toServer!=null && buffer.size()>0 && !isFullAnswer)
 				{
 					// check if url is denied
 					isAccessDenied = !Collector.getInstance().CheckAccessToUrl(UserIp,HttpHost);
+					cid = Categorizer.getInstance().getCategoryForUrl(HttpHost);
+					if(cid != null)
+					{
+					 Action act = Collector.getInstance().getActionByUserIp(UserIp);
+					 if(act != null)
+					 {
+						boolean access = Categorizer.getInstance().checkAccessToCategory(act.getGid(), cid);
+						logger.info("Checking access of "+act.getUser()+" to ("+HttpHost+")cid="+cid+" = "+ access +"...");
+						isAccessDenied = isAccessDenied && access;
+						if(!access)
+						{
+							// indicating that we have finished the answer
+							isFullAnswer = true;
+							// answer the denied access
+							answerAccessDenied(buffer,UserIp,HttpHost);
+							// log the attempt to access denied category
+							new AccessDeniedAttemptLogger(cid, HttpHost,UserIp).start();
+						}
+					 }	
+					}
+					
+					
 					if(!isAccessDenied)
 					{
 						//cRcvdData = RequestParser.GetFixedFullHeader();
@@ -268,7 +290,7 @@ class ProxyConnection extends CADBiSThread {
 			 /**************************************
 			  * Parse the response headers
 			  *************************************/
-			 if(buffer.size()>0 && !firstResponsePacketParser.isResponseParsed())
+			 if(buffer.size()>0 && !isFullAnswer && !firstResponsePacketParser.isResponseParsed())
 			 {
 				 firstResponsePacketParser.ParseResponseHeaders(new String(StringUtils.getChars(buffer.get(0))));				 
 				 NeedToCheckContent = isNeedToCheckContent(firstResponsePacketParser);
@@ -280,10 +302,8 @@ class ProxyConnection extends CADBiSThread {
 			  * TODO: The place for content analyze
 			  * analyze only text/html content
 			  ***************************************/
-			 if(NeedToCheckContent)
+			 if(NeedToCheckContent && !isFullAnswer)
 			 {
-				 if(!NeedToRecognizeCategory)
-					 cid = Categorizer.getInstance().getCategoryForUrl(HttpHost);
 				 // category not recognized, trying to recognize it
 				 if(cid == null)
 				 {	
@@ -310,26 +330,6 @@ class ProxyConnection extends CADBiSThread {
 						 NeedToCheckContent = false;
 					 }
 				 }
-				 else
-				 {
-					 NeedToCheckContent = false;
-					 Action act = Collector.getInstance().getActionByUserIp(UserIp);
-					 if(act != null)
-					 {
-						boolean access = Categorizer.getInstance().checkAccessToCategory(act.getGid(), cid);
-						logger.info("Checking access of "+act.getUser()+" to ("+HttpHost+")cid="+cid+" = "+ access +"...");
-						if(!access)
-						{
-							// indicating that we have finished the answer
-							isFullAnswer = true;
-							// answer the denied access
-							answerAccessDenied(buffer,UserIp,HttpHost);
-							// log the attempt to access denied category
-							new AccessDeniedAttemptLogger(cid, HttpHost,UserIp).start();
-						}
-					 }
-				 }
-				 
 			 }			 
 			 
 			 
