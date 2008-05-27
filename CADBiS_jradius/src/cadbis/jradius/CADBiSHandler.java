@@ -88,6 +88,8 @@ public class CADBiSHandler extends PacketHandlerBase
     	    String clientIP = "";
     	    if(req.getAttributes().get("Client-IP-Address")!=null)
     	    	clientIP = req.getAttributes().get("Client-IP-Address").getValue().toString();
+    	    if(req.getAttributes().get("Calling-Station-Id")!=null)
+    	    	clientIP = req.getAttributes().get("Calling-Station-Id").getValue().toString();    	    
     	    if(req.getAttributes().get("Framed-IP-Address")!=null)
     	    	framedIP = req.getAttributes().get("Framed-IP-Address").getValue().toString();
 
