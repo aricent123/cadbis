@@ -25,6 +25,7 @@ public class Categorizer extends CADBiSDaemon{
 	protected HashMap<String, Integer> kwds_weights = null;
 	protected Set<String> catsAccessDenied = null; 
 	private static Categorizer instance = null;
+	protected Set<String> current_analysis = new HashSet<String>();
 	protected static Object rwLock = new Object(); 
 	
 	protected Categorizer() {
@@ -121,13 +122,22 @@ public class Categorizer extends CADBiSDaemon{
 		return cats_by_cid.get(cidMax);
 	}
 	
-	public synchronized Integer recognizeAndAddCategory(String url, String content, String charset)
+	public Integer recognizeAndAddCategory(String url, String content, String charset)
 	{
-		ContentCategory cat = recognizeCategory(url, content, cats, uswords,charset);
+		ContentCategory cat = new ContentCategory();
+		if(!current_analysis.contains(url)){
+			current_analysis.add(url);
+			cat = recognizeCategory(url, content, cats, uswords,charset);
+		}
+		else
+			return 0;		
 		logger.info("Recognizing and adding a category for url='"+url+"' = " + cat.getTitle());
-		if(!url_cat.containsKey(url)){
-			url_cat.put(url, cat.getCid());
-			new ContentCategoryDAO().addUrlCategoryMatch(url, cat.getCid());
+		synchronized (rwLock) {
+			current_analysis.remove(url);
+			if(!url_cat.containsKey(url)){
+				url_cat.put(url, cat.getCid());
+				new ContentCategoryDAO().addUrlCategoryMatch(url, cat.getCid());
+			}			
 		}
 		return cat.getCid();
 	}
@@ -138,8 +148,8 @@ public class Categorizer extends CADBiSDaemon{
 		logger.debug("Trying to recognize category for " + url);
 		if(!url_cat.containsKey(url))
 		{
-			logger.debug("Category unrecognized, reloading data... ");
-			reloadData();
+			//logger.debug("Category unrecognized, reloading data... ");
+			//reloadData();
 		}
 		else
 			logger.debug("Category recognized, = " + url_cat.get(url));
