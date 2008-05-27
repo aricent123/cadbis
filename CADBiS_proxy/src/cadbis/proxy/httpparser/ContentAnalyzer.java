@@ -9,6 +9,7 @@ import java.nio.charset.CharsetDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.PatternSyntaxException;
 
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Parser;
@@ -180,7 +181,7 @@ public class ContentAnalyzer {
 		String metaCharset = getCharset(content.toLowerCase());
 		if(!metaCharset.isEmpty())
 			charset = metaCharset;
-		logger.debug("Converting charset from '"+charset+"'...");		
+		logger.info("Converting charset from '"+charset+"'...");		
 		content = ContentAnalyzer.ConvertToUTF(content, charset).toLowerCase();
 		String metaKeywords = getKeywords(content);
 		String metaDescription = getDescription(content);
@@ -203,18 +204,7 @@ public class ContentAnalyzer {
 					keywords.put(keyword,keywords.get(keyword)+1);
 			}
 		}
-
-		
-		Iterator<String> kIterator = keywords.keySet().iterator();
-		String tmp = "";
-	    while (kIterator.hasNext()) {
-	    	String keyword = kIterator.next();
-	    	tmp += keyword+"("+keywords.get(keyword)+")";
-		}
-	    logger.debug(tmp);
-		
-		
-		
+	
 		HashMap<Integer, Integer> cats_coefs = new HashMap<Integer, Integer>();
 		cats_coefs.put(0, 0);
 	    for(ContentCategory cat : cats)
@@ -235,12 +225,16 @@ public class ContentAnalyzer {
 			    		coef += keywords.get(keyword) * weight;			    		
 			    	}
 		    	}
+		    	try{
 	    		if(metaKeywords.matches("(?ims).*, *"+catkw+" *,.*") || metaDescription.matches("(?ims).* *"+catkw+" *.*"))
 	    			coef += META_KWD_COEF * weight;
-    				cats_coefs.put(cat.getCid(),cats_coefs.get(cat.getCid())+coef);    				
+    				cats_coefs.put(cat.getCid(),cats_coefs.get(cat.getCid())+coef);
+		    	}catch(PatternSyntaxException e)
+		    	{logger.error("Analyze keywords '"+catkw+"' in '"+metaKeywords+"' error" + e.getMessage());}
+		    	
 	    		
     			if(coef>0)
-    				logger.debug("'"+catkw+"' +"+coef+" for '"+cat.getTitle()+"'");
+    				logger.info("'"+catkw+"' +"+coef+" for '"+cat.getTitle()+"'");
 	    	}
 	    }
 	    

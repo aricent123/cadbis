@@ -22,8 +22,8 @@ public class ResponseHttpParser extends AbstractHttpParser {
 			try{
 				respStatus = Integer.parseInt(lines[0].substring(spPos+1,spPos2));
 			}
-			catch(NumberFormatException e){logger.debug("Resp status recognition failed for: '"+lines[0]+"'("+spPos2+")("+spPos+")");}
-			catch(StringIndexOutOfBoundsException e){logger.debug("Resp status recognition failed for: '"+lines[0]+"'("+spPos2+")("+spPos+")");}
+			catch(NumberFormatException e){}
+			catch(StringIndexOutOfBoundsException e){}
 		}
 		ParseHeaders(lines);
 		isResponseParsed = true;

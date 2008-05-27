@@ -11,12 +11,14 @@
       <eAnnotations xmi:id="_Val2witqEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/srcClassDiagramInheritance.ucd"/>
       <eAnnotations xmi:id="_uFqpYitqEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/srcClassDiagram.ucd"/>
       <eAnnotations xmi:id="_fWm-hCtrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd" references="_fWm-gytrEd2DVPgneqAduw _bDFT0StrEd2DVPgneqAduw _bDYOwCtrEd2DVPgneqAduw"/>
+      <eAnnotations xmi:id="_6jCcICuCEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad" references="_fWm-gytrEd2DVPgneqAduw"/>
       <packagedElement xmi:type="uml:Package" xmi:id="_hOLEcytoEd2DVPgneqAduw" name="proxy">
         <eAnnotations xmi:id="_hOLEdStoEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/cadbisClassDiagram.ucd" references="_bBTLICtrEd2DVPgneqAduw"/>
         <eAnnotations xmi:id="_uN1jYCtpEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/docComponentDiagram.upd"/>
         <eAnnotations xmi:id="_XBaqoCtqEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/srcClassDiagramInheritance.ucd"/>
         <eAnnotations xmi:id="_vXe2kCtqEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/srcClassDiagram.ucd"/>
         <eAnnotations xmi:id="_fWm-gStrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd" references="_fWm-gCtrEd2DVPgneqAduw _fdm-YCtrEd2DVPgneqAduw _bBTLICtrEd2DVPgneqAduw _bDFT0StrEd2DVPgneqAduw _ha-xYytoEd2DVPgneqAduw _bDYOwCtrEd2DVPgneqAduw _fjHwgStrEd2DVPgneqAduw _fjbSgCtrEd2DVPgneqAduw _fjbSgitrEd2DVPgneqAduw _fjbShCtrEd2DVPgneqAduw _fjkccCtrEd2DVPgneqAduw _fm2Z8CtrEd2DVPgneqAduw _he3L0StoEd2DVPgneqAduw __qYSwCtpEd2DVPgneqAduw _hoisQCtoEd2DVPgneqAduw _FiofkCtqEd2DVPgneqAduw _he3L0itoEd2DVPgneqAduw _fWm-gytrEd2DVPgneqAduw _foVntCtrEd2DVPgneqAduw _foVntitrEd2DVPgneqAduw _hfKGxitoEd2DVPgneqAduw _Fqh3UCtqEd2DVPgneqAduw _j1y34CtxEd2DVPgneqAduw _hxVb4CtoEd2DVPgneqAduw _iKqh6ytoEd2DVPgneqAduw _hoisWytoEd2DVPgneqAduw _hvjTMCtoEd2DVPgneqAduw _iKqh7ytoEd2DVPgneqAduw _Qb0sIitpEd2DVPgneqAduw _hyFCxCtoEd2DVPgneqAduw _hoZiUStoEd2DVPgneqAduw _hoisUCtoEd2DVPgneqAduw _QhfPQitpEd2DVPgneqAduw _hyFCwitoEd2DVPgneqAduw _Qj304CtpEd2DVPgneqAduw _iKEsAStoEd2DVPgneqAduw _hxfM4CtoEd2DVPgneqAduw _iKqh7StoEd2DVPgneqAduw _hoisRCtoEd2DVPgneqAduw _hnzFYStoEd2DVPgneqAduw __wKAECtoEd2DVPgneqAduw _hxCg9ytoEd2DVPgneqAduw _hoisUitoEd2DVPgneqAduw _hoisQitoEd2DVPgneqAduw _iKqh6StoEd2DVPgneqAduw _ABSzYCtpEd2DVPgneqAduw _hxCg8itoEd2DVPgneqAduw _FZsmACtqEd2DVPgneqAduw _AK-66CtpEd2DVPgneqAduw _hnzFYCtoEd2DVPgneqAduw _ha-xYitoEd2DVPgneqAduw _foVnsCtrEd2DVPgneqAduw"/>
+        <eAnnotations xmi:id="_6jLmECuCEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad" references="_fjbShCtrEd2DVPgneqAduw"/>
         <packagedElement xmi:type="uml:Association" xmi:id="_hcxhIStoEd2DVPgneqAduw" memberEnd="_hcxhIitoEd2DVPgneqAduw">
           <ownedEnd xmi:id="_hcxhIitoEd2DVPgneqAduw" name="ownedEnd" association="_hcxhIStoEd2DVPgneqAduw"/>
         </packagedElement>
@@ -432,6 +434,7 @@
         </packagedElement>
         <packagedElement xmi:type="uml:Class" xmi:id="_fWm-gCtrEd2DVPgneqAduw" name="Categorizer" clientDependency="_fXpgUCtrEd2DVPgneqAduw _fXzRUStrEd2DVPgneqAduw _fX8bQStrEd2DVPgneqAduw _fYGMQStrEd2DVPgneqAduw _fYGMRCtrEd2DVPgneqAduw _fYP9QitrEd2DVPgneqAduw _fYZHMStrEd2DVPgneqAduw _fYi4MStrEd2DVPgneqAduw _fY1zIStrEd2DVPgneqAduw _fY_kIStrEd2DVPgneqAduw _fZIuEStrEd2DVPgneqAduw _fZSfEStrEd2DVPgneqAduw _fZcQEStrEd2DVPgneqAduw _fZlaACtrEd2DVPgneqAduw _fZlaAitrEd2DVPgneqAduw _fZvLAStrEd2DVPgneqAduw _fZ48AStrEd2DVPgneqAduw _faCF8StrEd2DVPgneqAduw _faL28StrEd2DVPgneqAduw _faVA4StrEd2DVPgneqAduw _faex4itrEd2DVPgneqAduw">
           <eAnnotations xmi:id="_fWm-gitrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd"/>
+          <eAnnotations xmi:id="_UGurECt-Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
           <generalization xmi:id="_fWm-hitrEd2DVPgneqAduw" general="_fWm-gytrEd2DVPgneqAduw"/>
           <ownedAttribute xmi:id="_fW55cCtrEd2DVPgneqAduw" name="cats" visibility="protected" type="_hnzFYStoEd2DVPgneqAduw" association="_faxs0CtrEd2DVPgneqAduw">
             <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_fXDqcitrEd2DVPgneqAduw" value="*"/>
@@ -517,6 +520,7 @@
         </packagedElement>
         <packagedElement xmi:type="uml:Class" xmi:id="_fdm-YCtrEd2DVPgneqAduw" name="GCRunner" clientDependency="_fdwvYCtrEd2DVPgneqAduw _fd55UitrEd2DVPgneqAduw _feDqUStrEd2DVPgneqAduw _feDqUytrEd2DVPgneqAduw _feNbUStrEd2DVPgneqAduw _HIz5kCtyEd2DVPgneqAduw _SpY1QCt8Ed2DVPgneqAduw _FNnXMCt9Ed239LwpEivL3A">
           <eAnnotations xmi:id="_fdm-YStrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd"/>
+          <eAnnotations xmi:id="_Ti92sCt-Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
           <generalization xmi:id="_fdm-YitrEd2DVPgneqAduw" general="_fWm-gytrEd2DVPgneqAduw"/>
           <ownedAttribute xmi:id="_fdm-YytrEd2DVPgneqAduw" name="instance" visibility="private" isStatic="true" type="_fdm-YCtrEd2DVPgneqAduw" association="_fegWQCtrEd2DVPgneqAduw"/>
           <ownedOperation xmi:id="_fdm-ZCtrEd2DVPgneqAduw" name="GCRunner" visibility="protected" concurrency="concurrent"/>
@@ -532,6 +536,7 @@
         </packagedElement>
         <packagedElement xmi:type="uml:Class" xmi:id="_fjHwgStrEd2DVPgneqAduw" name="Proxy" clientDependency="_fjkccitrEd2DVPgneqAduw _fjuNcStrEd2DVPgneqAduw _fj3XYStrEd2DVPgneqAduw _fkBIYStrEd2DVPgneqAduw _fkK5YitrEd2DVPgneqAduw _fkK5ZStrEd2DVPgneqAduw _fkUDUStrEd2DVPgneqAduw _fkd0UStrEd2DVPgneqAduw _fknlUStrEd2DVPgneqAduw _fkwvQStrEd2DVPgneqAduw _fk6gQitrEd2DVPgneqAduw _flDqMStrEd2DVPgneqAduw _flNbMStrEd2DVPgneqAduw _flXMMStrEd2DVPgneqAduw _flgWIStrEd2DVPgneqAduw _flqHIStrEd2DVPgneqAduw _flz4IStrEd2DVPgneqAduw _fl9CEStrEd2DVPgneqAduw _fmGzEitrEd2DVPgneqAduw _fmP9AitrEd2DVPgneqAduw _fmZuAStrEd2DVPgneqAduw _fmjfAStrEd2DVPgneqAduw _4BKIgCtyEd2DVPgneqAduw _72bw8CtyEd2DVPgneqAduw _-yVhYCtyEd2DVPgneqAduw _G0QaUCt8Ed2DVPgneqAduw _V0VuUCt8Ed2DVPgneqAduw _aDiSoCt8Ed2DVPgneqAduw">
           <eAnnotations xmi:id="_fjHwgitrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd"/>
+          <eAnnotations xmi:id="_RnlIESt-Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
           <generalization xmi:id="_fjHwgytrEd2DVPgneqAduw" general="_bDYOwCtrEd2DVPgneqAduw"/>
           <ownedAttribute xmi:id="_fjHwhCtrEd2DVPgneqAduw" name="logger" visibility="private" isLeaf="true" isStatic="true" type="_ZNqqUStrEd2DVPgneqAduw" isReadOnly="true"/>
           <ownedAttribute xmi:id="_fjHwhStrEd2DVPgneqAduw" name="clientCount" visibility="package" isStatic="true">
@@ -632,6 +637,7 @@
         </packagedElement>
         <packagedElement xmi:type="uml:Class" xmi:id="_fjbSgitrEd2DVPgneqAduw" name="Aggregator" clientDependency="_fynlECtrEd2DVPgneqAduw _fyxWEStrEd2DVPgneqAduw _fy7HEStrEd2DVPgneqAduw _fzERAStrEd2DVPgneqAduw _fzOCAStrEd2DVPgneqAduw _fzXL8StrEd2DVPgneqAduw _fzg88itrEd2DVPgneqAduw _fzqt8StrEd2DVPgneqAduw _fzz34StrEd2DVPgneqAduw _fz9o4StrEd2DVPgneqAduw _f0HZ4StrEd2DVPgneqAduw _f0Qj0StrEd2DVPgneqAduw _f0aU0StrEd2DVPgneqAduw _f0jewitrEd2DVPgneqAduw _f0tPwStrEd2DVPgneqAduw _f03AwStrEd2DVPgneqAduw _f1AKsStrEd2DVPgneqAduw _f1J7sStrEd2DVPgneqAduw _f1TssitrEd2DVPgneqAduw _f1c2oStrEd2DVPgneqAduw">
           <eAnnotations xmi:id="_fjbSgytrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd"/>
+          <eAnnotations xmi:id="_frHM4CuBEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
           <generalization xmi:id="_fxu0QCtrEd2DVPgneqAduw" general="_fWm-gytrEd2DVPgneqAduw"/>
           <ownedAttribute xmi:id="_fxu0QStrEd2DVPgneqAduw" name="instance" visibility="private" isStatic="true" type="_fjbSgitrEd2DVPgneqAduw" association="_f1mnoStrEd2DVPgneqAduw"/>
           <ownedOperation xmi:id="_fx3-MCtrEd2DVPgneqAduw" name="UpdateCtryPopularity" visibility="protected" concurrency="concurrent">
@@ -756,6 +762,7 @@
         </packagedElement>
         <packagedElement xmi:type="uml:Class" xmi:id="_fjbShCtrEd2DVPgneqAduw" name="Collector" clientDependency="_gIYZsCtrEd2DVPgneqAduw _gIhjoStrEd2DVPgneqAduw _gIrUoStrEd2DVPgneqAduw _gI0ekStrEd2DVPgneqAduw _gI-PkStrEd2DVPgneqAduw _gJIAkStrEd2DVPgneqAduw _gJRKgStrEd2DVPgneqAduw _gJa7gStrEd2DVPgneqAduw _gJksgitrEd2DVPgneqAduw _gJt2citrEd2DVPgneqAduw _gJ3ncStrEd2DVPgneqAduw _gKAxYStrEd2DVPgneqAduw _gKAxYytrEd2DVPgneqAduw _gKKiYStrEd2DVPgneqAduw _gKUTYStrEd2DVPgneqAduw _gKnOUStrEd2DVPgneqAduw _gKw_UitrEd2DVPgneqAduw _DYA88Ct8Ed2DVPgneqAduw _Cj5i8Ct9Ed239LwpEivL3A">
           <eAnnotations xmi:id="_fjbShStrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd"/>
+          <eAnnotations xmi:id="_T1vowCt-Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
           <generalization xmi:id="_gHoLwCtrEd2DVPgneqAduw" general="_fWm-gytrEd2DVPgneqAduw"/>
           <ownedAttribute xmi:id="_gHx8wCtrEd2DVPgneqAduw" name="actionsOfIps" visibility="private" type="_iKEsAStoEd2DVPgneqAduw" association="_gK6JRStrEd2DVPgneqAduw">
             <qualifier xmi:id="_gHx8wStrEd2DVPgneqAduw" name="key" type="_hfdBsCtoEd2DVPgneqAduw"/>
@@ -849,6 +856,7 @@
         </packagedElement>
         <packagedElement xmi:type="uml:Class" xmi:id="_fjkccCtrEd2DVPgneqAduw" name="Reconfigurer" clientDependency="_fwYwcCtrEd2DVPgneqAduw _fwihcStrEd2DVPgneqAduw _fwrrYStrEd2DVPgneqAduw _fw1cYStrEd2DVPgneqAduw _fw-mUStrEd2DVPgneqAduw _fw-mUytrEd2DVPgneqAduw _fxIXUStrEd2DVPgneqAduw _fxSIUStrEd2DVPgneqAduw">
           <eAnnotations xmi:id="_fjkccStrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd"/>
+          <eAnnotations xmi:id="_Utxc8Ct-Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
           <generalization xmi:id="_fwO_cCtrEd2DVPgneqAduw" general="_fWm-gytrEd2DVPgneqAduw"/>
           <ownedAttribute xmi:id="_fwO_cStrEd2DVPgneqAduw" name="instance" visibility="private" isStatic="true" type="_fjkccCtrEd2DVPgneqAduw" association="_fxlDQCtrEd2DVPgneqAduw"/>
           <ownedOperation xmi:id="_fwO_citrEd2DVPgneqAduw" name="daemonize" visibility="protected" concurrency="concurrent"/>
@@ -872,6 +880,7 @@
           <eAnnotations xmi:id="_foVnsitrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd" references="_foVnsStrEd2DVPgneqAduw _foVntCtrEd2DVPgneqAduw _foVntitrEd2DVPgneqAduw _FLZSACtvEd2DVPgneqAduw"/>
           <packagedElement xmi:type="uml:Class" xmi:id="_foVnsStrEd2DVPgneqAduw" name="AccessDeniedAttemptLogger" clientDependency="_FLjDACtvEd2DVPgneqAduw _FLsM8itvEd2DVPgneqAduw _FL198itvEd2DVPgneqAduw _FL_H4StvEd2DVPgneqAduw _FMI44StvEd2DVPgneqAduw">
             <eAnnotations xmi:id="_foVnsytrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd"/>
+            <eAnnotations xmi:id="_SZLnUCuCEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
             <generalization xmi:id="_FLPhACtvEd2DVPgneqAduw" general="_bDYOwCtrEd2DVPgneqAduw"/>
             <ownedAttribute xmi:id="_FLPhAStvEd2DVPgneqAduw" name="HttpHost" visibility="private" type="_hW90GCtoEd2DVPgneqAduw"/>
             <ownedAttribute xmi:id="_FLPhAitvEd2DVPgneqAduw" name="type" visibility="private" type="_FLZSACtvEd2DVPgneqAduw" association="_FMSp4itvEd2DVPgneqAduw"/>
@@ -905,6 +914,7 @@
           </packagedElement>
           <packagedElement xmi:type="uml:Class" xmi:id="_foVntCtrEd2DVPgneqAduw" name="CategoryRecognizer" clientDependency="_FNoGoCtvEd2DVPgneqAduw _FNx3oStvEd2DVPgneqAduw _FN7ooStvEd2DVPgneqAduw _FOEykitvEd2DVPgneqAduw _FOOjkStvEd2DVPgneqAduw _FOXtgStvEd2DVPgneqAduw _FOhegStvEd2DVPgneqAduw _FOrPgitvEd2DVPgneqAduw _FO0ZcStvEd2DVPgneqAduw _FO-KcStvEd2DVPgneqAduw _FPH7cStvEd2DVPgneqAduw _FPRFYitvEd2DVPgneqAduw _wDeLICtwEd2DVPgneqAduw _DT89UCtxEd2DVPgneqAduw">
             <eAnnotations xmi:id="_foVntStrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd"/>
+            <eAnnotations xmi:id="_Bvc08CuCEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
             <generalization xmi:id="_FNVLsCtvEd2DVPgneqAduw" general="_bDYOwCtrEd2DVPgneqAduw"/>
             <ownedAttribute xmi:id="_FNe8sCtvEd2DVPgneqAduw" name="ResponseParser" visibility="private" type="_he3L0itoEd2DVPgneqAduw" association="_FPa2YStvEd2DVPgneqAduw"/>
             <ownedAttribute xmi:id="_FNe8sStvEd2DVPgneqAduw" name="HttpHost" visibility="private" type="_hW90GCtoEd2DVPgneqAduw"/>
@@ -1266,6 +1276,7 @@
         <eAnnotations xmi:id="_XBaqoStqEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/srcClassDiagramInheritance.ucd" references="_hxCg9ytoEd2DVPgneqAduw _hxCg8itoEd2DVPgneqAduw _hnzFYStoEd2DVPgneqAduw _iKEsAStoEd2DVPgneqAduw"/>
         <eAnnotations xmi:id="_vXoAgCtqEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/srcClassDiagram.ucd" references="_hxCg8itoEd2DVPgneqAduw _hxCg9ytoEd2DVPgneqAduw _hnzFYStoEd2DVPgneqAduw _iKEsAStoEd2DVPgneqAduw"/>
         <eAnnotations xmi:id="_DggxoCt8Ed2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd" references="_iKEsAStoEd2DVPgneqAduw"/>
+        <eAnnotations xmi:id="_6jLmEiuCEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad" references="_iKEsAStoEd2DVPgneqAduw"/>
         <packagedElement xmi:type="uml:Class" xmi:id="_hnzFYStoEd2DVPgneqAduw" name="ContentCategory" clientDependency="_FRWiUCtqEd2DVPgneqAduw _FRynMCtqEd2DVPgneqAduw _FR8YMitqEd2DVPgneqAduw _FSGJMitqEd2DVPgneqAduw _wuRz8Ct2Ed2DVPgneqAduw">
           <eAnnotations xmi:id="_hnzFYytoEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/cadbisClassDiagram.ucd"/>
           <ownedAttribute xmi:id="_FRfsQCtqEd2DVPgneqAduw" name="title" visibility="protected" type="_hW90GCtoEd2DVPgneqAduw"/>
@@ -3243,6 +3254,7 @@
         <eAnnotations xmi:id="_VaJK0itqEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/srcClassDiagramInheritance.ucd" references="_hW90EytoEd2DVPgneqAduw _hnzFbStoEd2DVPgneqAduw _hnp7cStoEd2DVPgneqAduw _hnzFZitoEd2DVPgneqAduw _iKXm8itoEd2DVPgneqAduw"/>
         <eAnnotations xmi:id="_uFOkgitqEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/srcClassDiagram.ucd" references="_hW90EytoEd2DVPgneqAduw _hnp7cStoEd2DVPgneqAduw _hnzFbStoEd2DVPgneqAduw _hnzFZitoEd2DVPgneqAduw _iKXm8itoEd2DVPgneqAduw"/>
         <eAnnotations xmi:id="_fXDqcCtrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd" references="_hnp7cStoEd2DVPgneqAduw _hnzFZitoEd2DVPgneqAduw _hnzFbStoEd2DVPgneqAduw _hW90EytoEd2DVPgneqAduw _iKXm8itoEd2DVPgneqAduw"/>
+        <eAnnotations xmi:id="_6jLmESuCEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad" references="_hnp7cStoEd2DVPgneqAduw _hnzFbStoEd2DVPgneqAduw _iKXm8itoEd2DVPgneqAduw"/>
         <packagedElement xmi:type="uml:Class" xmi:id="_hW90EytoEd2DVPgneqAduw" name="Properties">
           <eAnnotations xmi:id="_hW90FStoEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/cadbisClassDiagram.ucd"/>
         </packagedElement>
@@ -3346,6 +3358,7 @@
         <eAnnotations xmi:id="_VaJK0CtqEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/srcClassDiagramInheritance.ucd" references="_hW90GCtoEd2DVPgneqAduw _hn82ZCtoEd2DVPgneqAduw _hXta8itoEd2DVPgneqAduw _hfdBsCtoEd2DVPgneqAduw _ixkJ0itoEd2DVPgneqAduw"/>
         <eAnnotations xmi:id="_uFOkgCtqEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/srcClassDiagram.ucd" references="_hW90GCtoEd2DVPgneqAduw _hn82ZCtoEd2DVPgneqAduw _hXta8itoEd2DVPgneqAduw _hfdBsCtoEd2DVPgneqAduw _ixkJ0itoEd2DVPgneqAduw"/>
         <eAnnotations xmi:id="_fXDqdCtrEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/cadbis.proxyClassDiagram.ucd" references="_hW90GCtoEd2DVPgneqAduw _hfdBsCtoEd2DVPgneqAduw _hn82ZCtoEd2DVPgneqAduw _hXta8itoEd2DVPgneqAduw _ixkJ0itoEd2DVPgneqAduw _he3L1ytoEd2DVPgneqAduw _hyOzwytoEd2DVPgneqAduw _hyOzwStoEd2DVPgneqAduw _hdhIACtoEd2DVPgneqAduw _hyFCwCtoEd2DVPgneqAduw"/>
+        <eAnnotations xmi:id="_6jLmEyuCEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad" references="_hn82ZCtoEd2DVPgneqAduw _hW90GCtoEd2DVPgneqAduw _hfdBsCtoEd2DVPgneqAduw"/>
         <packagedElement xmi:type="uml:Class" xmi:id="_hW90GCtoEd2DVPgneqAduw" name="String" isLeaf="true">
           <eAnnotations xmi:id="_hW90GitoEd2DVPgneqAduw" source="D:/Projects/EclipseProjects/CADBiS_proxy/doc/cadbisClassDiagram.ucd"/>
         </packagedElement>
@@ -4722,6 +4735,123 @@
     <packagedElement xmi:type="uml:Abstraction" xmi:id="_Cj5i8Ct9Ed239LwpEivL3A" supplier="_fWm-gytrEd2DVPgneqAduw" client="_fjbShCtrEd2DVPgneqAduw"/>
     <packagedElement xmi:type="uml:Abstraction" xmi:id="_FNnXMCt9Ed239LwpEivL3A" supplier="_fWm-gytrEd2DVPgneqAduw" client="_fdm-YCtrEd2DVPgneqAduw"/>
     <packagedElement xmi:type="uml:Abstraction" xmi:id="_HmzcICt9Ed239LwpEivL3A" supplier="_bDYOwCtrEd2DVPgneqAduw" client="_fjbSgCtrEd2DVPgneqAduw"/>
+    <packagedElement xmi:type="uml:Package" xmi:id="_Qt68MCt-Ed239LwpEivL3A" name=".">
+      <eAnnotations xmi:id="_RnlIECt-Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad" references="_fjHwgStrEd2DVPgneqAduw _fdm-YCtrEd2DVPgneqAduw _fjbShCtrEd2DVPgneqAduw _fWm-gCtrEd2DVPgneqAduw _fjbSgitrEd2DVPgneqAduw _fjkccCtrEd2DVPgneqAduw _fjbSgCtrEd2DVPgneqAduw _ZXDVMCt-Ed239LwpEivL3A _IvlXMCt_Ed239LwpEivL3A _ODe5wCt_Ed239LwpEivL3A _VJXXUCt_Ed239LwpEivL3A _ex-3YCt_Ed239LwpEivL3A _vyXPMCt_Ed239LwpEivL3A _y_i84Ct_Ed239LwpEivL3A _1QFcICt_Ed239LwpEivL3A _388D8Ct_Ed239LwpEivL3A _LaYUECuAEd239LwpEivL3A _9otegCuAEd239LwpEivL3A _GsEVYCuBEd239LwpEivL3A _1boS4CuBEd239LwpEivL3A _foVntCtrEd2DVPgneqAduw _foVnsStrEd2DVPgneqAduw _kFhGMCuCEd239LwpEivL3A _y7Kr0CuCEd239LwpEivL3A _CmUWECuDEd239LwpEivL3A _GP0MUCuDEd239LwpEivL3A _G_8owCuDEd239LwpEivL3A"/>
+      <packagedElement xmi:type="uml:Activity" xmi:id="_Qt68MSt-Ed239LwpEivL3A" name="ProxyConnection Activity">
+        <node xmi:type="uml:ForkNode" xmi:id="_ZXDVMCt-Ed239LwpEivL3A" name="Creates">
+          <eAnnotations xmi:id="_ZXDVMSt-Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_IvlXMCt_Ed239LwpEivL3A" name="Recieve Request" outgoing="_RRHTYCt_Ed239LwpEivL3A">
+          <eAnnotations xmi:id="_IvlXMSt_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_ODe5wCt_Ed239LwpEivL3A" name="Parse Request" outgoing="_bliJgCt_Ed239LwpEivL3A _78Mu0Ct_Ed239LwpEivL3A" incoming="_RRHTYCt_Ed239LwpEivL3A">
+          <eAnnotations xmi:id="_ODe5wSt_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_VJXXUCt_Ed239LwpEivL3A" name="Recieve Response" outgoing="_hzPo8Ct_Ed239LwpEivL3A" incoming="_bliJgCt_Ed239LwpEivL3A">
+          <eAnnotations xmi:id="_VJXXUSt_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_ex-3YCt_Ed239LwpEivL3A" name="Parse Response" outgoing="_H3bxwCuAEd239LwpEivL3A" incoming="_hzPo8Ct_Ed239LwpEivL3A">
+          <eAnnotations xmi:id="_ex-3YSt_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_vyXPMCt_Ed239LwpEivL3A" name="Analyze Content" outgoing="_ho16UCuAEd239LwpEivL3A">
+          <eAnnotations xmi:id="_vygZICt_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:ForkNode" xmi:id="_y_i84Ct_Ed239LwpEivL3A" outgoing="_F2GMICuAEd239LwpEivL3A" incoming="_H3bxwCuAEd239LwpEivL3A">
+          <eAnnotations xmi:id="_y_i84St_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+          <name xsi:nil="true"/>
+        </node>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_1QFcICt_Ed239LwpEivL3A" name="Send Response to client" outgoing="_8B7RcCuBEd239LwpEivL3A" incoming="_F2GMICuAEd239LwpEivL3A">
+          <eAnnotations xmi:id="_1QFcISt_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_388D8Ct_Ed239LwpEivL3A" name="Send denial to client" outgoing="_OvBUoCuAEd239LwpEivL3A" incoming="_KSb_ICuBEd239LwpEivL3A">
+          <eAnnotations xmi:id="_388D8St_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:ActivityFinalNode" xmi:id="_LaYUECuAEd239LwpEivL3A" name="End of ProxyConnection" incoming="_OvBUoCuAEd239LwpEivL3A _8B7RcCuBEd239LwpEivL3A">
+          <eAnnotations xmi:id="_LaYUESuAEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:ForkNode" xmi:id="_9otegCuAEd239LwpEivL3A" outgoing="_KSb_ICuBEd239LwpEivL3A" incoming="_78Mu0Ct_Ed239LwpEivL3A">
+          <eAnnotations xmi:id="_9otegSuAEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+          <name xsi:nil="true"/>
+        </node>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_GsEVYCuBEd239LwpEivL3A" name="Log the attempt" outgoing="_Ij4LkCuBEd239LwpEivL3A">
+          <eAnnotations xmi:id="_GsEVYSuBEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:ActivityFinalNode" xmi:id="_1boS4CuBEd239LwpEivL3A" name="End of CategoryRecognizer" incoming="_ho16UCuAEd239LwpEivL3A">
+          <eAnnotations xmi:id="_1boS4SuBEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:ActivityFinalNode" xmi:id="_kFhGMCuCEd239LwpEivL3A" name="End of logger" incoming="_Ij4LkCuBEd239LwpEivL3A">
+          <eAnnotations xmi:id="_kFhGMSuCEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_y7Kr0CuCEd239LwpEivL3A" name="Collect data" outgoing="_J-O-0CuDEd239LwpEivL3A">
+          <eAnnotations xmi:id="_y7Kr0SuCEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_CmUWECuDEd239LwpEivL3A" name="Wait" incoming="_J-O-0CuDEd239LwpEivL3A">
+          <eAnnotations xmi:id="_CmUWESuDEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_GP0MUCuDEd239LwpEivL3A" name="Aggregate" outgoing="_R8wUkCuDEd239LwpEivL3A" incoming="_mOMNcCuDEd239LwpEivL3A">
+          <eAnnotations xmi:id="_GP0MUSuDEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_G_8owCuDEd239LwpEivL3A" name="Wait" outgoing="_mOMNcCuDEd239LwpEivL3A" incoming="_R8wUkCuDEd239LwpEivL3A">
+          <eAnnotations xmi:id="_G_8owSuDEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
+        </node>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_RRHTYCt_Ed239LwpEivL3A" name="Request recieved" source="_IvlXMCt_Ed239LwpEivL3A" target="_ODe5wCt_Ed239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_TaDV0Ct_Ed239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_TaDV0St_Ed239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_bliJgCt_Ed239LwpEivL3A" name="Url is allowed, request sent to server" source="_ODe5wCt_Ed239LwpEivL3A" target="_VJXXUCt_Ed239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_BJsHYCuAEd239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_BJsHYSuAEd239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_hzPo8Ct_Ed239LwpEivL3A" name="Response recieved" source="_VJXXUCt_Ed239LwpEivL3A" target="_ex-3YCt_Ed239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_kchYUCt_Ed239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_kchYUSt_Ed239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_78Mu0Ct_Ed239LwpEivL3A" name="URL is denied" source="_ODe5wCt_Ed239LwpEivL3A" target="_9otegCuAEd239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_9sGmMCt_Ed239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_9sGmMSt_Ed239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_F2GMICuAEd239LwpEivL3A" name="" source="_y_i84Ct_Ed239LwpEivL3A" target="_1QFcICt_Ed239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_yPef8CuBEd239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_yPef8SuBEd239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_H3bxwCuAEd239LwpEivL3A" name="" source="_ex-3YCt_Ed239LwpEivL3A" target="_y_i84Ct_Ed239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_IAhcUCuAEd239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_IAhcUSuAEd239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_OvBUoCuAEd239LwpEivL3A" name="" source="_388D8Ct_Ed239LwpEivL3A" target="_LaYUECuAEd239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_O5mM8CuAEd239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_O5mM8SuAEd239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_ho16UCuAEd239LwpEivL3A" name="" source="_vyXPMCt_Ed239LwpEivL3A" target="_1boS4CuBEd239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_hzbZsCuAEd239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_hzbZsSuAEd239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_Ij4LkCuBEd239LwpEivL3A" name="" source="_GsEVYCuBEd239LwpEivL3A" target="_kFhGMCuCEd239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_IwY9kCuBEd239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_IwY9kSuBEd239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_KSb_ICuBEd239LwpEivL3A" name="" source="_9otegCuAEd239LwpEivL3A" target="_388D8Ct_Ed239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_KdnUYCuBEd239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_KdnUYSuBEd239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_8B7RcCuBEd239LwpEivL3A" name="" source="_1QFcICt_Ed239LwpEivL3A" target="_LaYUECuAEd239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_8SKs4CuBEd239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_8SKs4SuBEd239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_J-O-0CuDEd239LwpEivL3A" name="" source="_y7Kr0CuCEd239LwpEivL3A" target="_CmUWECuDEd239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_KIg8MCuDEd239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_KIqtMCuDEd239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_R8wUkCuDEd239LwpEivL3A" name="" source="_GP0MUCuDEd239LwpEivL3A" target="_G_8owCuDEd239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_SGSrECuDEd239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_SGSrESuDEd239LwpEivL3A" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_mOMNcCuDEd239LwpEivL3A" name="Aggregate timer elapsed" source="_G_8owCuDEd239LwpEivL3A" target="_GP0MUCuDEd239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_negl0CuDEd239LwpEivL3A" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_negl0SuDEd239LwpEivL3A" value="1"/>
+        </edge>
+      </packagedElement>
+    </packagedElement>
     <profileApplication xmi:id="_fo_PYStoEd2DVPgneqAduw">
       <eAnnotations xmi:id="_fo_PYitoEd2DVPgneqAduw" source="http://www.eclipse.org/uml2/2.0.0/UML">
         <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Xml_3.2_SN.profile.uml#_7JNEVSK5EdujMN-Mf6X4Bw"/>
