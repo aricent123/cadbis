@@ -126,7 +126,6 @@ class ProxyConnection extends CADBiSThread {
 		 final int WaitRWPeriod = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("waitrwtime"));
 		 final int MaxErrorsCount = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("maxerrorscount"));
 		 Integer cid = null;
-		 boolean NeedToRecognizeCategory = false;
 		 final ResponseHttpParser firstResponsePacketParser = new ResponseHttpParser();
 		 while(endTime - startTime < timeout && ErrorsCount<MaxErrorsCount && !isFullAnswer) 
 		 {
@@ -141,39 +140,40 @@ class ProxyConnection extends CADBiSThread {
 			 List<byte[]> buffer = new ArrayList<byte[]>();		
 	 
 			 
-			 /*******************************
-			  * Recieving data client->proxy
-			  *******************************/			 
-			 try{
-				buffer.clear();
-				IOUtils.readStreamAsArray(clientIn, buffer);
-				if(buffer.size()>0)
-					logger.debug("read from clientIn completed " + buffer.size()+" blocks read");	
+			 if(!isFullAnswer){
+				 /*******************************
+				  * Recieving data client->proxy
+				  *******************************/			 
+				 try{
+					buffer.clear();
+					IOUtils.readStreamAsArray(clientIn, buffer);
+					if(buffer.size()>0)
+						logger.debug("read from clientIn completed " + buffer.size()+" blocks read");	
+				 }
+				 catch(IOException e)
+				 {
+					 ErrorsCount++;
+					 logger.warn("Recieving data client->proxy error: "+e.getMessage());
+				 }
+				 
+				 /*******************************
+				  * Parsing request
+				  *******************************/	
+				 if(buffer.size()>0)
+				 {
+					cRcvdData = new String(StringUtils.getChars(buffer.get(0)));
+					startTime = new Date().getTime();
+					isReadWrite = true;
+					if(!RequestParser.isRequestParsed()){
+						RequestParser.ClearHeaders();
+						RequestParser.ParseRequestHeaders(cRcvdData);
+					}
+					RequestParser.setEncodingAcceptable(false);
+					buffer.set(0, RequestParser.GetFixedPacket(buffer.get(0)));
+					HttpHost = RequestParser.getHttpHost();
+					HttpPort = RequestParser.getHttpPort();	
+				 }
 			 }
-			 catch(IOException e)
-			 {
-				 ErrorsCount++;
-				 logger.warn("Recieving data client->proxy error: "+e.getMessage());
-			 }
-			 
-			 /*******************************
-			  * Parsing request
-			  *******************************/	
-			 if(buffer.size()>0)
-			 {
-				cRcvdData = new String(StringUtils.getChars(buffer.get(0)));
-				startTime = new Date().getTime();
-				isReadWrite = true;
-				if(!RequestParser.isRequestParsed()){
-					RequestParser.ClearHeaders();
-					RequestParser.ParseRequestHeaders(cRcvdData);
-				}
-				RequestParser.setEncodingAcceptable(false);
-				buffer.set(0, RequestParser.GetFixedPacket(buffer.get(0)));
-				HttpHost = RequestParser.getHttpHost();
-				HttpPort = RequestParser.getHttpPort();	
-			 }
-
 			 
 			 
 			 /*******************************
@@ -230,7 +230,7 @@ class ProxyConnection extends CADBiSThread {
 					 {
 						boolean access = Categorizer.getInstance().checkAccessToCategory(act.getGid(), cid);
 						logger.info("Checking access of "+act.getUser()+" to ("+HttpHost+")cid="+cid+" = "+ access +"...");
-						isAccessDenied = isAccessDenied && access;
+						isAccessDenied = isAccessDenied || !access;
 						if(!access)
 						{
 							// indicating that we have finished the answer
@@ -307,7 +307,6 @@ class ProxyConnection extends CADBiSThread {
 				 // category not recognized, trying to recognize it
 				 if(cid == null)
 				 {	
-					 NeedToRecognizeCategory = true;
 					 /**
 					  * filling the full response buffer only if 
 					  * the category is not recognized...

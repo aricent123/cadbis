@@ -51,7 +51,8 @@ public class RequestHttpParser extends AbstractHttpParser {
 		
 	public String GetFixedFullHeader()
 	{
-		if(!HttpHost.equals("") && !RequestString.matches("^(?s)" + RequestMethod + " https?:\\/\\/.+"))
+		if(!HttpHost.equals("") && (RequestMethod.equals("GET") || RequestMethod.equals("POST")) 
+				&& !RequestString.matches("^(?s)" + RequestMethod + " https?:\\/\\/"+ HttpHost + ".*"))
 		{
 			String Protocol = RequestString.matches("(?s).+https:\\/\\/.+")?"https://":"http://";
 			String fixedReq = FullHeader.replace(RequestMethod + " ", RequestMethod + " "+Protocol + HttpHost); 
@@ -72,7 +73,8 @@ public class RequestHttpParser extends AbstractHttpParser {
 		{
 			if(!isEncodingAcceptable)
 				PacketString = PacketString.replaceFirst("Accept-Encoding: (.)*\r\n", "");
-			if(!HttpHost.equals("") && !PacketString.matches("^(?s)" + RequestMethod + " https?:\\/\\/.+"))
+			if(!HttpHost.equals("") && (RequestMethod.equals("GET") || RequestMethod.equals("POST")) 
+					&& !RequestString.matches("^(?s)" + RequestMethod + " https?:\\/\\/"+ HttpHost + ".*"))
 			{
 				String Protocol = RequestString.matches("(?s).+https:\\/\\/.+")?"https://":"http://";
 				String fixedPacket = PacketString.replace(RequestMethod + " ", RequestMethod + " "+Protocol + HttpHost); 

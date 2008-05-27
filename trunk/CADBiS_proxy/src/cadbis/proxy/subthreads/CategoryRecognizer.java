@@ -22,16 +22,15 @@ public class CategoryRecognizer extends CADBiSThread {
  	
 	public void run()
 	{	
-		logger.debug("Category unknown, have to parse whole response... " );
+		logger.info("Category unknown, have to parse whole response... " );
 		String body = fullResponse.toString();
-		logger.debug("Content charset = '"+ResponseParser.GetCharset()+"'");
+		logger.info("Content charset = '"+ResponseParser.GetCharset()+"'");
 		String charset = ResponseParser.GetCharset();
 			try
 			{					
 				Integer headerEnd = body.indexOf("\r\n\r\n");
 				if(headerEnd > -1)
 				{
-					logger.debug("Splitting the header from body header = '"+body.substring(0, headerEnd)+"'");
 					body = body.substring(headerEnd + 4);
 					if(!ResponseParser.GetHeader("Content-Length").isEmpty()){
 						Integer content_length = Integer.valueOf(ResponseParser.GetHeader("Content-Length"));

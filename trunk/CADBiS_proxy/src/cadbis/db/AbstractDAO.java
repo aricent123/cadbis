@@ -100,7 +100,6 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	@SuppressWarnings("unchecked")
 	public List<objT> getItemsByQuery(String query)
 	{
-		logger.debug(query);
 		ArrayList<objT> list = new ArrayList<objT>();
 
 		
@@ -197,7 +196,6 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	 */
 	public void execSql(String query)
 	{
-		logger.debug(query);
 		if(dataAccess==null || dataAccess.getConnection()==null)
 			return;
 		
@@ -223,7 +221,6 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	 */
 	public int getCountByQuery(String query, String key)
 	{
-		logger.debug(query);
 		int count = 0;
 		if(dataAccess==null)
 			return 0;
@@ -257,7 +254,6 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	 */
 	public Object getSingleValueByQuery(String query, String key)
 	{
-		logger.debug(query);
 		Object value = null;
 		if(dataAccess==null)
 			return 0;
@@ -288,7 +284,6 @@ public abstract class AbstractDAO<objT extends BusinessObject> {
 	 */
 	public List<String> getListOfStringsByQuery(String query, String key)
 	{
-		logger.debug(query);
 		List<String> res = new ArrayList<String>();
 		if(dataAccess==null)
 			return null;
