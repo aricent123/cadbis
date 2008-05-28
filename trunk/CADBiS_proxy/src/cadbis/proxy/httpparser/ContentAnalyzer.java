@@ -37,7 +37,7 @@ public class ContentAnalyzer {
 				"&quot;","&nbsp;","&nbsp;","&lt;","&gt;","&laquo;","&raquo;","&middot;",
 				".",";",":","[","]","-","(",")","_","/","|",
 				"\\","^","{","}",">","<","%","$","#","@","?",
-				"\"",",","!","=","+","©","\"","«","»","&"
+				"\"",",","!","=","+","©","\"","«","»","&","*"
 				};
 		try{
 			content = StringUtils.replaceAll(punctuation,content);
@@ -160,7 +160,6 @@ public class ContentAnalyzer {
 			  String tChar = content.substring(i,i+1);
 			  if(allowedChars.indexOf(tChar)<0){
 				  content = content.replaceAll(StringUtils.escapeRE(tChar), " ");
-				  i = 0;
 			  }
 		  }
 		return content;
@@ -181,17 +180,27 @@ public class ContentAnalyzer {
 		String metaCharset = getCharset(content.toLowerCase());
 		if(!metaCharset.isEmpty())
 			charset = metaCharset;
-		logger.info("Converting charset from '"+charset+"'...");		
+		logger.info("Converting charset from '"+charset+"'...");
 		content = ContentAnalyzer.ConvertToUTF(content, charset).toLowerCase();
+		logger.info("1) charset converted");
 		String metaKeywords = getKeywords(content);
+		logger.info("2) keywords retrieved");
 		String metaDescription = getDescription(content);
+		logger.info("3) description retrieved");
 		content = killTags(content);
+		logger.info("4) tags killed");
 		content = killNumbers(content);
+		logger.info("5) numbers killed");
 		content = killPunctuation(content);
+		logger.info("6) punctuation killed");
 		content = killUnsenseWords(content,uswords);
+		logger.info("7) unsense words killed");
 		content = killNonLetters(content);
+		logger.info("8) non letters killed");
 		content = killNewLines(content);
+		logger.info("9) new lines killed");
 		content = killDoubleSpaces(content);
+		logger.info("10) double spaces killed");
 		
 		String[] arrKeywords = content.split(" ");
 		HashMap<String, Integer> keywords = new HashMap<String, Integer>();
