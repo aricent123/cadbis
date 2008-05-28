@@ -81,7 +81,7 @@ public class CADBiS extends CADBiSDaemon{
 		return res;
 	}	
 	
-	public boolean checkAccessNow(String login, String framedIp, String clientIp)
+	public boolean checkAccessNow(String login, String framedIp, String clientIp, boolean alive)
 	{
 		
 		User user = new UserDAO().getByLoginWithStats(login);
@@ -93,9 +93,10 @@ public class CADBiS extends CADBiSDaemon{
 		{
 			try{
 				checker.checkBlocked();
-				checker.checkTrafficLimits();
-				checker.checkSimultaneous_use(getConnectedCount(user));
-				checker.checkAccessTime(); 
+				checker.checkTrafficLimits();				
+				if(!alive)
+					checker.checkSimultaneous_use(getConnectedCount(user));
+				checker.checkAccessTime();
 				checker.checkTrafficLimits(user.getMtraffic(),user.getWtraffic(),
 													user.getDtraffic(), user.getTtraffic());
 				
@@ -174,7 +175,7 @@ public class CADBiS extends CADBiSDaemon{
 		{
 			new ActionDAO().execSql(String.format("update `actions` set in_bytes=%d, out_bytes=%d,time_on=%d where unique_id = '%s'",
 					inputOctets, outputOctets, sessionTime, uniqueId));
-			if(!checkAccessNow(login, framedIP, clientIP))
+			if(!checkAccessNow(login, framedIP, clientIP, true))
 			{
 				logger.info("Killing user '"+login+"' with ip='"+clientIP+"'");
 				new Killer(login,framedIP, clientIP, nasPort).start();
