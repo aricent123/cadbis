@@ -128,7 +128,7 @@ public class CADBiSHandler extends PacketHandlerBase
 	        	case JRadiusServer.JRADIUS_authorize:
 	        	{
 	        		
-	        		if (!CADBiS.getInstance().checkAccessNow(username, framedIP, clientIP))
+	        		if (!CADBiS.getInstance().checkAccessNow(username, framedIP, clientIP, false))
 	        		{
 	        			jRequest.setReturnValue(JRadiusServer.RLM_MODULE_REJECT);
 	        			return false;
