@@ -1,4 +1,5 @@
 <?php
+require_once(dirname(__FILE__).'/cadbisnew/graph/charts.php');
 
 //include("restore_confs.php");
 if($BILLEVEL<=1)
@@ -223,8 +224,10 @@ $urls = $BILL->GetUrlsPopularity($sort,$uid,$limit,$gid,$groupby,$hideother);
  	}
 
 
- if(isset($graf) && $graf=="true"){?>
- <div align=center><img align=center src="<? OUT(SK_DIR) ?>/billing/admin_draw.php?action=topurl<? OUT("&sort=$sort&limit=$limit&uid=$uid&gid=$gid&groupby=$groupby&hideother=$hideother") ?>"></div><br>
+ if(isset($graf) && $graf=="true"){ ?>
+ <div>
+ <? echo InsertChart ("./skins/smadbis/billing/cadbisnew/graph/charts.swf", "./skins/smadbis/billing/cadbisnew/graph/charts_library", "./skins/smadbis/billing/chart_data.php?chart_type=topurl&sort=$sort&limit=$limit&uid=$uid&gid=$gid&groupby=$groupby&hideother=$hideother",600, 500 );?>
+ </div><br>
  <div align=right>
  <?}
  if($graf!="true")
