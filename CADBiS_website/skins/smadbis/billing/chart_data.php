@@ -97,7 +97,9 @@ switch($chart_type)
 	 $uid = null;
 	 if($uid)
 	 {$user = $BILL->GetUserData($uid);
-	 $byuser = " пользователя ".iconv('cp1251', 'utf-8', $user['fio']);
+	 $tmpname = explode(" ", $user['fio']);
+	 $surname = $tmpname[0];
+	 $byuser = " пользователя ".iconv('cp1251', 'utf-8', $surname);
 	 }
 	 else
 	 $byuser = "";
@@ -161,8 +163,8 @@ switch($chart_type)
                                     'duration'   => 0,
                                     'x'          => 0, 
                                     'y'          => 10, 
-                                    'width'      => 900,  
-                                    'height'     => 100, 
+                                    'width'      => 600,  
+                                    'height'     => 200, 
                                     'h_align'    => "center", 
                                     'v_align'    => "top", 
                                     'rotation'   => 90, 
