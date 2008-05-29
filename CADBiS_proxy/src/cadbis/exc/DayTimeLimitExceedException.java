@@ -6,7 +6,7 @@ public class DayTimeLimitExceedException extends CADBiSException {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	/**
 	 * 
 	 */
