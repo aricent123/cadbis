@@ -6,7 +6,6 @@ public class DayPacketTrafficLimitExceedException extends CADBiSException {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
-
 	/**
 	 * 
 	 */
