@@ -104,6 +104,8 @@ public class CADBiS extends CADBiSDaemon{
 													user.getDtime(),user.getTtime());
 				checker.checkPacketUsage(getPacketUsageCount(user));
 				
+				
+				logger.info("Checking day traffic limits: " + dao.getDayTraffic(userpacket.getGid()) + "/" + dayLimits.getPacketDayTrafficLimit(user.getGid()));
 				checker.checkDayTrafficLimit(
 						dao.getDayTraffic(userpacket.getGid()),
 						dayLimits.getPacketDayTrafficLimit(user.getGid()));
@@ -111,7 +113,7 @@ public class CADBiS extends CADBiSDaemon{
 			catch(CADBiSException e)
 			{
 				logger.warn("Exceed access error: " + e.getClass() + ", error= "+ e.getMessage());
-				new Notifier(login,"","",e.getUniformMessage()).start();
+				new Notifier(login,framedIp,clientIp,e.getUniformMessage()).start();
 				return false;
 			}
 			catch(Exception e)
