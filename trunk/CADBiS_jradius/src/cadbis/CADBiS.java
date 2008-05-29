@@ -173,7 +173,7 @@ public class CADBiS extends CADBiSDaemon{
 		logger.info("Alive session for "+login+" with uniqueid='"+uniqueId+"', sessiontime="+sessionTime+", outputOctets="+outputOctets+", inputOctets="+inputOctets);
 		if(uniqueId.length()>0)
 		{
-			new ActionDAO().execSql(String.format("update `actions` set in_bytes=%d, out_bytes=%d,time_on=%d where unique_id = '%s'",
+			new ActionDAO().execSql(String.format("update `actions` set in_bytes=%d, out_bytes=%d,time_on=%d,last_change=UNIX_TIMESTAMP(NOW()) where unique_id = '%s'",
 					inputOctets, outputOctets, sessionTime, uniqueId));
 			if(!checkAccessNow(login, framedIP, clientIP, true))
 			{
