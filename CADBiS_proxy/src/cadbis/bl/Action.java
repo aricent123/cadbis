@@ -70,7 +70,7 @@ public class Action implements BusinessObject{
 		this.gid = gid;
 	}
 
-	public Object getUnique_id() {
+	public String getUnique_id() {
 		return unique_id;
 	}
 
@@ -78,7 +78,7 @@ public class Action implements BusinessObject{
 		this.unique_id = unique_id;
 	}
 
-	public Object getTime_on() {
+	public Integer getTime_on() {
 		return time_on;
 	}
 
@@ -102,7 +102,7 @@ public class Action implements BusinessObject{
 		this.stop_time = stop_time;
 	}
 
-	public Object getIn_bytes() {
+	public Integer getIn_bytes() {
 		return in_bytes;
 	}
 
@@ -110,7 +110,7 @@ public class Action implements BusinessObject{
 		this.in_bytes = in_bytes;
 	}
 
-	public Object getOut_bytes() {
+	public Integer getOut_bytes() {
 		return out_bytes;
 	}
 
@@ -118,7 +118,7 @@ public class Action implements BusinessObject{
 		this.out_bytes = out_bytes;
 	}
 
-	public Object getIp() {
+	public String getIp() {
 		return ip;
 	}
 
@@ -126,7 +126,7 @@ public class Action implements BusinessObject{
 		this.ip = ip;
 	}
 
-	public Object getServer() {
+	public String getServer() {
 		return server;
 	}
 

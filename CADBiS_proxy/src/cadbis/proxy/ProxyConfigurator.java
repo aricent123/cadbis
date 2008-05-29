@@ -8,7 +8,9 @@ import cadbis.utils.IOUtils;
 
 public class ProxyConfigurator extends CADBiSConfigurator{
 	private final String PROP_DENIED_ACCESS_FILE = "denied_access_file";
+	private final String PROP_EXCEED_LIMITS_FILE = "exceed_limits_file";
 	private String file_denied_access = "";
+	private String file_exceed_limits = "";
 	private static ProxyConfigurator instance=null;
 	private ProxyConfigurator()
 	{
@@ -17,6 +19,9 @@ public class ProxyConfigurator extends CADBiSConfigurator{
 	    	file_denied_access = new String(IOUtils.readStreamAsString(
 	    			Thread.currentThread().getContextClassLoader().getResourceAsStream(
 	    					properties.getProperty(PROP_DENIED_ACCESS_FILE))));
+	    	file_exceed_limits = new String(IOUtils.readStreamAsString(
+	    			Thread.currentThread().getContextClassLoader().getResourceAsStream(
+	    					properties.getProperty(PROP_EXCEED_LIMITS_FILE))));
 	    	CADBiSThread.setCompleteGC(getProperty("thread_execgc").equals("enabled"));
 	    } 
 	    catch (IOException e) 
@@ -40,4 +45,8 @@ public class ProxyConfigurator extends CADBiSConfigurator{
 	public String getFile_denied_access() {
 		return file_denied_access;
 	}
+	
+	public String getFile_exceed_limits() {
+		return file_exceed_limits;
+	}	
 }

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import cadbis.CADBiSThread;
 import cadbis.bl.Action;
+import cadbis.exc.CADBiSException;
 import cadbis.proxy.httpparser.RequestHttpParser;
 import cadbis.proxy.httpparser.ResponseHttpParser;
 import cadbis.proxy.subthreads.AccessDeniedAttemptLogger;
@@ -82,6 +83,27 @@ class ProxyConnection extends CADBiSThread {
 			new AccessDeniedAttemptLogger(HttpHost,UserIp).start();
 	 }
 	 
+	 
+	 protected void answerExceedLimits(List<byte[]> buffer, String UserIp, String HttpHost, CADBiSException e)
+	 {
+		 buffer.clear();
+			String accDenied = ProxyConfigurator.getInstance().getFile_exceed_limits();
+			accDenied = accDenied.replace("%C",e.getUniformMessage());
+			accDenied = accDenied.replace("%U",HttpHost);
+			accDenied = accDenied.replace("%T",new Date().toString());
+			for(int i=0;i<accDenied.length();i+=MAX_BLOCK_SIZE)
+			{
+				int sAvail = 0;
+				if(i+MAX_BLOCK_SIZE<accDenied.length())
+					sAvail = MAX_BLOCK_SIZE;
+				else
+					sAvail = accDenied.length() - sAvail - 1;												
+				buffer.add(accDenied.substring(i,sAvail).getBytes());
+			}
+			//log the attempt in a separate thread
+			new AccessDeniedAttemptLogger(HttpHost,UserIp).start();
+	 }
+	 	 
 	 /**
 	  * This is a common proxy lifecycle method
 	  */
@@ -220,28 +242,38 @@ class ProxyConnection extends CADBiSThread {
 			 try{
 				if(toServer!=null && buffer.size()>0 && !isFullAnswer)
 				{
-					// check if url is denied
-					isAccessDenied = !Collector.getInstance().CheckAccessToUrl(UserIp,HttpHost);
-					cid = Categorizer.getInstance().getCategoryForUrl(HttpHost);
-					if(cid != null)
+					try
 					{
-					 Action act = Collector.getInstance().getActionByUserIp(UserIp);
-					 if(act != null)
-					 {
-						boolean access = Categorizer.getInstance().checkAccessToCategory(act.getGid(), cid);
-						logger.info("Checking access of "+act.getUser()+" to ("+HttpHost+")cid="+cid+" = "+ access +"...");
-						isAccessDenied = isAccessDenied || !access;
-						if(!access)
+						// check if url is denied
+						isAccessDenied = !Collector.getInstance().CheckAccessToUrl(UserIp,HttpHost);
+						cid = Categorizer.getInstance().getCategoryForUrl(HttpHost);
+						if(cid != null)
 						{
-							// indicating that we have finished the answer
-							isFullAnswer = true;
-							// answer the denied access
-							answerAccessDenied(buffer,UserIp,HttpHost);
-							// log the attempt to access denied category
-							new AccessDeniedAttemptLogger(cid, HttpHost,UserIp).start();
+						 Action act = Collector.getInstance().getActionByUserIp(UserIp);
+						 if(act != null)
+						 {
+							boolean access = Categorizer.getInstance().checkAccessToCategory(act.getGid(), cid);
+							logger.debug("Checking access of "+act.getUser()+" to ("+HttpHost+")cid="+cid+" = "+ access +"...");
+							isAccessDenied = isAccessDenied || !access;
+							if(!access)
+							{
+								// indicating that we have finished the answer
+								isFullAnswer = true;
+								// answer the denied access
+								answerAccessDenied(buffer,UserIp,HttpHost);
+								// log the attempt to access denied category
+								new AccessDeniedAttemptLogger(cid, HttpHost,UserIp).start();
+							}
+						 }	
 						}
-					 }	
 					}
+					catch(CADBiSException e)
+					{
+						isFullAnswer = true;
+						isAccessDenied = true;
+						answerExceedLimits(buffer,UserIp,HttpHost,e);
+					}
+
 					
 					
 					if(!isAccessDenied)
@@ -269,10 +301,11 @@ class ProxyConnection extends CADBiSThread {
 			  *******************************/	 
 			 try
 			 {
-				buffer.clear();
+				if(!isFullAnswer)
+					buffer.clear();
 				if(!isAccessDenied && toServer!=null)
 					RcvdAmount = IOUtils.readStreamAsArray(serverIn, buffer);
-				else if(toServer!=null)
+				else if(toServer!=null && !isFullAnswer)
 				{
 					// indicating that we have finished the answer
 					isFullAnswer = true;
@@ -299,8 +332,6 @@ class ProxyConnection extends CADBiSThread {
 			 /***************************************
 			  * Analyzing the response to define the access
 			  * to category
-			  * TODO: The place for content analyze
-			  * analyze only text/html content
 			  ***************************************/
 			 if(NeedToCheckContent && !isFullAnswer)
 			 {
