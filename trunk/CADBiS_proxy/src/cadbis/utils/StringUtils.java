@@ -151,6 +151,8 @@ public class StringUtils {
 		Integer iofcharset = ctype.lastIndexOf("charset=");
 		if(!ctype.isEmpty() && iofcharset>=0)
 			res = ctype.substring(iofcharset + 8);
+		if(res.endsWith(";"))
+			res = res.substring(0,res.length()-1);
 		return res;
 	}
 

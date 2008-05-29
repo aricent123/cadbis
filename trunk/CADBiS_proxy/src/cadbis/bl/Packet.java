@@ -213,7 +213,7 @@ public class Packet implements BusinessObject{
 	
 	
 	public Integer getSummarRang() {
-		return rang*simuluse_sum;
+		return rang * simuluse_sum;
 	}	
 	
 

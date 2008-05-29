@@ -8,22 +8,37 @@ import java.util.List;
 
 
 import cadbis.CADBiSDaemon;
+import cadbis.Checker;
+import cadbis.PacketsTodayLimits;
 import cadbis.bl.Action;
 import cadbis.bl.CollectedData;
+import cadbis.bl.Packet;
 import cadbis.bl.UrlDenied;
+import cadbis.bl.User;
 import cadbis.db.ActionDAO;
 import cadbis.db.DeniedUrlDAO;
+import cadbis.db.PacketDAO;
+import cadbis.db.UserDAO;
+import cadbis.exc.CADBiSException;
 
 public class Collector extends CADBiSDaemon{
 	private static Collector instance = null;
 	private List<Action> actions = null;	
-	private HashMap<Integer, Action> actionsOfIps;
+	private HashMap<String, Action> actionsOfIps;
+	private HashMap<String, User> usersStatsOfIps;
+	private HashMap<String, Long> dayTraffics;
+	private HashMap<String, Packet> packetsStatsOfIps;
+	private PacketsTodayLimits dayLimits = null;
 	private static Object wLock = null;
 	
 	private void createObjects()
 	{
-		actionsOfIps = new HashMap<Integer, Action>();
+		actionsOfIps = new HashMap<String, Action>();
 		actions = new ArrayList<Action>();
+		dayLimits = new PacketsTodayLimits();
+		usersStatsOfIps = new HashMap<String, User>();
+		packetsStatsOfIps = new HashMap<String, Packet>();
+		dayTraffics = new HashMap<String, Long>();
 	}
 	
 	private Collector(){
@@ -36,6 +51,12 @@ public class Collector extends CADBiSDaemon{
 		if(instance == null)
 			instance = new Collector();
 		return instance;
+	}
+	
+	@Override
+	protected void prerun() {
+		super.prerun();
+		_refreshSessions();
 	}
 	
 	@Override
@@ -55,10 +76,16 @@ public class Collector extends CADBiSDaemon{
 	{
 		createObjects();
 		actions = getActiveSessions();
+		UserDAO udao = new UserDAO();
+		PacketDAO pdao = new PacketDAO();
 		if(actions!=null)
 		for(int i=0;i<actions.size();++i){
 		if(actions.get(i)!=null){
-			actionsOfIps.put(actions.get(i).getIp().toString().hashCode(), actions.get(i));
+			
+			usersStatsOfIps.put(actions.get(i).getIp(), udao.getByLoginWithStats(actions.get(i).getUser()));
+			packetsStatsOfIps.put(actions.get(i).getIp(), pdao.getPacketWithStats(actions.get(i).getGid()));
+			dayTraffics.put(actions.get(i).getIp(), pdao.getDayTraffic(actions.get(i).getGid()));
+			actionsOfIps.put(actions.get(i).getIp(), actions.get(i));
 			DeniedUrlDAO dao = new DeniedUrlDAO();
 			actions.get(i).getDeniedUrls().clear();
 			List<UrlDenied> durls = dao.getItemsByQuery("select * from url_denied where gid="+actions.get(i).getGid());
@@ -77,7 +104,7 @@ public class Collector extends CADBiSDaemon{
 	 */	
 	public Action getActionByUserIp(String ip)
 	{
-		return actionsOfIps.get(ip.hashCode());
+		return actionsOfIps.get(ip);
 	}
 	//------------------------------------------------------
 	/**
@@ -106,7 +133,7 @@ public class Collector extends CADBiSDaemon{
 	public void Collect(String userIp, String hostUrl, long rcvdBytes, Date date, String hostIp, String content_type)
 	{
 		synchronized (wLock) {
-			if(!actionsOfIps.containsKey(userIp.hashCode()))
+			if(!actionsOfIps.containsKey(userIp))
 			{
 				logger.warn("User of ip='"+userIp+"' not found, refreshing sessions info.");
 				_refreshSessions();		
@@ -121,16 +148,30 @@ public class Collector extends CADBiSDaemon{
 	//------------------------------------------------------
 	/**
 	 * Collect the information about packet
+	 * @throws CADBiSException 
 	 */	
-	public boolean CheckAccessToUrl(String userIp, String url)
+	public boolean CheckAccessToUrl(String userIp, String url) throws CADBiSException
 	{
 		Action action = getActionByUserIp(userIp);
-		if(action!=null && action.getDeniedUrls()!=null)
-		for(int i=0;i<action.getDeniedUrls().size();++i)
-		{
-			if(action.getDeniedUrls() != null && action.getDeniedUrls().get(i) != null)
-			if(url.matches(action.getDeniedUrls().get(i).getUrl().toString()))
-				return false;			
+		if(action!=null && action.getDeniedUrls()!=null){
+			if(packetsStatsOfIps.containsKey(userIp) && usersStatsOfIps.containsKey(userIp) && dayTraffics.containsKey(userIp)){
+				Packet userpacket = packetsStatsOfIps.get(userIp);
+				User user = usersStatsOfIps.get(userIp);
+				Checker checker = new Checker(userpacket, user);
+				checker.checkBlocked();
+				checker.checkTrafficLimits();								
+				checker.checkAccessTime();
+				checker.checkDayTrafficLimit(
+						dayTraffics.get(userIp),
+						dayLimits.getPacketDayTrafficLimit(user.getGid()));
+
+			}
+			for(int i=0;i<action.getDeniedUrls().size();++i)
+			{
+				if(action.getDeniedUrls() != null && action.getDeniedUrls().get(i) != null)
+				if(url.matches(action.getDeniedUrls().get(i).getUrl().toString()))
+					return false;			
+			}
 		}
 		return true;
 	}
