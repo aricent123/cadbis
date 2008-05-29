@@ -39,7 +39,7 @@ class PacketsTodayLimits
 		$maximumMonthTraffic = $config['max_month_traffic'];  
 		$monthAccts = $this->BILL->GetMonthTotalAccts();
 		$this->usedMonthTraffic = ($monthAccts['traffic'])?$monthAccts['traffic']:0;
-		$this->restDaysCount = date("t")-date("j");	
+		$this->restDaysCount = date("t")-date("j")+1;	
 		$this->restMonthTraffic = $maximumMonthTraffic - $this->usedMonthTraffic;
 		$this->allowedDayTraffic = ($this->restMonthTraffic) / $this->restDaysCount;
 			
