@@ -32,6 +32,7 @@ public class Notifier extends CADBiSSubprocess {
 					toServer = new Socket(clientIP,portTo);
 					OutputStream serverOut = new BufferedOutputStream(toServer.getOutputStream());
 					serverOut.write(message.getBytes());
+					toServer.close();
 				} catch (UnknownHostException e) {
 					logger.error("Send2ip Unknown host error: " + e.getMessage());
 				} catch (IOException e) {
@@ -42,7 +43,7 @@ public class Notifier extends CADBiSSubprocess {
 			 {
 				 try {
 					 String execStr = JRadiusConfigurator.getInstance().getProperty("send_program");
-					 execStr = String.format(execStr+" %s %s %s", clientIP, portTo, message);
+					 execStr = String.format(execStr+" %s %s '%s'", clientIP, portTo, message);
 					 Process p = Runtime.getRuntime().exec(execStr);
 					 p.waitFor();
 					 logger.info("Execute send2ip program result: " + p.exitValue());

@@ -24,7 +24,7 @@ public class Killer extends CADBiSSubprocess {
 			 {
 				 try {
 					 String execStr = JRadiusConfigurator.getInstance().getProperty("kill_program");
-					 execStr = String.format(execStr+" %s %s %s %d", forLogin, mpd_host, clientIP, nasPort);
+					 execStr = String.format(execStr+" %d", nasPort);
 					 Process p = Runtime.getRuntime().exec(execStr);
 					 p.waitFor();
 					 logger.info("Execute kill program result: " + p.exitValue());
