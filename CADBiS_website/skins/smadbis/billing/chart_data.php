@@ -344,6 +344,10 @@ switch($chart_type)
 			$accts[0]["packet"]=$tdata["packet"];
 		}
 		$cnt=count($accts);
+		$tmpfdate=explode(" ",$fdate);
+		$ffdate=$tmpfdate[0];
+		$tmptdate=explode(" ",$tdate);
+		$ttdate=$tmptdate[0];
 		if(!isset($param))$param="";
 		if($param=="traffic")
 		for($k=0;$k<$cnt;++$k)
@@ -357,11 +361,11 @@ switch($chart_type)
 		else
 		for($k=0;$k<$cnt;++$k)
 		{
-			$data[$k+1]=$accts[$k]["time"];
+			$data[$k+1]=gethours($accts[$k]["time"]);
 			$labels[$k+1]=iconv('cp1251', 'utf-8', $accts[$k]["packet"])." (".gethours($accts[$k]["time"]).":".getmins($accts[$k]["time"]).":".getsecs($accts[$k]["time"]).")";
 			$fdate_s=date_dmy(strtotime($fdate));
 			$tdate_s=date_dmy(strtotime($tdate));
-			$title = "Статистика тарифов по времени за период ".$fdate_s." - ".$tdate_s;
+			$title = "Статистика тарифов по времени за период ".$ffdate." - ".$ttdate;
 		}
 		$chart [ 'chart_type' ] = "3D pie";
 		$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma", 'size'	=> 10);
@@ -386,12 +390,20 @@ switch($chart_type)
                                     'alpha'      => 90
 		)
 		);
+		if($param=="traffic"){
 		$chart [ 'chart_value' ] = array ('font'	=>  "Tahoma",
                                     'bold'	=>  true, 
                                     'size'	 =>  16,
                                     'color'	=>  "4400ff",
 	  								'suffix'	=>  " Mb"
                                     );
+		}else{		$chart [ 'chart_value' ] = array ('font'	=>  "Tahoma",
+                                    'bold'	=>  true, 
+                                    'size'	 =>  16,
+                                    'color'	=>  "4400ff",
+	  								'suffix'	=>  " ч."
+                                    );}
+		
 		SendChartData ( $chart );
 		break;	
 //--------------------	

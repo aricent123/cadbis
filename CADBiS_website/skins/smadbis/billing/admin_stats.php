@@ -548,8 +548,13 @@ elseif($action=="sessions")
    <br>
    <? 
    if(isset($draw) && $draw=="graph" && $tarif=="!all!"){
+   	$tmpfdate=explode(" ",$fdate);
+	$fdate=$tmpfdate[0];
+	$tmptdate=explode(" ",$tdate);
+	$tdate=$tmptdate[0];
         ?>      
        <div align=center>По траффику:<br>
+          
        <? echo InsertChart ("./skins/smadbis/billing/cadbisnew/graph/charts.swf", "./skins/smadbis/billing/cadbisnew/graph/charts_library", "./skins/smadbis/billing/chart_data.php?chart_type=$action&fdate=$fdate&tdate=$tdate&tarif=$tarif&param=traffic",600, 500 );?>
        </div>
        <div align=center>По времени:<br>
