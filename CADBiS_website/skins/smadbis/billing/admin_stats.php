@@ -1,4 +1,5 @@
 <?php
+require_once(dirname(__FILE__).'/cadbisnew/graph/charts.php');
 if($BILLEVEL<=2)
  {
  ?>
@@ -186,8 +187,10 @@ if($action=="today" || $action=="week" || $action=="month")
    <?
     }
    if(isset($draw) && $draw=="graph" && count($accts)){
-  ?>      
-   <div align=center><img align=center src="<? OUT(SK_DIR) ?>/billing/admin_draw.php?action=<? OUT($action."&gid=".$gid) ?>"></div>
+  ?>   
+   <div align=center>
+   <? echo InsertChart ("./skins/smadbis/billing/cadbisnew/graph/charts.swf", "./skins/smadbis/billing/cadbisnew/graph/charts_library", "./skins/smadbis/billing/chart_data.php?chart_type=$action&gid=$gid",600, 500 );?>
+   </div>
    <? } 
 }
 elseif($action=="sessions")
@@ -546,8 +549,12 @@ elseif($action=="sessions")
    <? 
    if(isset($draw) && $draw=="graph" && $tarif=="!all!"){
         ?>      
-       <div align=center>По траффику:<br><img align=center src="<? OUT(SK_DIR) ?>/billing/admin_draw.php?action=<? OUT($action."&fdate=$fdate&tdate=$tdate&tarif=$tarif&param=traffic") ?>"></div>
-       <div align=center>По времени:<br><img align=center src="<? OUT(SK_DIR) ?>/billing/admin_draw.php?action=<? OUT($action."&fdate=$fdate&tdate=$tdate&tarif=$tarif&param=time") ?>"></div>
+       <div align=center>По траффику:<br>
+       <? echo InsertChart ("./skins/smadbis/billing/cadbisnew/graph/charts.swf", "./skins/smadbis/billing/cadbisnew/graph/charts_library", "./skins/smadbis/billing/chart_data.php?chart_type=$action&fdate=$fdate&tdate=$tdate&tarif=$tarif&param=traffic",600, 500 );?>
+       </div>
+       <div align=center>По времени:<br>
+       <? echo InsertChart ("./skins/smadbis/billing/cadbisnew/graph/charts.swf", "./skins/smadbis/billing/cadbisnew/graph/charts_library", "./skins/smadbis/billing/chart_data.php?chart_type=$action&fdate=$fdate&tdate=$tdate&tarif=$tarif&param=time",600, 500 );?>
+       </div>
        <? }    
    
     }
