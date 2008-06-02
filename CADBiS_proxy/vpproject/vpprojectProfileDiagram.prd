@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ProfileDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" name="vpprojectProfileDiagram" id="platform:/resource/CADBiS_proxy/vpproject/vpprojectProfileDiagram.profile.uml#_d3KiEC-qEd20noQbAd9RRA" metadata="uml2-1.0" tag="10" key="3230303730363239204341444269535F70726F7879">
+  <model href="vpprojectProfileDiagram.profile.uml#_d3KiEC-qEd20noQbAd9RRA"/>
+  <diagramOptions xsi:type="options:ProfileDiagramOptions" level="0" autoName="false"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="10,10" gridOrigin="0,0" rulerUnit="pixel">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+</editmodel:ProfileDiagramEditModel>
