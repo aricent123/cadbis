@@ -24,7 +24,11 @@ public class PacketDAO extends AbstractDAO<Packet> {
 	
 	public Long getMonthTraffic()
 	{
-		return ((BigDecimal)getSingleValueByQuery(String.format("select sum(a.out_bytes) as traffic from `actions` a  where UNIX_TIMESTAMP(a.start_time) > UNIX_TIMESTAMP(NOW()) -%d*3600*24",DateUtils.getDOM()),"traffic")).longValue();
+		Object value = getSingleValueByQuery(String.format("select sum(a.out_bytes) as traffic from `actions` a  where UNIX_TIMESTAMP(a.start_time) > UNIX_TIMESTAMP(NOW()) -%d*3600*24",DateUtils.getDOM()),"traffic");
+		if(value == null)
+			return 0L;
+		else
+			return ((BigDecimal)value).longValue();		
 	}
 	
 	public Long getDayTraffic(Integer gid)

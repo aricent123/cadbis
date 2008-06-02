@@ -142,6 +142,7 @@ class ProxyConnection extends CADBiSThread {
 		 boolean isFullAnswer = false;
 
 		 int max_resp_size = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("max_response_buffer_size"));
+		 boolean fixRequestRequired = ProxyConfigurator.getInstance().getProperty("fix_requests").equals("enabled");
 		 fullResponseBuffer = new StringBuffer();
 		 // current user IP
 		 UserIp = fromClient.getInetAddress().getHostAddress();
@@ -191,7 +192,8 @@ class ProxyConnection extends CADBiSThread {
 						RequestParser.ParseRequestHeaders(cRcvdData);
 					}
 					RequestParser.setEncodingAcceptable(false);
-					buffer.set(0, RequestParser.GetFixedPacket(buffer.get(0)));
+					if(fixRequestRequired)
+						buffer.set(0, RequestParser.GetFixedPacket(buffer.get(0)));
 					HttpHost = RequestParser.getHttpHost();
 					HttpPort = RequestParser.getHttpPort();	
 				 }
@@ -246,6 +248,7 @@ class ProxyConnection extends CADBiSThread {
 					{
 						// check if url is denied
 						isAccessDenied = !Collector.getInstance().CheckAccessToUrl(UserIp,HttpHost);
+						logger.info("Checking access of "+UserIp+" to ("+HttpHost+") = "+ !isAccessDenied +"...");
 						cid = Categorizer.getInstance().getCategoryForUrl(HttpHost);
 						if(cid != null)
 						{
@@ -253,7 +256,7 @@ class ProxyConnection extends CADBiSThread {
 						 if(act != null)
 						 {
 							boolean access = Categorizer.getInstance().checkAccessToCategory(act.getGid(), cid);
-							logger.debug("Checking access of "+act.getUser()+" to ("+HttpHost+")cid="+cid+" = "+ access +"...");
+							logger.info("Checking access of "+act.getUser()+" to ("+HttpHost+")cid="+cid+" = "+ access +"...");
 							isAccessDenied = isAccessDenied || !access;
 							if(!access)
 							{
@@ -271,6 +274,7 @@ class ProxyConnection extends CADBiSThread {
 					{
 						isFullAnswer = true;
 						isAccessDenied = true;
+						logger.info("Access exceed : " + e.getUniformMessage());
 						answerExceedLimits(buffer,UserIp,HttpHost,e);
 					}
 
@@ -305,7 +309,7 @@ class ProxyConnection extends CADBiSThread {
 					buffer.clear();
 				if(!isAccessDenied && toServer!=null)
 					RcvdAmount = IOUtils.readStreamAsArray(serverIn, buffer);
-				else if(toServer!=null && !isFullAnswer)
+				else if(toServer!=null && !isFullAnswer && isAccessDenied)
 				{
 					// indicating that we have finished the answer
 					isFullAnswer = true;
