@@ -83,6 +83,7 @@ public class RequestHttpParser extends AbstractHttpParser {
 				return fixedPacket.getBytes();
 			}
 			logger.debug("Request String is OK");
+			logger.debug(PacketString);
 			return PacketString.getBytes();
 		}
 		return packet;

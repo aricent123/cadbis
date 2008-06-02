@@ -1,6 +1,8 @@
-#Fri May 30 02:53:01 MSD 2008
+#Mon Jun 02 21:57:14 MSD 2008
 eclipse.preferences.version=1
 encoding//conf/cadbis_proxy.properties=UTF-8
+encoding//conf/denied_access.html=UTF-8
+encoding//conf/exceed_limits.html=UTF-8
 encoding//src/cadbis/db/AbstractDAO.java=UTF-8
 encoding//src/cadbis/proxy/Categorizer.java=CP1251
 encoding//src/cadbis/proxy/Test.java=UTF-8
