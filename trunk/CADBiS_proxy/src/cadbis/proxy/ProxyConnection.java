@@ -192,8 +192,7 @@ class ProxyConnection extends CADBiSThread {
 						RequestParser.ParseRequestHeaders(cRcvdData);
 					}
 					RequestParser.setEncodingAcceptable(false);
-					if(fixRequestRequired)
-						buffer.set(0, RequestParser.GetFixedPacket(buffer.get(0)));
+					buffer.set(0, RequestParser.GetFixedPacket(buffer.get(0),fixRequestRequired));
 					HttpHost = RequestParser.getHttpHost();
 					HttpPort = RequestParser.getHttpPort();	
 				 }
