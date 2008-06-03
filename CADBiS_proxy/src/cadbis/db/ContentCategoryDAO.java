@@ -59,24 +59,29 @@ public class ContentCategoryDAO extends AbstractDAO<ContentCategory> {
 	public void addUrlCategoryConflict(String keyword, Integer forCid, Integer inCid, String url)
 	{
 		keyword = setStringUtf(keyword);
-		new ContentCategoryDAO().execSql(String.format("insert into `url_categories_conflicts`(keyword,forcid,incid,date,url) value('%s',%d,%d,NOW(),'%s')",keyword,forCid,inCid,url));
+		execSql(String.format("insert into `url_categories_conflicts`(keyword,forcid,incid,date,url) value('%s',%d,%d,NOW(),'%s')",keyword,forCid,inCid,url));
 	}
 	
 	public void attachUrlCategoryKeyword(Integer cid, String keyword)
 	{
 		keyword = setStringUtf(keyword);
-		new ContentCategoryDAO().execSql(String.format("insert into `url_categories_keywords`(cid,keyword) values(%d,'%s')",cid,keyword));
+		execSql(String.format("insert into `url_categories_keywords`(cid,keyword) values(%d,'%s')",cid,keyword));
 	}
+	
+	public boolean keywordExists(String keyword)
+	{
+		return (getCountByQuery(String.format("select count(*) as count from `url_categories_keywords` where keyword='%s'",keyword), "count") == 1);
+	}	
 	
 	public void updateContentCategory(Integer cid, String title)
 	{		
 		title = setStringUtf(title);
-		new ContentCategoryDAO().execSql(String.format("update `url_categories` set title='%s' where cid=%d",title,cid));
+		execSql(String.format("update `url_categories` set title='%s' where cid=%d",title,cid));
 	}
 	
 	public void addUrlCategoryMatch(String url, Integer cid)
 	{
-		new ContentCategoryDAO().execSql(String.format("insert into url_categories_match(url,cid) values('%s',%d)",url,cid));
+		execSql(String.format("insert into url_categories_match(url,cid) values('%s',%d)",url,cid));
 	}
 	
 }
