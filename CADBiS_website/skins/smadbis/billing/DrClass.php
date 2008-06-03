@@ -2231,6 +2231,7 @@ function DeleteDiapason($id)
 	public function UpdateUrlCategoriesUnsenseWords($kwds)
 	{
 		mysql_query(sprintf("truncate table `url_categories_unsensewords`"));
+		mysql_query(sprintf("delete from `url_categories_keywords` where keyword in('%s')",implode("'",$kwds)));
 	 foreach($kwds as $kwd)
 		mysql_query(sprintf('insert into `url_categories_unsensewords`(keyword) value(\'%s\')',$kwd));
 	}
