@@ -248,7 +248,7 @@ class ProxyConnection extends CADBiSThread {
 					{
 						// check if url is denied
 						isAccessDenied = !Collector.getInstance().CheckAccessToUrl(UserIp,HttpHost);
-						logger.info("Checking access of "+UserIp+" to ("+HttpHost+") = "+ !isAccessDenied +"...");
+						logger.debug("Checking access of "+UserIp+" to ("+HttpHost+") = "+ !isAccessDenied +"...");
 						cid = Categorizer.getInstance().getCategoryForUrl(HttpHost);
 						if(cid != null)
 						{
@@ -256,7 +256,7 @@ class ProxyConnection extends CADBiSThread {
 						 if(act != null)
 						 {
 							boolean access = Categorizer.getInstance().checkAccessToCategory(act.getGid(), cid);
-							logger.info("Checking access of "+act.getUser()+" to ("+HttpHost+")cid="+cid+" = "+ access +"...");
+							logger.debug("Checking access of "+act.getUser()+" to ("+HttpHost+")cid="+cid+" = "+ access +"...");
 							isAccessDenied = isAccessDenied || !access;
 							if(!access)
 							{

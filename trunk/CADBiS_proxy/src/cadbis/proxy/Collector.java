@@ -161,9 +161,11 @@ public class Collector extends CADBiSDaemon{
 				checker.checkBlocked();
 				checker.checkTrafficLimits();								
 				checker.checkAccessTime();
-				checker.checkDayTrafficLimit(
-						dayTraffics.get(userIp),
-						dayLimits.getPacketDayTrafficLimit(user.getGid()));
+				
+				Long dayTraffic = dayTraffics.get(userIp);
+				Long dayLimit = dayLimits.getPacketDayTrafficLimit(user.getGid());
+				if(dayTraffic != null && dayLimit!= null)
+					checker.checkDayTrafficLimit(dayTraffic,dayLimit);
 
 			}
 			for(int i=0;i<action.getDeniedUrls().size();++i)
