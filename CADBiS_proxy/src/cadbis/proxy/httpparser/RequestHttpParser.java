@@ -69,9 +69,9 @@ public class RequestHttpParser extends AbstractHttpParser {
 	public byte[] GetFixedPacket(byte[] packet, boolean fixRequest)
 	{		
 		String PacketString = new String(StringUtils.getChars(packet));		
-		if(PacketString.indexOf("HTTP/1.")>0)
+		if(PacketString.indexOf("HTTP/1.")>0 && (RequestMethod.equals("GET") || fixRequest))
 		{
-			if(!isEncodingAcceptable && (RequestMethod.equals("GET") || fixRequest))
+			if(!isEncodingAcceptable)
 				PacketString = PacketString.replaceFirst("Accept-Encoding: (.)*\r\n", "");
 			if(fixRequest && !HttpHost.equals("") && (RequestMethod.equals("GET") || RequestMethod.equals("POST")) 
 					&& !RequestString.matches("^(?s)" + RequestMethod + " https?:\\/\\/"+ HttpHost + ".*"))

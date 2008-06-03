@@ -149,7 +149,7 @@ class ProxyConnection extends CADBiSThread {
 		 final int WaitRWPeriod = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("waitrwtime"));
 		 final int MaxErrorsCount = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("maxerrorscount"));
 		 Integer cid = null;
-		 final ResponseHttpParser firstResponsePacketParser = new ResponseHttpParser();
+		 ResponseHttpParser firstResponsePacketParser = new ResponseHttpParser();
 		 while(endTime - startTime < timeout && ErrorsCount<MaxErrorsCount && !isFullAnswer) 
 		 {
 			 //logger.debug("new packet processing iteration, timeout: " + (endTime-startTime) +" ms");
@@ -187,6 +187,7 @@ class ProxyConnection extends CADBiSThread {
 					cRcvdData = new String(StringUtils.getChars(buffer.get(0)));
 					startTime = new Date().getTime();
 					isReadWrite = true;
+					firstResponsePacketParser = new ResponseHttpParser();
 					if(!RequestParser.isRequestParsed()){
 						RequestParser.ClearHeaders();
 						RequestParser.ParseRequestHeaders(cRcvdData);
