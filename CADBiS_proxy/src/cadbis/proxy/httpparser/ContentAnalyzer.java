@@ -21,6 +21,7 @@ import org.htmlparser.util.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cadbis.proxy.ProxyConfigurator;
 import cadbis.proxy.exc.AnalyzeException;
 import cadbis.utils.StringUtils;
 import cadbis.bl.ContentAnalyzeResult;
@@ -177,6 +178,9 @@ public class ContentAnalyzer {
 	 */
 	public static ContentAnalyzeResult Analyze(String content, List<ContentCategory> cats, List<String> uswords, HashMap<String, Integer> kwds_weights, String charset) throws CharacterCodingException, UnsupportedEncodingException
 	{		
+		int minimalWordRang = 1;
+		try{minimalWordRang = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("minimal_wordrang"));}
+		catch(NumberFormatExcepton e){}
 		String metaCharset = getCharset(content.toLowerCase());
 		if(!metaCharset.isEmpty())
 			charset = metaCharset;
