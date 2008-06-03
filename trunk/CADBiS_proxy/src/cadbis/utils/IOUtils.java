@@ -59,8 +59,8 @@ public class IOUtils {
 		 for(int i=0;i<buffer.size();++i)
 		 {
 			os.write(buffer.get(i));
-		 }
-		os.flush();
+			os.flush();
+		 }		
 	}
 	
 	public static byte[] UnzipArray(byte[] compressedData) throws DataFormatException,IOException
