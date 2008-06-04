@@ -1212,7 +1212,6 @@ function GetTarifData($gid)
               $res["day_traffic_limit"]=$row["day_traffic_limit"];
               $res["login_time"]=$row["login_time"];
               $res["port_limit"]=$row["port_limit"];
-              $res["simultaneous_use"]=$row["simultaneous_use"];              
               $res["level"]=$row["level"];
               $res["prim"]=$row["prim"];
               $res["exceed_times"]=$row["exceed_times"];
@@ -2489,4 +2488,23 @@ function DeleteDiapason($id)
 	{
 		mysql_query(sprintf("delete from `url_categories_conflicts` where keyword='%s'",$keyword));
 	}
+	 // ----------------------------------------------------
+	 /**
+	  * Retrieves channel loading (threads)
+	  * @return long
+	  */
+	public function	getChannelLoading()
+	{
+		return mysql_result(mysql_query(sprintf("select `cvalue` from `cadbis_tmp` where `ckey` = 'current_channel_loading'")),0);
+	}	
+	 // ----------------------------------------------------
+	 /**
+	  * Retrieves memory usage (bytes)
+	  * @return long
+	  */
+	public function	getMemoryUsage()
+	{
+		return mysql_result(mysql_query(sprintf("select `cvalue` from `cadbis_tmp` where `ckey` = 'current_memory_usage'")),0);
+	}	
+	
 };

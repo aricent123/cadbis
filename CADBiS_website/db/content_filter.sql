@@ -66,3 +66,18 @@ ALTER TABLE `url_categories_keywords` MODIFY COLUMN `keyword` VARCHAR(40) CHARAC
 ALTER TABLE `url_categories_unsensewords` MODIFY COLUMN `keyword` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
 , ENGINE = InnoDB;
 
+
+CREATE TABLE `cadbis_tmp` (
+  `key` VARCHAR(64) NOT NULL,
+  `value` BIGINT UNSIGNED NOT NULL
+)
+ENGINE = MEMORY;
+
+ALTER TABLE `cadbis_tmp` ADD INDEX `Index_key`(`key`)
+, ENGINE = MEMORY;
+
+
+ALTER TABLE `cadbis_tmp` DROP INDEX `Index_key`,
+ ADD UNIQUE `Index_key` USING HASH(`key`)
+, ENGINE = MEMORY;
+

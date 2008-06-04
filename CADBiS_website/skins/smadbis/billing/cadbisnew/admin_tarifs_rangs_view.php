@@ -1,4 +1,6 @@
 <h2>Статус системы:</h2>
+<? require_once(dirname(__FILE__)."/CADBiS/cadbis_statistic_view.php"); ?>
+<br/>
 	Месячный порог трафика:
 	<input type="text" value="<?=$max_month_traffic->get_value()?>"
 		onchange="<?= $ajaxbuf->client_id()?>.set_var('<?=$max_month_traffic->client_id() ?>',this.value)"> (Мб)
