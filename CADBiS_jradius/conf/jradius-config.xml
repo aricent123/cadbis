@@ -5,7 +5,7 @@
 		For more information, see http://jradius.net/
 -->
 
-<jradius-config debug="true">
+<jradius-config debug="false">
 
 	<!-- 
 		General Configurations
@@ -14,7 +14,7 @@
 		timeout: how long to wait for packets, 0 indicated indefinately
 	-->
     
-	<debug>true</debug>
+	<debug>false</debug>
 	<timeout>0</timeout>
 
     
@@ -43,34 +43,12 @@
 	-->
     
 	<packet-handlers>
-		<!-- <packet-handler name="LocalUsers">
-			<description>Generic FreeRADIUS Local Users Handler</description>
-			<class>net.jradius.example.LocalUsersHandler</class>
-			<users>
-				<user username="test" password="test">
-				      Reply-Message = Hello test user!
-				      Session-Timeout = 3600
-				      Idle-Timeout = 300
-				      User-Name = test
-				</user>
-			</users>
-		</packet-handler> -->
 		<packet-handler name="CADBiS">
 			<description>Generic FreeRADIUS Local Users Handler</description>
 			<class>cadbis.jradius.CADBiSHandler</class>
-		</packet-handler> 
-		 
+		</packet-handler> 	 
 	</packet-handlers>
 
-
-
-	<!-- 
-		Loading Packet Handler Chains
-		
-	<chain-catalog name="net/jradius/handler/catalog.xml"/>
-	<chain-catalog name="net/jradius/example/catalog.xml"/>-->
- 
- 
 	<!-- 
 		Configuring the JRadius Listeners
 	--> 
@@ -113,44 +91,13 @@
 			listener's configuration -->
             
 			<property><name>port</name><value>1814</value></property>
+			<property><name>host</name><value>127.0.0.1</value></property>
 			<property><name>backlog</name><value>1024</value></property>
 			<property name="keepAlive" value="true" />
 		</listener>
-<!-- 
-        <listener name="OTPProxyListener">
-			<description>JRadius OTP Proxy Listener</description>
-			<class>net.jradius.webservice.WebServiceListener</class>
-			<processor-class>net.jradius.webservice.OTPProxyProcessor</processor-class>
-			<processor-threads>2</processor-threads>
-			<property name="port" value="1810"/>
-			<property name="backlog" value="1024"/>
-			<property name="useSSL" value="false"/>
-			<property name="keepAlive" value="false"/>
-         </listener>
 
-		<listener name="GenericWebSerices">
-			<description>JRadius WebServices Listener</description>
-			<class>net.jradius.webservice.WebServiceListener</class>
-			<processor-class>net.jradius.webservice.WebServiceProcessor</processor-class>
-			<processor-threads>2</processor-threads>
-			<property name="port" value="1812"/>
-			<property name="backlog" value="1024"/>
-			<property name="useSSL" value="false"/>
-			<packet-handler name="SSOProxy">
-				<description>SSO Proxy Redirector</description>
-				<class>net.jradius.webservice.SSOProxyService</class>
-			</packet-handler>
-		</listener>
--->
 	</listeners>
-<!-- 
-	<realm-manager realm-factory="net.jradius.realm.StaticRealms">
-		<realm name="coova.org" server="localhost" sharedSecret="coova-anonymous" authPort="1812" acctPort="1813"/>
-	</realm-manager>
-    -->
-	<!-- 
-		Configuring the JRadiusSession Management Classes
-	--> 
+
 
 	<session-manager key-provider="net.jradius.session.RadiusSessionKeyProvider"
 			 session-factory="net.jradius.session.RadiusSessionFactory"/>

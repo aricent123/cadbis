@@ -24,6 +24,8 @@ package net.jradius.server;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyManagementException;
@@ -65,6 +67,7 @@ public abstract class Listener extends JRadiusThread
     protected BlockingQueue queue;
     
     private int port = 1814;
+    private String host = "localhost";
     private int backlog = 1024;
     private boolean usingSSL = false;
     private boolean keepAlive;
@@ -90,8 +93,11 @@ public abstract class Listener extends JRadiusThread
         
         Map props = config.getProperties();
         
+        
         String s = (String) props.get("port");
         if (s != null) port = new Integer(s).intValue();
+        s = (String) props.get("host");
+        if (s != null) host = new String(s);
         
         s = (String) props.get("backlog");
         if (s != null) backlog = new Integer(s).intValue();
@@ -165,6 +171,10 @@ public abstract class Listener extends JRadiusThread
         else
         {
             serverSocket = new ServerSocket(port, backlog);
+        }
+        if(!host.isEmpty() && host!=null){
+        	serverSocket.close();
+        	serverSocket = new ServerSocket(port,backlog,InetAddress.getByName(host));
         }
         
         serverSocket.setReuseAddress(true);
