@@ -14,7 +14,6 @@ public class Packet implements BusinessObject{
 	private Long day_traffic_limit;
 	private String login_time;
 	private Integer port_limit;
-	private Integer simultaneous_use;
 
 	private Integer rang;
 	private Integer exceed_times;
@@ -36,7 +35,6 @@ public class Packet implements BusinessObject{
 					{"day_traffic_limit",	"Long"},
 					{"login_time",			"String"},					
 					{"port_limit",			"Integer"},
-					{"simultaneous_use",	"Integer"},
 					{"users_count",			"Integer"},
 					{"rang",				"Integer"},
 					{"exceed_times",		"Integer"},
@@ -218,19 +216,6 @@ public class Packet implements BusinessObject{
 	public Integer getSummarRang() {
 		return rang * simuluse_sum;
 	}
-
-
-
-	public Integer getSimultaneous_use() {
-		return simultaneous_use;
-	}
-
-
-
-	public void setSimultaneous_use(Integer simultaneous_use) {
-		this.simultaneous_use = simultaneous_use;
-	}	
-	
 
 
 }

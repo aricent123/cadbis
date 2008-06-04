@@ -2,10 +2,14 @@ package cadbis.proxy;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cadbis.CADBiSDaemon;
 import cadbis.CADBiSThread;
+import cadbis.db.ProxyDAO;
 
 public class Proxy extends CADBiSThread {
 	private final static Logger logger = LoggerFactory.getLogger("Main");
@@ -65,6 +69,20 @@ public class Proxy extends CADBiSThread {
 				 return;
 			 }
 			 logger.info("listening to " + String.valueOf(bindport)+"...");
+			final ProxyDAO dao = new ProxyDAO();
+			
+			/**
+			 * The daemon to update statistic about usage
+			 */
+			new CADBiSDaemon("StatisticUpdater",1000){
+				@Override
+				protected void daemonize() {				
+					try{delay = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("min_usage_update_time"));}
+					catch(NumberFormatException e){delay = 1000;}			
+					dao.setChannelLoading(Thread.activeCount());
+					dao.setMemoryUsage(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory());
+				}
+			}.start();
 			while(true) 
 			{
 				boolean trueProxy = (ProxyConfigurator.getInstance().getProperty("trueproxy").equals("enabled"));
@@ -74,6 +92,7 @@ public class Proxy extends CADBiSThread {
 					cSocket = sSocket.accept();				
 					if(cSocket!=null) 
 					{
+
 						logger.debug("accepted as #"+clientCount+":"+cSocket);
 						clientCount++;
 						ProxyConnection c = null;
