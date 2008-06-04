@@ -101,7 +101,11 @@ public class Categorizer extends CADBiSDaemon{
 	    ContentCategoryDAO dao = new ContentCategoryDAO();
 		Iterator<String> iter = res.keywords.keySet().iterator();
 		int minimalWordRang = 1;
-		try{minimalWordRang = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("categorizer_minimal_kwrang"));}
+		int maximumCatKwds = 1000;
+		try{
+			minimalWordRang = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("categorizer_minimal_kwrang"));
+			maximumCatKwds = Integer.parseInt(ProxyConfigurator.getInstance().getProperty("categorizer_max_cat_words"));			
+			}		
 		catch(NumberFormatException e){}
 
 	    while (iter.hasNext()) 
@@ -115,11 +119,12 @@ public class Categorizer extends CADBiSDaemon{
 	    	}
 	    	
 	    	
-	    	if(confCid != cidMax && minimalWordRang<keyword.length()){
+	    	if(confCid != cidMax && minimalWordRang<res.keywords.get(keyword)){
 		    	if(confCid!=0) // conflict
-		    		dao.addUrlCategoryConflict(keyword, cidMax, confCid, url);
+		    		if(dao.keywordsCount(cidMax)<maximumCatKwds)
+		    			dao.addUrlCategoryConflict(keyword, cidMax, confCid, url);
 		    	else if(cidMax != 0)// no conflicts
-		    		if(!dao.keywordExists(keyword))
+		    		if(!dao.keywordExists(keyword) && dao.keywordsCount(cidMax)<maximumCatKwds)
 		    			dao.attachUrlCategoryKeyword(cidMax, keyword);
 	    	}
 	    }
