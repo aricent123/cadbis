@@ -48,8 +48,7 @@ public class Proxy extends CADBiSThread {
 	
 	public void run(String bindhost, int bindport, String fwdhost, int fwdport,long timeout) {
 		try 
-		{		
-			boolean trueProxy = (ProxyConfigurator.getInstance().getProperty("trueproxy").equals("enabled"));
+		{					
 			ServerSocket sSocket = null;
 			 try
 			 {
@@ -67,7 +66,8 @@ public class Proxy extends CADBiSThread {
 			 }
 			 logger.info("listening to " + String.valueOf(bindport)+"...");
 			while(true) 
-			{			
+			{
+				boolean trueProxy = (ProxyConfigurator.getInstance().getProperty("trueproxy").equals("enabled"));
 				Socket cSocket=null;
 				try 
 				{
