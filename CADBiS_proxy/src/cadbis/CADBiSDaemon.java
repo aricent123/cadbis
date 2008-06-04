@@ -3,7 +3,7 @@ package cadbis;
 public abstract class CADBiSDaemon extends CADBiSThread {
 	protected static CADBiSDaemon instance = null;
 	private Object dLock = new Object();
-	private int delay = 60000; 
+	protected int delay = 60000; 
 	
 	protected CADBiSDaemon() {
 		
