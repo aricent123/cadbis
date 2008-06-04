@@ -6,12 +6,21 @@ require_once(dirname(__FILE__)."/SMPHPToolkit/SMAjax.php");
 require_once(dirname(__FILE__)."/CADBiS/PacketsTodayLimits.php");
 CADBiSNew::instance()->script_src('js/ajax/buffer.js');
 
+
 $ajaxbuf = new ajax_buffer("update_buffer");
 $ajaxbuf->show_progress(true);
 $ajaxbuf->set_postback_url($_SERVER['REQUEST_URI']);
 
 $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
 $packets = $BILL->GetTarifs();
+
+require_once(dirname(__FILE__)."/CADBiS/cadbis_statistic_backend.php");
+CADBiSNew::instance()->script_src('js/jquery/jquery.js');
+CADBiSNew::instance()->script_src('js/jquery/jquery.scrollTo-min.js');
+CADBiSNew::instance()->register_script('<script type="text/javascript">jQuery.noConflict();</script>');
+
+
+
 
 $config = $BILL->GetCADBiSConfig();
 $packets_confs = array();
