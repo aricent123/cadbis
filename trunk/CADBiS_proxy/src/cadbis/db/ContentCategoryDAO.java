@@ -73,6 +73,13 @@ public class ContentCategoryDAO extends AbstractDAO<ContentCategory> {
 		return (getCountByQuery(String.format("select count(*) as count from `url_categories_keywords` where keyword='%s'",keyword), "count") == 1);
 	}	
 	
+	public int keywordsCount(Integer cid)
+	{
+		return getCountByQuery(String.format("select count(*) as count from `url_categories_keywords` where cid=%d",cid), "count");
+	}		
+	
+	
+	
 	public void updateContentCategory(Integer cid, String title)
 	{		
 		title = setStringUtf(title);
