@@ -1240,6 +1240,7 @@ function UpdateTarif($gid,$data)
         , `day_traffic_limit`='.$data['day_traffic_limit'].'
         , `login_time`=\''.$data['login_time'].'\'
         , `port_limit`= '.$data['port_limit'].'
+        , `simultaneous_use`= '.$data['simultaneous_use'].'
         , `prim`=\''.$data['prim'].'\'
         , `level`=\''.$data['level'].'\' 
         , `exceed_times`='.$data['exceed_times'].'
