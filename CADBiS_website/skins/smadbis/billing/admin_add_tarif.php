@@ -86,7 +86,7 @@ if($form)
  if(!isset($mod) && isset($mode) && $mode=="edit" && isset($gid))
   {
   $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
-  $data=$BILL->GetTarifData($gid);      
+  $data=$BILL->GetTarifData($gid);
   $vars[0]=$data['packet'];
   $activated=!$data['blocked'];
   $time_vals[0]=gethours($data['total_time_limit']);
