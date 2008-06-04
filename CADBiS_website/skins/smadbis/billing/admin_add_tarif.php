@@ -26,8 +26,8 @@ if(isset($mod)  && $mod=="add" && !isset($addtime) && !isset($deltimes))
  $data['week_traffic_limit']     = mb2bytes($vars[3]);
  $data['day_traffic_limit']      = mb2bytes($vars[4]);
  $data['login_time']             = $logintime;
- $data['simultaneous_use']       = (int)$vars[5];
- $data['port_limit']             = (int)$vars[6];
+ $data['simultaneous_use']       = (int)$vars[6];
+ $data['port_limit']             = (int)$vars[5];
  $data['session_timeout']        = timeinsec($time_vals[12],$time_vals[13],$time_vals[14]);
  $data['idle_timeout']           = (int)$vars[7];
  $data['level']                  = (int)$vars[8];
@@ -108,8 +108,8 @@ if($form)
   $vars[2]=bytes2mb($data['month_traffic_limit']);
   $vars[3]=bytes2mb($data['week_traffic_limit']);
   $vars[4]=bytes2mb($data['day_traffic_limit']);
-  $vars[5]=(int)$data['simultaneous_use'];
-  $vars[6]=(int)$data['port_limit'];
+  $vars[6]=(int)$data['simultaneous_use'];
+  $vars[5]=(int)$data['port_limit'];
   $vars[7]=(int)$data['idle_timeout'];
   $vars[8]=(int)$data['level'];
   $vars[9]=$FLTR->ReverseProcessText($data['prim']);

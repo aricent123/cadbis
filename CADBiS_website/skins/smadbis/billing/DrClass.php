@@ -1061,8 +1061,7 @@ function GetUserData($uid)
 function UpdateUser($uid,$data)
 	{
 	global $GV;
-	var_dump($data);die;
-	
+
 	$query="Update `".$GV["users_tbl"]."` set `password`='".$data['password'].
         "', `gid`='".$data["gid"]."', `nick`='".$data["nick"].
         "', `fio`='".$data["fio"]."', `gender`='".$data["gender"]."', `phone`= '".$data["phone"]."', `email`= '".
@@ -1213,6 +1212,7 @@ function GetTarifData($gid)
               $res["day_traffic_limit"]=$row["day_traffic_limit"];
               $res["login_time"]=$row["login_time"];
               $res["port_limit"]=$row["port_limit"];
+              $res["simultaneous_use"]=$row["simultaneous_use"];              
               $res["level"]=$row["level"];
               $res["prim"]=$row["prim"];
               $res["exceed_times"]=$row["exceed_times"];
@@ -2375,6 +2375,7 @@ function DeleteDiapason($id)
 	 */
 	public function UrlCategoryAttachKeyword($cid, $keyword)
 	{
+		mysql_query(sprintf("delete from `url_categories_unsensewords` where keyword='%s'",$keyword));
 		$sql = sprintf("insert into `url_categories_keywords`(cid,keyword) values(%d,'%s')",$cid,$keyword);
 		mysql_query($sql);
 	}
@@ -2407,6 +2408,7 @@ function DeleteDiapason($id)
 	 */
 	public function AddUrlCategoryUnsenseword($keyword)
 	{
+		mysql_query(sprintf("delete from `url_categories_keywords` where keyword='%s'",$keyword));
 		$sql = sprintf('insert into `url_categories_unsensewords`(keyword) value(\'%s\')',$keyword);
 		mysql_query($sql);
 	}
