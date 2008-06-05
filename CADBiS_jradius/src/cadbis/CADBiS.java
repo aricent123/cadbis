@@ -8,6 +8,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cadbis.bl.Action;
 import cadbis.bl.Packet;
 import cadbis.bl.User;
 import cadbis.db.ActionDAO;
@@ -44,6 +45,10 @@ public class CADBiS extends CADBiSDaemon{
 	{
 		activeSessions = new HashMap<String, String>();
 		dayLimits = new PacketsTodayLimits();
+		ActionDAO dao = new ActionDAO();
+		KillInactiveUsers();
+		for(Action act : dao.getOnlineSessions())
+			activeSessions.put(act.getId(), act.getUnique_id());
 	}
 	
 	@Override
