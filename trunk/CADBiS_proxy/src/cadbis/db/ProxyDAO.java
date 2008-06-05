@@ -11,11 +11,11 @@ public class ProxyDAO extends AbstractDAO<BusinessObjectImpl> {
  
 	public void setChannelLoading(long loading)
 	{
-		execSql(String.format("replace into `cadbis_tmp` values ('current_channel_loading',%d)",loading));
+		execSql(String.format("update `cadbis_tmp` set `cvalue`=%d where `ckey`='current_channel_loading'",loading));
 	}
 	
 	public void setMemoryUsage(long usage)
 	{
-		execSql(String.format("replace into `cadbis_tmp` values('current_memory_usage',%d)",usage));
+		execSql(String.format("update `cadbis_tmp` set `cvalue`=%d where `ckey`='current_memory_usage'",usage));
 	}	
 }
