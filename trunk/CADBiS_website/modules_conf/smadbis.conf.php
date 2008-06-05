@@ -3,6 +3,6 @@ $GV["dbhost"]="localhost";
 $GV["dbname"]="nibs";
 $GV["dblogin"]="root";
 $GV["dbpassword"]="root";
-$GV["kill_program"]="/usr/local/etc/mpd/kill.pl";
-$GV["send_program"]="/usr/local/sbin/send2ip";
+$GV["kill_program"]="/home/smecsia/cadbis/kill.pl";
+$GV["send_program"]="/home/smecsia/cadbis/send2ip";
 ?>
