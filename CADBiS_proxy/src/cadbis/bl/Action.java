@@ -54,7 +54,7 @@ public class Action implements BusinessObject{
 		this.user = user;
 	}
 
-	public Object getId() {
+	public String getId() {
 		return id;
 	}
 

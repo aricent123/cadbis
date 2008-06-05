@@ -135,7 +135,7 @@ public class Checker {
 	
 	public void checkPacketUsage(long usage_count) throws CADBiSException
 	{
-		if(this.packet.getPort_limit()>0 && this.packet.getPort_limit() <= usage_count)
+		if(this.packet.getPort_limit()!=0 && this.packet.getPort_limit() <= usage_count)
 			throw new PacketUsageExceedException(this.packet.getPort_limit()+" exceed maximum of "+usage_count);
 	}
 
