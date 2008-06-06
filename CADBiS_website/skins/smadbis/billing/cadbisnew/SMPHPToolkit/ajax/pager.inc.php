@@ -45,10 +45,11 @@ class ajax_grid_pager extends grid_pager {
 
 						echo "	$paging_first&nbsp;&nbsp;
 								$paging_prev&nbsp;&nbsp;
-								$page of $pcount&nbsp;&nbsp;
+								<input type=\"text\" id=\"".$this->client_id()."_pnum\" value=\"$page\"/> of $pcount&nbsp;&nbsp;
 								$paging_next&nbsp;&nbsp;
 								$paging_last&nbsp;&nbsp;";
 						';
+	
 	//--------------------------------------------------
 	/**
 	 * Sets the ajax buffer for this ajax grid pager
