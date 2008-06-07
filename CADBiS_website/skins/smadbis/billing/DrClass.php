@@ -1658,6 +1658,8 @@ function GetUrlsPopularity($asort=">count", $uid = null, $limit=25,$gid=null,$gr
  	case "<ucount":$sort="ucount asc,up.count desc,up.length desc";break;
  	case ">url":$sort="up.url desc,up.count desc";break;
  	case "<url":$sort="up.url asc,up.count desc";break;
+ 	case ">cid":$sort="ucm.cid desc,up.count desc";break;
+ 	case "<cid":$sort="ucm.cid asc,up.count desc";break; 	
  	default:$sort="up.count desc,up.length desc";break;
  };
 
@@ -1685,7 +1687,16 @@ function GetUrlsPopularity($asort=">count", $uid = null, $limit=25,$gid=null,$gr
  if($hideother)
  	$where .= ($where)?" and up.cid>0":" where up.cid>0";
  	
- $sql = "select up.cid,uc.title as cattitle,up.url,count(up.`uid`) as `ucount`, sum(up.`count`) as `count`, sum(up.`length`) as length from `url_popularity` up inner join `users` u on u.uid=up.uid left join `url_categories` uc on up.cid=uc.cid $where $groupby order by $sort $limit";
+ $sql = "select up.cid,IF(LENGTH(uc.title_ru)>0,uc.title_ru,uc.title) as cattitle,up.url,count(up.`uid`) as `ucount`, 
+ 				sum(up.`count`) as `count`, sum(up.`length`) as length 
+ 			from `url_popularity` up 
+ 				inner join `url_categories_match` ucm on ucm.url = up.url
+ 				inner join `users` u on u.uid=up.uid 
+				left join `url_categories` uc on ucm.cid=uc.cid 
+			$where 
+			$groupby 
+			order by $sort 
+			$limit";
 	//die($sql);
  $result = mysql_query($sql)or die(mysql_error());
  $res = null;
