@@ -43,11 +43,11 @@ class ajax_grid_pager extends grid_pager {
 							$paging_last = "<a href=\"javascript:".$link."\"><img src=\"".$this->pager_img_last."\" border=\"0\"></a>";
 						}
 
-						$link = "".$this->buffer->client_id().".set_var(\'".$this->pagenum->client_id()."\',document.getElementById(\'".$this->client_id()."_pnum\').value);".$this->buffer->client_id().".update()";
+						$link = "".$this->buffer->client_id().".set_var(\'".$this->pagenum->client_id()."\',document.getElementById(\'".$place.$this->client_id()."_pnum\').value);".$this->buffer->client_id().".update()";
 						?> 
 							<?=$paging_first?>&nbsp;&nbsp;
 							<?=$paging_prev?>&nbsp;&nbsp;
-								<input type="text" id="<?=$this->client_id()?>_pnum" class="grid_pagenum" value="<?=$page?>"/> 
+								<input type="text" id="<?=$place.$this->client_id()?>_pnum" class="grid_pagenum" value="<?=$page?>"/> 
 									of <?=$pcount?> 
 								<input type="button" value="Go" onclick="<?=$link?>"/>&nbsp;&nbsp;
 							<?=$paging_next?>&nbsp;&nbsp;
@@ -84,10 +84,10 @@ class ajax_grid_pager extends grid_pager {
 	//--------------------------------------------------
 	/**
 	 * name: render
-	 * params:
+	 * @param $place place for pager
 	 */
-	public function render()
+	public function render($place = 'top')
 	{
-		return parent::render();
+		return parent::render($place);
 	}
 };
