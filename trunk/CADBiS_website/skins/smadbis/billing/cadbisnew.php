@@ -179,6 +179,10 @@ if(!empty($backendfile) && file_exists($backendfile))
 		border: 1px solid #C5E4EC;
 		background: #f4fafc;
 	}
+	select{
+		border: 1px solid #C5E4EC;
+		background: #f4fafc;
+	}	
 	textarea{
 		border: 1px solid #C5E4EC;
 		background: #f4fafc;

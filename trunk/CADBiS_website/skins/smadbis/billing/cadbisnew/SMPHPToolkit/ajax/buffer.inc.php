@@ -127,7 +127,7 @@ class ajax_buffer extends smphp_control{
 	 * @return string
 	 */
 	protected function render_vars()
-	{
+	{		
 		$result = "";
 		if(!is_null($this->vars))
 			foreach($this->vars as $name => $var)
@@ -207,7 +207,7 @@ class ajax_buffer extends smphp_control{
 	 *
 	 * @param ajax_var $variable
 	 */
-	public function register_var(&$variable)
+	public function register_var($variable)
 	{
 		if(!isset($this->vars[$variable->get_id()]))
 			$this->vars[$variable->get_id()]= &$variable;
@@ -242,12 +242,17 @@ class ajax_buffer extends smphp_control{
 	/**
 	 * Registers array of variables in the buffer
 	 *
-	 * @param array $variables
+	 * @param array $variables | @param $variables
+	 * @param 
 	 */
-	public function register_vars(&$variables)
-	{
-		foreach($variables as &$variable)
-			$this->register_var($variable);
+	public function register_vars($variables)
+	{	
+		if(is_array($variables))
+			foreach($variables as &$variable)
+				$this->register_var($variable);
+		else
+			foreach(func_get_args() as $variable)
+				$this->register_var($variable);
 	}
 	//--------------------------------------------------
 	/**

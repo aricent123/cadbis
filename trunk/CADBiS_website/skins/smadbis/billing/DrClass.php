@@ -2050,10 +2050,12 @@ function DeleteDiapason($id)
 	 * @param string $orderdir - sort direction (allowed: asc,desc)
 	 * @return array - array[$i] = array('cid'=>$cid,'title'=>$title);
 	 */ 
-	public function GetUrlCategories($page = 0, $pop = 10, $orderby = 'default', $orderdir = 'asc')
+	public function GetUrlCategories($page = 0, $pop = 10, $orderby = 'default', $orderdir = 'asc', $filterby='',$filtervalue = '')
 	 {
 	 $cats = array();
 	 $sql = "select * from url_categories";
+	 if(!empty($filterby) && !empty($filtervalue))
+	 	$sql .= sprintf(" where `%s` like '%s%%'",$filterby,$filtervalue);	
 	 if($orderby!='default')
 	 	$sql .= ' order by '.$orderby.' '.$orderdir;
 	 else
@@ -2309,7 +2311,7 @@ function DeleteDiapason($id)
 	 * @param string $exclude
 	 * @return array - array[$i] = array('cid'=>$cid,'url'=>$cid)
 	 */
-	public function GetUrlCategoriesMatch($page = 0, $pop = 10, $orderby = 'default', $orderdir = 'asc', $include = array(), $exclude = array())
+	public function GetUrlCategoriesMatch($page = 0, $pop = 10, $orderby = 'default', $orderdir = 'asc', $include = array(), $exclude = array(), $filterby='',$filtervalue = '')
 	 {
 	 $cats = array();
 	 $sql = "select * from `url_categories_match`";
@@ -2319,6 +2321,13 @@ function DeleteDiapason($id)
 	 	$sql .= ' where cid in('.implode(',',$include).')';
 	 elseif(!empty($include) && empty($exclude))
 	 	$sql .= ' where cid not in ('.implode(',',$exclude).') and cid in('.implode(',',$include).')';
+	 if(!empty($filterby) && !empty($filtervalue)){
+	 	if(!empty($exclude) || !empty($include))
+	 		$sql.= ' and ';
+	 	else
+	 		$sql.= ' where ';
+	 	$sql .= sprintf("`%s` like '%s%%'",$filterby,$filtervalue);
+	 }
 	 if($orderby!='default')
 	 	$sql .= ' order by '.$orderby.' '.$orderdir;
 	 if($page > 0)
@@ -2338,9 +2347,12 @@ function DeleteDiapason($id)
 	 *
 	 * @return int
 	 */
-	public function GetCategoriesUrlMatchedCount()
+	public function GetCategoriesUrlMatchedCount($filterfield = '', $filtervalue = '')
 	{
-		return mysql_result(mysql_query("select count(1) from `url_categories_match` where cid > 0"),0);
+		$sql = sprintf("select count(1) from `url_categories_match` where cid > 0");
+		if(!empty($filterfield) && !empty($filtervalue))
+			$sql .= sprintf(" and `%s` like '%s%%'", $filterfield, $filtervalue);		
+		return mysql_result(mysql_query($sql),0);
 	}
 	// ----------------------------------------------------
 	/**
@@ -2348,9 +2360,12 @@ function DeleteDiapason($id)
 	 *
 	 * @return int
 	 */
-	public function GetCategoriesUrlUnMatchedCount()
+	public function GetCategoriesUrlUnMatchedCount($filterfield = '', $filtervalue = '')
 	{
-		return mysql_result(mysql_query("select count(1) from `url_categories_match` where cid = 0"),0);
+		$sql = sprintf("select count(1) from `url_categories_match` where cid = 0");
+		if(!empty($filterfield) && !empty($filtervalue))
+			$sql .= sprintf(" and `%s` like '%s%%'", $filterfield, $filtervalue);
+		return mysql_result(mysql_query($sql),0);
 	}
 	// ----------------------------------------------------
 	/**
@@ -2429,9 +2444,12 @@ function DeleteDiapason($id)
 	 * @param string $table
 	 * @return int
 	 */
-	public function GetRowsCount($table)
+	public function GetRowsCount($table, $filterfield = '', $filtervalue = '')
 	{
-		return mysql_result(mysql_query("select count(*) from `$table`"),0);
+		$sql = sprintf("select count(*) from `%s`",$table);
+		if(!empty($filterfield) && !empty($filtervalue))
+			$sql .= sprintf(" where `%s` like '%s%%'", $filterfield, $filtervalue);
+		return mysql_result(mysql_query($sql),0);
 	}
 	// ----------------------------------------------------
 	public function AddUrlCategoryConflict($keyword,$forcid,$incid,$url)
@@ -2448,10 +2466,12 @@ function DeleteDiapason($id)
 	 * @param string $orderdir - sort direction (allowed: asc,desc)
 	 * @return array - array[$i] = array('cid'=>$cid,'title'=>$title);
 	 */ 
-	public function GetUrlCategoriesConflicts($page = 0, $pop = 10, $orderby = 'default', $orderdir = 'asc')
+	public function GetUrlCategoriesConflicts($page = 0, $pop = 10, $orderby = 'default', $orderdir = 'asc', $filterby='',$filtervalue = '')
 	 {
 	 $conflicts = array();
 	 $sql = "select * from url_categories_conflicts";
+	 if(!empty($filterby) && !empty($filtervalue))
+	 	$sql .= sprintf(" where `%s` like '%s%%'",$filterby,$filtervalue);		 
 	 if($orderby!='default')
 	 	$sql .= sprintf(' order by %s %s',$orderby,$orderdir);
 	 else

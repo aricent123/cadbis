@@ -26,6 +26,7 @@ class grid_header_item{
 	protected $sortable;
 	protected $formatter;
 	protected $visible;
+	protected $filterable;
 
 	public function get_visible()
 	{
@@ -51,7 +52,17 @@ class grid_header_item{
 	{
 		return $this->sortable;
 	}
-
+	
+	public function is_filterable()
+	{
+		return $this->filterable;
+	}
+	
+	public function set_filterable($value)
+	{
+	  $this->filterable = $value;
+	}	
+	
 	public function set_sortable($value)
 	{
 	  $this->sortable = $value;
@@ -96,13 +107,14 @@ class grid_header_item{
 	 * @param grid_formatter $formatter
 	 * @param bool $visible
 	 */
-	public function __construct($name, $title, $type = type::STRING, $sortable = false, $formatter = null, $visible = true)
+	public function __construct($name, $title, $type = type::STRING, $sortable = false, $formatter = null, $visible = true, $filterable = false)
 	{
 		$this->title = $title;
 		$this->name = $name;
 		$this->type = $type;
 		$this->sortable = $sortable;
 		$this->visible = $visible;
+		$this->filterable = $filterable;
 		if($formatter != null)
 			$this->formatter = $formatter;
 		else
@@ -116,7 +128,11 @@ class grid_header_item{
  */
 class grid_header_item_array{
 	protected $items;
-
+	/**
+	 * Returns array of items
+	 *
+	 * @return array of grid_header_item
+	 */
 	public function get_items()
 	{
 		return $this->items;
@@ -212,7 +228,10 @@ class grid extends smphp_control {
 	public $cellclass = "grid_cell";
 	public $headercellclass = "grid_header_cell";
 	public $no_data_message = 'no data';
-
+	
+	/**
+	 * @var grid_data_source
+	 */
 	protected $datasource = null;
 	protected $cellspacing = 0;
 	protected $cellpadding = 0;

@@ -43,11 +43,15 @@ class ajax_grid_pager extends grid_pager {
 							$paging_last = "<a href=\"javascript:".$link."\"><img src=\"".$this->pager_img_last."\" border=\"0\"></a>";
 						}
 
-						echo "	$paging_first&nbsp;&nbsp;
-								$paging_prev&nbsp;&nbsp;
-								<input type=\"text\" id=\"".$this->client_id()."_pnum\" value=\"$page\"/> of $pcount&nbsp;&nbsp;
-								$paging_next&nbsp;&nbsp;
-								$paging_last&nbsp;&nbsp;";
+						$link = "".$this->buffer->client_id().".set_var(\'".$this->pagenum->client_id()."\',document.getElementById(\'".$this->client_id()."_pnum\').value);".$this->buffer->client_id().".update()";
+						?> 
+							<?=$paging_first?>&nbsp;&nbsp;
+							<?=$paging_prev?>&nbsp;&nbsp;
+								<input type="text" id="<?=$this->client_id()?>_pnum" class="grid_pagenum" value="<?=$page?>"/> 
+									of <?=$pcount?> 
+								<input type="button" value="Go" onclick="<?=$link?>"/>&nbsp;&nbsp;
+							<?=$paging_next?>&nbsp;&nbsp;
+							<?=$paging_last?>&nbsp;&nbsp;
 						';
 	
 	//--------------------------------------------------

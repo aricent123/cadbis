@@ -46,8 +46,8 @@ class conflicts_cat_formatter extends grid_formatter {
 $ajaxbuffer = new ajax_buffer("update_buffer");
 $datasource = new grid_data_source(new grid_header_item_array(
 					new grid_header_item('id','',null, false, new conflicts_act_formatter()),
-					new grid_header_item('url','URL',type::LINK_NEWWIN, true),
-					new grid_header_item('keyword','Слово',type::STRING, true),					
+					new grid_header_item('url','URL',type::LINK_NEWWIN, true, null, true, true),
+					new grid_header_item('keyword','Слово',type::STRING, true, null, true, true),					
 					new grid_header_item('forcid','Категория',type::STRING, true, new conflicts_cat_formatter($cats)),
 					new grid_header_item('incid','Конфликт с',type::STRING, true, new conflicts_cat_formatter($cats)),
 					new grid_header_item('date','Дата',type::STRING, true)					
@@ -55,15 +55,18 @@ $datasource = new grid_data_source(new grid_header_item_array(
 $grid = new ajax_grid('grid',$datasource,$ajaxbuffer);
 $grid->no_data_message = 'Нет записей';
 $grid->render_pager_top(true);
-$grid_pager = new ajax_grid_pager('grid_pager',$BILL->GetRowsCount('url_categories_conflicts'),COUNT_ON_PAGE);
+$grid->render_filter_bottom(true);
+$grid_pager = new ajax_grid_pager('grid_pager',$BILL->GetRowsCount('url_categories_conflicts',$grid->get_filterfield(),$grid->get_filtering()),COUNT_ON_PAGE);
 $grid->attach_pager($grid_pager);
 
 
 $conflicts = $BILL->GetUrlCategoriesConflicts(
 					$grid_pager->get_curpage(),
 					$grid_pager->get_pagesize(),			
-					$grid->get_current_sorting(), 
-					$grid->get_sort_direction());
+					$grid->get_sorting(), 
+					$grid->get_sort_direction(),
+					$grid->get_filterfield(),
+					$grid->get_filtering());
 
 foreach($conflicts as $conflict){
 	$datasource->add_row(array(

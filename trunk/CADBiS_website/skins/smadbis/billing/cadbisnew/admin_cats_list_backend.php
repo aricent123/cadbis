@@ -51,13 +51,13 @@ class cats_formatter extends grid_formatter {
 
 $cats_ds = new grid_data_source(new grid_header_item_array(
 					new grid_header_item('cid','Id',type::STRING, true),
-					new grid_header_item('title','Категория',type::STRING, true),
-					new grid_header_item('title_ru','Название',type::STRING, true),
-					new grid_header_item('actions','Действия',null, false, new cats_formatter('actions',$emanager))
+					new grid_header_item('title','Категория',type::STRING, true, null, true, true),
+					new grid_header_item('title_ru','Название',type::STRING, true, null, true, true),
+					new grid_header_item('actions','Действия',null, false, new cats_formatter('actions',$emanager),true, true)
 				));
 
 $cats_grid = new ajax_grid('cats_grid',$cats_ds,$ajaxbuf_cats);
-$cats_grid_pager = new ajax_grid_pager('cats_grid_pager',$BILL->GetRowsCount('url_categories'),20);
+$cats_grid_pager = new ajax_grid_pager('cats_grid_pager',$BILL->GetRowsCount('url_categories',$cats_grid->get_filterfield(),$cats_grid->get_filtering()),20);
 $cats_grid->attach_pager($cats_grid_pager);
 
 /**
@@ -98,7 +98,12 @@ if($emanager->isAnyAction() && $ajaxbuf_cats->is_post_back())
 /**
  * Retrieve categories from the database
  */
-$cats = $BILL->GetUrlCategories($cats_grid_pager->get_curpage(),$cats_grid_pager->get_pagesize(),$cats_grid->get_current_sorting(), $cats_grid->get_sort_direction());
+$cats = $BILL->GetUrlCategories($cats_grid_pager->get_curpage(),
+								$cats_grid_pager->get_pagesize(),
+								$cats_grid->get_sorting(), 
+								$cats_grid->get_sort_direction(),
+								$cats_grid->get_filterfield(),
+								$cats_grid->get_filtering());
 foreach($cats as $cat)
 {
 	$cat['keywords'] = implode(", ",$BILL->GetUrlCategoryKeywords($cat['cid']));

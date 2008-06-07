@@ -62,7 +62,7 @@ function create_ds_header($manager)
 	global $cats_cid;
 	return new grid_data_source(new grid_header_item_array(
 					new grid_header_item('u2cid','Id',type::STRING, true),
-					new grid_header_item('url','URL',type::LINK_NEWWIN, true),
+					new grid_header_item('url','URL',type::LINK_NEWWIN, true, null, true, true),
 					new grid_header_item('cid','Категория',type::STRING, true, new cat_urls_formatter('category',$cats_cid,$manager)),
 					new grid_header_item('actions','Действия',null, false, new cat_urls_formatter('actions',$cats_cid,$manager))
 				));
@@ -72,12 +72,18 @@ function create_ds_header($manager)
 
 $url_cats_unmatched_ds = create_ds_header($emanager->client_id());
 $url_cats_unmatched_grid = new ajax_grid('url_cats_grid_unmatched',$url_cats_unmatched_ds,$ajaxbuf_url_cats);
-$url_cats_unmatched_grid_pager = new ajax_grid_pager('url_cats_grid_pager_unmatched',$BILL->GetCategoriesUrlUnMatchedCount(),10);
+$url_cats_unmatched_grid_pager = new ajax_grid_pager('url_cats_grid_pager_unmatched',
+								$BILL->GetCategoriesUrlUnMatchedCount(
+									$url_cats_unmatched_grid->get_filterfield(),
+									$url_cats_unmatched_grid->get_filtering()),10);
 $url_cats_unmatched_grid->attach_pager($url_cats_unmatched_grid_pager);
 
 $url_cats_matched_ds = create_ds_header($emanager->client_id());
 $url_cats_matched_grid = new ajax_grid('url_cats_grid_matched',$url_cats_matched_ds,$ajaxbuf_url_matched_cats);
-$url_cats_matched_grid_pager = new ajax_grid_pager('url_cats_grid_pager_matched',$BILL->GetCategoriesUrlMatchedCount(),10);
+$url_cats_matched_grid_pager = new ajax_grid_pager('url_cats_grid_pager_matched',
+								$BILL->GetCategoriesUrlMatchedCount(
+									$url_cats_matched_grid->get_filterfield(),
+									$url_cats_matched_grid->get_filtering()),10);									
 $url_cats_matched_grid->attach_pager($url_cats_matched_grid_pager);
 
 
@@ -96,7 +102,7 @@ if($emanager->isAnyAction())
 	{
 		$url_cats = $BILL->GetUrlCategoriesMatch(
 			$url_cats_unmatched_grid_pager->get_curpage(),10,			
-			$url_cats_unmatched_grid->get_current_sorting(), 
+			$url_cats_unmatched_grid->get_sorting(), 
 			$url_cats_unmatched_grid->get_sort_direction(),
 			array(0),array());
 		require_once(dirname(__FILE__).'/CADBiS/recognize.php');
@@ -130,9 +136,11 @@ if($emanager->isAnyAction())
  */
 $url_cats = $BILL->GetUrlCategoriesMatch(
 			$url_cats_unmatched_grid_pager->get_curpage(),10,			
-			$url_cats_unmatched_grid->get_current_sorting(), 
+			$url_cats_unmatched_grid->get_sorting(), 
 			$url_cats_unmatched_grid->get_sort_direction(),
-			array(0),array());
+			array(0),array(), 
+			$url_cats_unmatched_grid->get_filterfield(),
+			$url_cats_unmatched_grid->get_filtering());
 foreach($url_cats as $cat)
 {
 	$url_cats_unmatched_ds->add_row(array(
@@ -148,9 +156,11 @@ foreach($url_cats as $cat)
  */
 $url_cats = $BILL->GetUrlCategoriesMatch(
 			$url_cats_matched_grid_pager->get_curpage(),10,			
-			$url_cats_matched_grid->get_current_sorting(), 
+			$url_cats_matched_grid->get_sorting(), 
 			$url_cats_matched_grid->get_sort_direction(),
-			array(),array(0));
+			array(),array(0), 
+			$url_cats_matched_grid->get_filterfield(),
+			$url_cats_matched_grid->get_filtering());
 foreach($url_cats as $cat)
 {
 	$url_cats_matched_ds->add_row(array(
