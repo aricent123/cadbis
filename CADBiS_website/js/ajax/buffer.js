@@ -16,7 +16,7 @@ var ajax_buffer = function(id,req,vc_pf)
     	{
     		if(res != '')
     			res += '&';
-    		res += name + '=' + $(name+_vc_pf).value;
+    		res += name + '=' + encodeURIComponent($(name+_vc_pf).value);
     	}	
     	return res;
     }

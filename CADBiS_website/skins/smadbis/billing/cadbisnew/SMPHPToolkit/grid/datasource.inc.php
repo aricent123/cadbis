@@ -7,26 +7,44 @@
 class grid_data_source{
 	protected $header;
 	protected $values;
+	/**
+	 * Returns array of grid header items
+	 * @return grid_header_item_array
+	 */
 	public function get_header()
 	{
 		return $this->header;
 	}
-	
+	/**
+	 * Sets grid header
+	 *
+	 * @param grid_header_item_array $value
+	 */
 	public function set_header($value)
 	{
 	  $this->header = $value;
 	}
-	
+	/**
+	 * Returns array of values
+	 * @return array
+	 */
 	public function get_values()
 	{
 		return $this->values;
 	}
-	
+	/**
+	 * Returns rows count
+	 * @return int 
+	 */
 	public function get_rows_count()
 	{
 		return count($this->values);
 	}	
-	
+	/**
+	 * Sets values array
+	 *
+	 * @param array $value
+	 */
 	public function set_values($value)
 	{
 	  $this->values = $value;
@@ -60,7 +78,11 @@ class grid_data_source{
 	{
 		$this->values[] = $columns;		
 	}
-	//--------------------------------------------------	
+	//--------------------------------------------------
+	/**
+	 * returns sizeof values(count)
+	 * @return int
+	 */
 	public function size()
 	{
 		if(!is_null($this->values))

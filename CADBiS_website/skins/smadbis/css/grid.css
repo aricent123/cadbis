@@ -15,3 +15,12 @@
 	font-size: 10pt;
 	padding: 3px;
 }
+.grid_pagenum{
+	width:30px;
+}
+.grid_filter_value{
+	width: 100px;
+}
+.grid_filter_field{
+	width: 150px;
+}
