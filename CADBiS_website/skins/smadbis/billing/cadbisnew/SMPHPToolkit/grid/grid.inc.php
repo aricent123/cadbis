@@ -242,7 +242,7 @@ class grid extends smphp_control {
 	public $img_sort_desc		= 'img/sort_desc.gif';
 
 	
-	protected $_current_sorting = sorting::DEFAULT_SORT;
+	protected $_sorting = sorting::DEFAULT_SORT;
 	protected $_sort_dir = sorting::SORT_DIR_DEFAULT;
 
 	protected $_default_header_template = 'if($sortable)
@@ -268,9 +268,9 @@ class grid extends smphp_control {
 			$this->header_template = $this->_default_header_template;
 			
 		if(isset($_REQUEST[$this->get_sortby_param()]))
-			$this->_current_sorting = $_REQUEST[$this->get_sortby_param()];
+			$this->_sorting = $_REQUEST[$this->get_sortby_param()];
 		else
-			$this->_current_sorting = sorting::DEFAULT_SORT;
+			$this->_sorting = sorting::DEFAULT_SORT;
 		if(isset($_REQUEST[$this->get_sort_direction_param()]))
 			$this->_sort_dir = $_REQUEST[$this->get_sort_direction_param()];
 		else
@@ -368,9 +368,9 @@ class grid extends smphp_control {
 		return $this->UID('direction');
 	}
 	//--------------------------------------------------
-	public function set_current_sorting($name)
+	public function set_sorting($name)
 	{
-		$this->_current_sorting = $name;
+		$this->_sorting = $name;
 	}
 	//--------------------------------------------------
 	public function set_sort_direction($dir)
@@ -378,9 +378,9 @@ class grid extends smphp_control {
 		$this->_sort_dir = $dir;
 	}	
 	//--------------------------------------------------
-	public function get_current_sorting()
+	public function get_sorting()
 	{
-		return $this->_current_sorting;
+		return $this->_sorting;
 	}
 	//--------------------------------------------------
 	public function get_sort_direction()
@@ -406,7 +406,7 @@ class grid extends smphp_control {
 			$header_class = $this->headercellclass;
 			$base_url = $this->base_url;
 			$sortby_param = $this->get_sortby_param();
-			$current_sorting = $this->get_current_sorting();
+			$current_sorting = $this->get_sorting();
 			$current_direction = $this->get_sort_direction();
 			$direction_param = $this->get_sort_direction_param();
 			if(!is_null($additional_values))

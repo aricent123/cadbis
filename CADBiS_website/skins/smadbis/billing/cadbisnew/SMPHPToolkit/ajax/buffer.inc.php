@@ -212,10 +212,9 @@ class ajax_buffer extends smphp_control{
 		if(!isset($this->vars[$variable->get_id()]))
 			$this->vars[$variable->get_id()]= &$variable;
 		$client_id = $variable->client_id();
-		if($this->is_post_back && isset($_REQUEST[$client_id]))
-		{
+		//if($this->is_post_back && isset($_REQUEST[$client_id]))
+		if(isset($_REQUEST[$client_id]))
 			$variable->set_value($_REQUEST[$client_id]);
-		}
 	}
 	//--------------------------------------------------
 	/**

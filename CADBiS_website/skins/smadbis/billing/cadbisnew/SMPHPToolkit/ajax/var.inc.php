@@ -34,7 +34,7 @@ class ajax_var extends smphp_control{
 	 */
 	public function render()
 	{
-		return '<input type="hidden" id="'.$this->client_id().ajax_common::AJAX_VAR_HIDDEN_PF.'" value="'.$this->value.'"/>';
+		return '<input type="hidden" name="'.$this->client_id().'" id="'.$this->client_id().ajax_common::AJAX_VAR_HIDDEN_PF.'" value="'.$this->value.'"/>';
 	}
 	/**
 	 * Returns client id
