@@ -273,7 +273,7 @@ class ajax_grid extends grid{
 		if($this->_renderFilterTop)
 			echo $this->render_filters('top');
 		if(!is_null($this->pager) && $this->_renderPagerTop)
-		echo $this->pager->render();
+		echo $this->pager->render('top');
 		echo parent::render(array(
 								'buffer'=>$this->buffer->client_id(),
 								'sortdir_name'=>$this->sortdir->client_id(),
@@ -282,7 +282,7 @@ class ajax_grid extends grid{
 		if($this->_renderFilterBottom)
 			echo $this->render_filters('bottom');
 		if(!is_null($this->pager))
-			echo $this->pager->render();
+			echo $this->pager->render('bottom');
 		if(!$this->_isExternalBuffer)
 			$this->buffer->end();
 	}

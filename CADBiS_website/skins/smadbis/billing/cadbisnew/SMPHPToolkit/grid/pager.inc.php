@@ -94,7 +94,7 @@ class grid_pager extends smphp_control{
 	 * name: render
 	 * params:
 	 */
-	public function render()
+	public function render($place)
 	{
 		$out = "";
 		$this->pager->recalc();
