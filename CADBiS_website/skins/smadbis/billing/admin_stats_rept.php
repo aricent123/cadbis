@@ -1,5 +1,5 @@
 <?php
-
+require_once(dirname(__FILE__).'/cadbisnew/SMPHPToolkit/common.inc.php');
 //include("restore_confs.php");
 if($BILLEVEL<=1)
  {
@@ -412,11 +412,11 @@ $urls = $BILL->GetUrlsPopularity($sort,$uid,$limit,$gid,$groupby,$hideother);
     ?>
      <tr>
          <td class=tbl1><?=++$i ?></td>
-       <td class=tbl1><?=(($groupby=="cid")?$url['cattitle']:make_url_str($url['url'],true))?></td>
+       <td class=tbl1><?=(($groupby=="cid")?utils::utf2cp($url['cattitle']):make_url_str($url['url'],true))?></td>
        <? if($groupby!="cid" && !$uid){?><td class=tbl1><?=$url['ucount'] ?></td><?}?>
        <td class=tbl1><?=$url['count'] ?></td>
        <td class=tbl1><?=make_fsize_str($url['length']) ?></td>
-       <? if($groupby!="cid"){?><td class=tbl1><?=$url['cattitle'] ?></td><?}?>       
+       <? if($groupby!="cid"){?><td class=tbl1><?=utils::utf2cp($url['cattitle']) ?></td><?}?>       
      </tr>
     <?
 
