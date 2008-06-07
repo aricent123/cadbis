@@ -108,7 +108,7 @@ if($emanager->isAnyAction())
 		require_once(dirname(__FILE__).'/CADBiS/recognize.php');
 		foreach($url_cats as $url)
 		{			
-			$catname = Recognizer::recognize($url['url']);
+			$catname = Recognizer::recognizeByUrlCheck($url['url']);
 			if(!empty($catname))
 				$BILL->UpdateUrlCategoryMatchByName($url['url'],$catname);
 		}
