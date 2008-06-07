@@ -1,5 +1,6 @@
 <?php
 require_once(dirname(__FILE__).'/cadbisnew/graph/charts.php');
+require_once(dirname(__FILE__).'/cadbisnew/SMPHPToolkit/common.inc.php');
 
 //include("restore_confs.php");
 if($BILLEVEL<=1)
@@ -200,7 +201,7 @@ if(!isset($sort))
  $sort=">count";
 if(!isset($limit) || !$limit)
 	$limit=25;
-if(!strstr($sort,"count") && !strstr($sort,"url")&& !strstr($sort,"length"))
+if(!strstr($sort,"count") && !strstr($sort,"url")&& !strstr($sort,"length")&& !strstr($sort,"cid"))
     $sort=">count";
 if(!isset($gid) || $gid=='all')
 	$gid=null;
@@ -210,7 +211,7 @@ if(!isset($groupby))
  		$BILL->SetCidsForUrls($cids);
 
 if(!isset($hideother) || $hideother=="false")
-	$hideother = false;
+	$hideother = false;	
 $urls = $BILL->GetUrlsPopularity($sort,$uid,$limit,$gid,$groupby,$hideother);
 
  ?>
@@ -284,7 +285,7 @@ $urls = $BILL->GetUrlsPopularity($sort,$uid,$limit,$gid,$groupby,$hideother);
    	<? if($groupby!="cid" && !$uid){?><td class=tbl1><?=template_header_sort("limit=$limit&graf=$graf&uid=$uid&showdenied=$showdenied&hideother=$hideother&gid=$gid&groupby=$groupby",$sort,"ucount","Число пользователей");?></td><?}?>
    	<td class=tbl1><?=template_header_sort("limit=$limit&graf=$graf&uid=$uid&showdenied=$showdenied&hideother=$hideother&gid=$gid&groupby=$groupby",$sort,"count","Число пакетов");?></td>
    	<td class=tbl1><?=template_header_sort("limit=$limit&graf=$graf&uid=$uid&showdenied=$showdenied&hideother=$hideother&gid=$gid&groupby=$groupby",$sort,"length","Трафик");?></td>
-   	<? if($groupby!="cid" && $BILLEVEL>=3){?><td align=center><input type=submit value="Save"></td><?}?>
+   	<? if($groupby!="cid"){?><td class=tbl1><?=template_header_sort("limit=$limit&graf=$graf&uid=$uid&showdenied=$showdenied&hideother=$hideother&gid=$gid&groupby=$groupby",$sort,"cid","Категория");?></td><?}?>
    </tr>
 
  <?
@@ -292,19 +293,14 @@ $urls = $BILL->GetUrlsPopularity($sort,$uid,$limit,$gid,$groupby,$hideother);
   if(count($urls))
   foreach($urls as $url)
    {
-   $sel_cat = "<select name=\"cids[".$url['url']."]\"><option value=0 ".(($url['cid']==0)?"selected":"").">OTHER</option>";
-   foreach($cats as $cat)
-	   $sel_cat.="<option value=\"".$cat['cid']."\" ".(($url['cid']==$cat['cid'])?"selected":"").">".$cat["title"]."</a>";
-   $sel_cat .= "</select>";
-   if($BILLEVEL<3)
-   	$sel_cat = $url['cattitle'];
+   $sel_cat = utils::utf2cp($url['cattitle']);
    $total_count +=(int)$url['count'];
    $total_length += (int)$url['length'];
    $total_ucount =($url['ucount']>$total_ucount)?$url['ucount']:$total_ucount;
     ?>
      <tr>
        <td class=tbl1><?=++$i ?></td>
-       <td class=tbl1><?=(($groupby=="cid")?$url['cattitle']:make_url_str($url['url'],true))?></td>
+       <td class=tbl1><?=(($groupby=="cid")?utils::utf2cp($url['cattitle']):make_url_str($url['url'],true))?></td>
        <? if($groupby!="cid" && !$uid){?><td class=tbl1><?=$url['ucount'] ?></td><?}?>
        <td class=tbl1><?=$url['count'] ?></td>
        <td class=tbl1><?=make_fsize_str($url['length']) ?></td>
@@ -320,7 +316,7 @@ $urls = $BILL->GetUrlsPopularity($sort,$uid,$limit,$gid,$groupby,$hideother);
        <? if($groupby!="cid" && !$uid){?><td class=tbl1>MAX: <?=$total_ucount?></td><?}?>
        <td class=tbl1><?=$total_count?></td>
        <td class=tbl1><?=make_fsize_str($total_length) ?></td>
-       <? if($groupby!="cid" && $BILLEVEL>=3){?><td align=center><input type=submit value="Save"></td><?}?>
+       <? if($groupby!="cid" && $BILLEVEL>=3){?><td align=center></td><?}?>
      </tr>
 </table>
 </form>
