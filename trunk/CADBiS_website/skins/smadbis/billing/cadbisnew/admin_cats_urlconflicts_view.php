@@ -20,7 +20,6 @@ if($datasource->get_rows_count()>0){ ?>
 <?} 
 }?>
 
-
 <form action="<?=cadbisnewurl('admin_cats_urlconflicts')?>&resolve=true" method="post"/>
 <?=draw_controls($datasource) ?>
 	<? $ajaxbuffer->start(); ?>	

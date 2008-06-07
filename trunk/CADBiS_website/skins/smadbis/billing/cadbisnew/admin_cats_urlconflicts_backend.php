@@ -9,7 +9,6 @@ CADBiSNew::instance()->link_href('skins/smadbis/css/grid.css');
 $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
 $cats = $BILL->GetUrlCategoriesAssoc();
 
-
 // any action on selected keywords
 if(isset($_POST['selected_kwds'])){
 	$selkwds = $_POST['selected_kwds'];

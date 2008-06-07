@@ -53,7 +53,7 @@ $cats_ds = new grid_data_source(new grid_header_item_array(
 					new grid_header_item('cid','Id',type::STRING, true),
 					new grid_header_item('title','Категория',type::STRING, true, null, true, true),
 					new grid_header_item('title_ru','Название',type::STRING, true, null, true, true),
-					new grid_header_item('actions','Действия',null, false, new cats_formatter('actions',$emanager),true, true)
+					new grid_header_item('actions','Действия',null, false, new cats_formatter('actions',$emanager))
 				));
 
 $cats_grid = new ajax_grid('cats_grid',$cats_ds,$ajaxbuf_cats);

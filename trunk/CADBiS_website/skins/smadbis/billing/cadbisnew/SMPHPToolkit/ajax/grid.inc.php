@@ -100,7 +100,7 @@ class ajax_grid extends grid{
 		$this->datasource = $datasource;
 		$this->page_size = $page_size;
 		if($ajax_buffer == null)
-		$this->buffer = new ajax_buffer($this->UID('buffer'));
+			$this->buffer = new ajax_buffer($this->UID('buffer'));
 		else
 		{
 			$this->_isExternalBuffer = true;
@@ -113,7 +113,7 @@ class ajax_grid extends grid{
 		$this->filterfield = new ajax_var($this->UID('filterfield'),'');
 		$this->buffer->register_vars($this->filterfield,$this->sorting,$this->pagenum,$this->sortdir,$this->filtering);
 		if($pager != null)
-		$this->attach_pager($pager);
+			$this->attach_pager($pager);
 	}
 	//--------------------------------------------------
 	/**
