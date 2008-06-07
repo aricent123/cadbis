@@ -81,3 +81,6 @@ ALTER TABLE `cadbis_tmp` DROP INDEX `Index_key`,
  ADD UNIQUE `Index_key` USING HASH(`key`)
 , ENGINE = MEMORY;
 
+
+insert into `cadbis_tmp` values('current_memory_usage',0);
+insert into `cadbis_tmp` values('current_channel_loading',0);
