@@ -156,7 +156,9 @@ switch($chart_type)
 	 	$tmpstr=($key=="length")?make_fsize_str($data_other['data']):$data_other['data'];
 	 	$labels[]=$data_other['label']." - ".$tmpstr;
 	 }
-	 $chart [ 'chart_data' ] = array ($labels, $data);
+	
+	 
+	 
 	 $chart [ 'draw' ] = array ( array ( 'type'       => "text",
                                     'transition' => 'slide_left',
                                     'delay'      => 0, 
@@ -176,13 +178,24 @@ switch($chart_type)
                                     'alpha'      => 90
 	 )
 	 );
+	 $prefix = "";
+	 if($sort===">count" || $sort==="<count")
+	 $prefix = " Пакетов";
+	 else
+	 { 
+	 	for($i=0;$i<count($data);$i++)
+	 		$data[$i]=bytes2mb($data[$i]);
+	 $prefix = " Mb";
+	 }
+	 $chart [ 'chart_data' ] = array ($labels, $data);
 	 $chart [ 'chart_value' ] = array ('font'	=>  "Tahoma",
                                     'bold'	=>  true, 
                                     'size'	 =>  16,
                                     'color'	=>  "4400ff",
-	  								'suffix'        =>  " Пакетов",
+	  								'suffix'        =>  $prefix,
                                     'position'	=>  "cursor"
                                     );
+     
 
                                     SendChartData ( $chart );
                                     break;
