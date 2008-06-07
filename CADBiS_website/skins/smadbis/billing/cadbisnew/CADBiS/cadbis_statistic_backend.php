@@ -1,6 +1,6 @@
 <?
 require_once(dirname(__FILE__)."/../SMPHPToolkit/SMAjax.php");
-$update_url = '/skins/smadbis/billing/cadbisnew/CADBiS/cadbis_statistic_update.php';
+$update_url = './skins/smadbis/billing/cadbisnew/CADBiS/cadbis_statistic_update.php';
 
 $channelbuf = new ajax_buffer("channelbuf");
 $channelbuf->set_method(ajax_buffer_method::APPEND_AFTER);
