@@ -1505,7 +1505,7 @@ function AddEventKillUser($user)
 {
   global $GV,$CURRENT_USER;
   $data["uid"]=$CURRENT_USER["id"];
-  $data["event"]="Убийство пользователя: ".$user;
+  $data["event"]="Отключение пользователя: ".$user;
   $data["date"]=norm_date_yymmddhhmmss(time());
   $this->AddEvent($data);
 }
