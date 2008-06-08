@@ -90,15 +90,15 @@ switch($chart_type)
 		break;
 //--------------------
 	case "memory":
-		$title = "Память";
+		$title = "Использование памяти";
 		if(!isset($_SESSION['graph_mem_values']))
 		{
 			$_SESSION['graph_mem_values'] = array($title,0);
 		}
 
-		if(!isset($_SESSION['graph_prev_indexes']))
+		if(!isset($_SESSION['graph_mem_indexes']))
 		{
-			$_SESSION['graph_prev_indexes'] = array(0,1);
+			$_SESSION['graph_mem_indexes'] = array(0,1);
 		}
 
 		//��� �������
@@ -110,17 +110,17 @@ switch($chart_type)
 		$chart[ 'chart_grid_v' ] = array ( 'alpha'=>10, 'color'=>"000000", 'thickness'=>1, 'type'=>"solid" );
 		$chart[ 'chart_pref' ] = array ( 'line_thickness'=>2, 'point_shape'=>"none", 'fill_shape'=>false );
 		//������ ��� �������
-		$_SESSION['graph_mem_values'][]=$BILL->getMemoryUsage();
-		$_SESSION['graph_prev_indexes'][]=$_SESSION['graph_prev_indexes'][count($_SESSION['graph_prev_indexes'])-1]+1;
+		$_SESSION['graph_mem_values'][]=$BILL->getMemoryUsage()/1024/1024;
+		$_SESSION['graph_mem_indexes'][]=$_SESSION['graph_mem_indexes'][count($_SESSION['graph_mem_indexes'])-1]+1;
 
 
 		if(count($_SESSION['graph_mem_values'])==15)
 		{
 			array_shift($_SESSION['graph_mem_values']);
-			array_shift($_SESSION['graph_prev_indexes']);
+			array_shift($_SESSION['graph_mem_indexes']);
 			$_SESSION['graph_mem_values'][0] = $title;
 		}
-		$chart [ 'chart_data' ] = array ( 	$_SESSION['graph_prev_indexes'],
+		$chart [ 'chart_data' ] = array ( 	$_SESSION['graph_mem_indexes'],
 		$_SESSION['graph_mem_values']
 		);
 		$chart [ 'draw' ] = array ( array ( 'type'       => "text",
