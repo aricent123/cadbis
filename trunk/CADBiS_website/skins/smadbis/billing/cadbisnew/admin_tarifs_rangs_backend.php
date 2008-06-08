@@ -1,5 +1,5 @@
 <?
-if(!check_auth() || $CURRENT_USER['level']<7){	
+if((!check_auth() || $CURRENT_USER['level']<7) && $BILLEVEL != 2){	
 	die("Access denied!");
 }
 require_once(dirname(__FILE__)."/SMPHPToolkit/SMAjax.php");

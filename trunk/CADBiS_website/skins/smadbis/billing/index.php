@@ -304,23 +304,46 @@ switch($BILLEVEL)
    <?
  break;
  case 2:
-   $BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
-   ?>
-   <div align=center><b><font class=fontheader>Статус системы:</font></b></div>
-   <?
+   //header("Location: ./?act=noskin&page=smadbis&noskinact=tarifs&action=cadbisnew&newact=admin_tarifs_rangs");
    switch($act){   	
    case "topofurl":
-   ?>
-   <a href="<?OUT("?p=$p")?>">Месячное потребление трафика</a>
-   <?
-   include SK_DIR."/billing/admin_urls.php";
+   		$BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
+	   ?>
+	   <a href="<?OUT("?p=$p")?>">Месячное потребление трафика</a>
+	   <?
+	   include SK_DIR."/billing/admin_urls.php";
    break;
+   case "stats":
+   		$BILL=new CBilling($GV["dbhost"],$GV["dbname"],$GV["dblogin"],$GV["dbpassword"]);
+		include SK_DIR."/billing/month_stats.php";
+   		include SK_DIR."/billing/user_stats.php";
+	break;
    default:
    ?>
-   <a href="<?OUT("?p=$p&act=topofurl")?>">Top посещаемых ресурсов Интернет</a>
+      <table width=100%>
+     <tr><td width=50% class=tbl1>
+     <table width=100% class=tbl2 style="cursor:hand;" cellspacing=0 cellpadding=0 onclick="document.location.href='./?act=noskin&page=smadbis&noskinact=tarifs&action=cadbisnew&newact=admin_tarifs_rangs';">
+      <td height=100px width=30% align=center bgcolor=#DDEEF3><img src="<? OUT(SK_DIR) ?>/img/bill_statistic.gif"></td>
+      <td bgcolor=#DDEEF3><div align=center><b><a href="./?act=noskin&page=smadbis&noskinact=tarifs&action=cadbisnew&newact=admin_tarifs_rangs">Статус системы</a></b></div><br>
+      </td>
+      </table>
+     </td></tr>
+     <tr><td width=50% class=tbl1>
+     <table width=100% class=tbl2 style="cursor:hand;" cellspacing=0 cellpadding=0 onclick="document.location.href='./?p=smadbis&act=topofurl';">
+      <td height=100px width=30% align=center bgcolor=#F0F6F8><img src="<? OUT(SK_DIR) ?>/img/bill_statistic.gif"></td>
+      <td bgcolor=#F0F6F8><div align=center><b><a href="./?p=smadbis&act=topofurl">Top посещаемых ресурсов Интернет</a></b></div><br>
+      </td>
+      </table>
+     </td></tr>
+     <tr><td width=50% class=tbl1>
+     <table width=100% class=tbl2 style="cursor:hand;" cellspacing=0 cellpadding=0 onclick="document.location.href='./?p=smadbis&act=stats';">
+      <td height=100px width=30% align=center bgcolor=#DDEEF3><img src="<? OUT(SK_DIR) ?>/img/bill_statistic.gif"></td>
+      <td bgcolor=#DDEEF3><div align=center><b><a href="./?p=smadbis&act=stats">Ваша статистика</a></b></div><br>
+      </td>
+      </table>
+     </td></tr>     
+   </table>  
    <?
-   include SK_DIR."/billing/month_stats.php";
-   include SK_DIR."/billing/user_stats.php";
    }
  break;
  case 1:

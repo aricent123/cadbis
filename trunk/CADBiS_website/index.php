@@ -85,6 +85,8 @@ $GV["skin_dir"]=$GV["skins_dir"]."/".$GV["skin"];
 define("SK_DIR",$GV["skin_dir"]);
 }
 
-//ENABLE SKIN
-require(SK_DIR."/index.php");
+ob_start();
+	//ENABLE SKIN
+	require(SK_DIR."/index.php");
+echo ob_get_clean();
 ?>
