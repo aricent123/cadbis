@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:RobustnessDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" name="vpprojectRobustnessDiagram" metadata="uml2-1.0" tag="10" key="3230303730363239204341444269535F70726F7879">
+  <diagramOptions xsi:type="options:RobustnessDiagramOptions" level="0" autoName="false"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="10,10" gridOrigin="0,0" rulerUnit="pixel">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+</editmodel:RobustnessDiagramEditModel>
