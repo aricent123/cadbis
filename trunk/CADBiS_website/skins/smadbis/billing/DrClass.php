@@ -1100,7 +1100,7 @@ function GetTarifs()
 		$query= 'select p.*, 
 			count(u.uid) as users_count, 
 			sum(u.simultaneous_use) as simuluse_sum 
-			from `'.$GV["groups_tbl"].'` p inner join `users` u on u.gid = p.gid group by u.gid';
+			from `'.$GV["groups_tbl"].'` p left join `users` u on u.gid = p.gid group by u.gid';
 		//$query="SELECT * from `".$GV["groups_tbl"]."`;";
 		$result=mysql_query($query,$this->link)or die("Invalid query(Get Groups List): " . mysql_error());
 		//$res=mysql_fetch_array($result);
@@ -1147,7 +1147,7 @@ function GetTarifsList()
 	global $GV;
 	$query="SELECT packet from `".$GV["groups_tbl"]."`;";
 	$result=mysql_query($query,$this->link)or die("Invalid query(Get Groups List): " . mysql_error());
-	//$res=mysql_fetch_array($result);
+	//$res=mysql_fetch_array($result);	
 	if (mysql_num_rows($result) == 0)
 
         return false;
@@ -1267,18 +1267,25 @@ function AddTarif($data)
 	 //if($this->IsTarifExists($data["packet"]))return "Ошибка, данный тариф уже занят!";
 
 	$query="Insert into `".$GV["groups_tbl"].
-        "`(`packet`,`direction`,`activation_time`,
-          `blocked`,`total_time_limit`,`month_time_limit`,`week_time_limit`,
+        "`(`packet`,`blocked`,`total_time_limit`,`month_time_limit`,`week_time_limit`,
           `day_time_limit`,`total_traffic_limit`,`month_traffic_limit`,`week_traffic_limit`,
-          `day_traffic_limit`,`login_time`,`simultaneous_use`,`port_limit`,`session_timeout`,
-          `idle_timeout`,`level`,`exceed_times`,`rang`) values ('".$data['packet']."','2','0','".$data['blocked']."','"
-	  .$data['total_time_limit']."','".$data['month_time_limit']."','".$data['week_time_limit']."','".$data['day_time_limit']."','"
-          .$data['total_traffic_limit']."','".$data['month_traffic_limit']."','"
-	  .$data['week_traffic_limit']."','".$data['day_traffic_limit']."','".$data['login_time']."','"
-          .$data['simultaneous_use']."','".$data['port_limit']."','".$data['session_timeout']."','".$data['idle_timeout']."'
-          ,'".$data['level']."'
-          ,'".$data['exceed_times']."'
-          ,'".$data['rang']."');";
+          `day_traffic_limit`,`login_time`,`port_limit`,
+          `level`,`exceed_times`,`rang`) values (
+          '".$data['packet']."',
+          '".$data['blocked']."',
+          '".$data['total_time_limit']."',
+          '".$data['month_time_limit']."',
+          '".$data['week_time_limit']."',
+          '".$data['day_time_limit']."',
+          '".$data['total_traffic_limit']."',
+          '".$data['month_traffic_limit']."',
+          '".$data['week_traffic_limit']."',          
+          '".$data['day_traffic_limit']."',
+          '".$data['login_time']."',
+          '".$data['port_limit']."',
+          '".$data['level']."',
+          '".$data['exceed_times']."',
+          '".$data['rang']."');";
 	$result=mysql_query($query,$this->link)or die("Invalid query(Add User): " . mysql_error());
 
 	global $CURRENT_USER;
