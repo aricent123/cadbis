@@ -1,6 +1,6 @@
 <?php
 //session_start();
-//error_reporting (0);
+error_reporting (0);
 require_once("DrClass.php");
 require_once("restore_confs.php");
 require_once("funcs.php");
@@ -34,7 +34,7 @@ switch($chart_type)
 		$chart[ 'chart_grid_v' ] = array ( 'alpha'=>10, 'color'=>"000000", 'thickness'=>1, 'type'=>"solid" );
 		$chart[ 'chart_pref' ] = array ( 'line_thickness'=>2, 'point_shape'=>"none", 'fill_shape'=>false );
 		//������ ��� �������
-		$_SESSION['graph_prev_values'][]=rand(5, 100)  ;
+		$_SESSION['graph_prev_values'][]=$BILL->getChannelLoading() ;
 		$_SESSION['graph_prev_indexes'][]=$_SESSION['graph_prev_indexes'][count($_SESSION['graph_prev_indexes'])-1]+1;
 
 
@@ -51,17 +51,17 @@ switch($chart_type)
                                     'transition' => 'slide_left',
                                     'delay'      => 0, 
                                     'duration'   => 0,
-                                    'x'          => -20, 
-                                    'y'          => 50, 
+                                    'x'          => -70, 
+                                    'y'          => 35, 
                                     'width'      => 250,  
                                     'height'     => 100, 
                                     'h_align'    => "center", 
                                     'v_align'    => "top", 
-                                    'rotation'   => 90, 
+                                    'rotation'   => -90, 
                                     'text'       => "Число потоков",  
                                     'font'       => "Tahoma", 
                                     'bold'       => true, 
-                                    'size'       => 14, 
+                                    'size'       => 12, 
                                     'color'      => "4400ff", 
                                     'alpha'      => 90
 		),
@@ -69,8 +69,8 @@ switch($chart_type)
                                     'transition' => 'slide_left',
                                     'delay'      => 0, 
                                     'duration'   => 0,
-                                    'x'          => 400, 
-                                    'y'          => 370, 
+                                    'x'          => 170, 
+                                    'y'          => 275, 
                                     'width'      => 250,  
                                     'height'     => 100, 
                                     'h_align'    => "center", 
@@ -79,7 +79,7 @@ switch($chart_type)
                                     'text'       => "Время",  
                                     'font'       => "Tahoma", 
                                     'bold'       => true, 
-                                    'size'       => 14, 
+                                    'size'       => 12, 
                                     'color'      => "4400ff", 
                                     'alpha'      => 90
 		)
