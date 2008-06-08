@@ -89,6 +89,82 @@ switch($chart_type)
 		SendChartData ( $chart );
 		break;
 //--------------------
+	case "memory":
+		$title = "Память";
+		if(!isset($_SESSION['graph_mem_values']))
+		{
+			$_SESSION['graph_mem_values'] = array($title,0);
+		}
+
+		if(!isset($_SESSION['graph_prev_indexes']))
+		{
+			$_SESSION['graph_prev_indexes'] = array(0,1);
+		}
+
+		//��� �������
+		$chart [ 'chart_type' ] = "line";
+		//����� �������
+		$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma");
+
+		$chart[ 'chart_grid_h' ] = array ( 'alpha'=>10, 'color'=>"000000", 'thickness'=>1, 'type'=>"solid" );
+		$chart[ 'chart_grid_v' ] = array ( 'alpha'=>10, 'color'=>"000000", 'thickness'=>1, 'type'=>"solid" );
+		$chart[ 'chart_pref' ] = array ( 'line_thickness'=>2, 'point_shape'=>"none", 'fill_shape'=>false );
+		//������ ��� �������
+		$_SESSION['graph_mem_values'][]=$BILL->getMemoryUsage();
+		$_SESSION['graph_prev_indexes'][]=$_SESSION['graph_prev_indexes'][count($_SESSION['graph_prev_indexes'])-1]+1;
+
+
+		if(count($_SESSION['graph_mem_values'])==15)
+		{
+			array_shift($_SESSION['graph_mem_values']);
+			array_shift($_SESSION['graph_prev_indexes']);
+			$_SESSION['graph_mem_values'][0] = $title;
+		}
+		$chart [ 'chart_data' ] = array ( 	$_SESSION['graph_prev_indexes'],
+		$_SESSION['graph_mem_values']
+		);
+		$chart [ 'draw' ] = array ( array ( 'type'       => "text",
+                                    'transition' => 'slide_left',
+                                    'delay'      => 0, 
+                                    'duration'   => 0,
+                                    'x'          => -80, 
+                                    'y'          => 35, 
+                                    'width'      => 250,  
+                                    'height'     => 100, 
+                                    'h_align'    => "center", 
+                                    'v_align'    => "top", 
+                                    'rotation'   => -90, 
+                                    'text'       => "Мб",  
+                                    'font'       => "Tahoma", 
+                                    'bold'       => true, 
+                                    'size'       => 12, 
+                                    'color'      => "4400ff", 
+                                    'alpha'      => 90
+		),
+		array ( 'type'       => 'text',
+                                    'transition' => 'slide_left',
+                                    'delay'      => 0, 
+                                    'duration'   => 0,
+                                    'x'          => 170, 
+                                    'y'          => 275, 
+                                    'width'      => 250,  
+                                    'height'     => 100, 
+                                    'h_align'    => "center", 
+                                    'v_align'    => "top", 
+                                    'rotation'   => -90, 
+                                    'text'       => "Время",  
+                                    'font'       => "Tahoma", 
+                                    'bold'       => true, 
+                                    'size'       => 12, 
+                                    'color'      => "4400ff", 
+                                    'alpha'      => 90
+		)
+
+		);
+		$chart [ 'live_update' ] = array (   'url'    =>  $_SERVER['REQUEST_URI'], 'delay'  =>  2);
+		SendChartData ( $chart );
+		break;
+//--------------------
 	case "topurl":
 	$chart [ 'chart_type' ] = "3d pie";
 	$chart [ 'legend_label' ] = array ( 'font'    =>  "Tahoma", 'size'	=> 10);

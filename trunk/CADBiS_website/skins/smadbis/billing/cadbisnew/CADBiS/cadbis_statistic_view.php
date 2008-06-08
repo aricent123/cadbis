@@ -1,9 +1,12 @@
+<?
+require_once(dirname(__FILE__).'/../graph/charts.php');
+?>
 <style type="text/css">
     #chart_channel{
     	float: left;
         border: 1px solid #C5E4EC;
         position:relative;
-        height:200px;
+        height:300px;
         width:100%;
         overflow-x:auto; 
         overflow-y:hidden;
@@ -12,7 +15,7 @@
     	float: left;
     	border: 1px solid #C5E4EC;
         position:relative;
-        height:200px;
+        height:300px;
         width:100%;
         overflow-x:auto; 
         overflow-y:hidden;
@@ -42,15 +45,11 @@
 </tr>
 <tr>
 <td width="50%">
-<div id="chart_channel">        
-        <? 
+<div>        
+ 
+<? echo InsertChart ("./skins/smadbis/billing/cadbisnew/graph/charts.swf", "./skins/smadbis/billing/cadbisnew/graph/charts_library", "./skins/smadbis/billing/chart_data.php?chart_type=loading",333, 300 );?>
 
-        ?>
-        <? $channelbuf->start(); ?>
-                <div class="indicator" style="left: <?=$left?>px; height: <?=calc_height($channel_loading,10,180) ?>px">
-                	<?=$channel_loading ?>
-                </div>                       
-        <? $channelbuf->end(); ?>
+
 </div>
 </td>
 <td width="50%">
@@ -58,11 +57,8 @@
 			$left = $memory_count->get_value()*14;            
         ?>
 <div id="chart_memory">
-        <? $memorybuf->start(); ?>
-                <div class="indicator" style="left: <?=$left?>px; height: <?=calc_height($memory_usage,20,180) ?>px">
-                	<?=$memory_usage ?>
-                </div>                       
-        <? $memorybuf->end(); ?>
+<? echo InsertChart ("./skins/smadbis/billing/cadbisnew/graph/charts.swf", "./skins/smadbis/billing/cadbisnew/graph/charts_library", "./skins/smadbis/billing/chart_data.php?chart_type=memory",333, 300 );?>
+
 </div>
 </td>
 </tr>
