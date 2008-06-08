@@ -27,7 +27,8 @@ ALTER TABLE `packets`
  DROP COLUMN `allow_callback`,
  DROP COLUMN `other_params`,
  DROP COLUMN `create_system_user`,
- DROP COLUMN `crypt_method`;
+ DROP COLUMN `crypt_method`,
+ DROP COLUMN `simultaneous_use`;
 
 ALTER TABLE `users` 
  DROP COLUMN `crypt_method`,
@@ -57,3 +58,7 @@ ALTER TABLE `packets`
  ADD COLUMN `rang` INTEGER UNSIGNED NOT NULL DEFAULT 1 AFTER `prim`,
  ADD COLUMN `exceed_times` INTEGER UNSIGNED NOT NULL DEFAULT 0 AFTER `rang`
 , ROW_FORMAT = DYNAMIC;
+
+ALTER TABLE `packets` MODIFY COLUMN `gid` SMALLINT(5) UNSIGNED NOT NULL DEFAULT NULL AUTO_INCREMENT
+, ENGINE = InnoDB;
+
