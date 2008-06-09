@@ -1545,11 +1545,15 @@ function IsUserActivated($uid)
          return !$row["blocked"];
 }
 
-function GetEvents($from=null, $to=null, $sort = null)
+function GetEvents($page=null, $pagesize=null, $sort = null)
 {
 $order = "eid";
 if($sort != null) $order = $sort;
-$sql = "SELECT * from events order by ".$order." desc; " ;
+$sql = "SELECT * from events order by ".$order." desc " ;
+
+if($page !=null && $pagesize!=null)
+	$sql .= sprintf(' limit %d,%d',(($page-1)*$pagesize),$pagesize);
+
   //die($sql);
  $result = mysql_query($sql);
   $k=0;
