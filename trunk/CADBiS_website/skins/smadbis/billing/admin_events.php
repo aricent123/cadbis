@@ -39,7 +39,8 @@ if($BILLEVEL<=3)
  } 
 if(!isset($page))
 	$page=1;
-$pagesize = 50;
+if(!isset($pagesize))
+	$pagesize = 150;
 $events = $BILL->GetEvents($page,$pagesize, "date");
 $evcount= $BILL->GetRowsCount('events');
  ?>
