@@ -104,7 +104,7 @@ if($BILLEVEL<3)return;
    if($sure=="true")
      {
      
-     $prg=$GV["kill_program"]." ".$kluser." ".$klserver." ".$klip." ".$klport;
+     $prg=$GV["kill_program"]." ".$klport;
      $res=shell_exec("$prg");
      $BILL->KillUser($klport);
 
