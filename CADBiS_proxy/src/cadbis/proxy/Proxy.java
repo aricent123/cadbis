@@ -73,6 +73,7 @@ public class Proxy extends CADBiSThread {
 			/**
 			 * The daemon to update statistic about usage
 			 */
+			dao.startStats();
 			if(ProxyConfigurator.getInstance().getProperty("statistic_updater").equals("enabled"))
 				new CADBiSDaemon("StatisticUpdater",1000){
 					@Override
