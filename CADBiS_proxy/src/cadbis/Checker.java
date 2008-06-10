@@ -57,7 +57,7 @@ public class Checker {
 	public boolean checkAccessTime() throws CADBiSException
 	{
 		boolean access = false;
-		if(this.packet.getLogin_time() != null && !this.packet.getLogin_time().isEmpty())
+		if(this.packet.getLogin_time() != null && this.packet.getLogin_time().length()!=0)
 		{
 			String[] periods = this.packet.getLogin_time().split(",");			
 			if(periods.length>0)

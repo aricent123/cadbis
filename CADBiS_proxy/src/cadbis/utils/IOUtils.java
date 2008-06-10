@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.zip.DataFormatException;
 import java.util.zip.GZIPInputStream;
@@ -54,6 +55,7 @@ public class IOUtils {
 		 //return res.toString();	
 	}	
 	
+
 	public static void writeArrayToStream(OutputStream os, List<byte[]> buffer) throws IOException
 	{		
 		 for(int i=0;i<buffer.size();++i)

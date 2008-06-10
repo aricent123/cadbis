@@ -87,6 +87,22 @@ public class RequestHttpParser extends AbstractHttpParser {
 		return packet;
 	}
 
+	public boolean isNeedToFixPacket(byte[] packet, boolean fixRequest)
+	{		
+		String PacketString = new String(StringUtils.getChars(packet));		
+		if(PacketString.indexOf("HTTP/1.")>0 && (RequestMethod.equals("GET") || fixRequest))
+		{
+			if(!isEncodingAcceptable)
+				return true;
+			if(fixRequest && !HttpHost.equals("") && (RequestMethod.equals("GET") || RequestMethod.equals("POST")) 
+					&& !RequestString.matches("^(?s)" + RequestMethod + " https?:\\/\\/"+ HttpHost + ".*"))
+			{
+				return true;
+			}
+		}
+		return false;
+	}	
+	
 	public boolean isRequestParsed() {
 		return isRequestParsed;
 	}

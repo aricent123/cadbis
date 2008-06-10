@@ -75,7 +75,7 @@ public abstract class AbstractHttpParser {
 		String res = "utf-8";
 		String ctype = GetHeader("Content-Type");
 		Integer iofcharset = ctype.indexOf("charset=");
-		if(!ctype.isEmpty() && iofcharset>=0)
+		if(ctype.length()!=0 && iofcharset>=0)
 		{
 			res = ctype.substring(iofcharset + 8);
 		}

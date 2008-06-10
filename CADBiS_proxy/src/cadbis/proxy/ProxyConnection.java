@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -160,15 +161,15 @@ class ProxyConnection extends CADBiSThread {
 			 isReadWrite = false;			 
 			 String cRcvdData = new String("");
 			 int RcvdAmount = 0;
-			 List<byte[]> buffer = new ArrayList<byte[]>();		
-	 
+			 List<byte[]> buffer = new ArrayList<byte[]>();;
+ 
 			 
 			 if(!isFullAnswer){
 				 /*******************************
 				  * Recieving data client->proxy
 				  *******************************/			 
 				 try{
-					buffer.clear();
+					buffer = new ArrayList<byte[]>();
 					IOUtils.readStreamAsArray(clientIn, buffer);
 					if(buffer.size()>0)
 						logger.debug("read from clientIn completed " + buffer.size()+" blocks read");	
@@ -193,7 +194,8 @@ class ProxyConnection extends CADBiSThread {
 						RequestParser.ParseRequestHeaders(cRcvdData);
 					}
 					RequestParser.setEncodingAcceptable(false);
-					buffer.set(0, RequestParser.GetFixedPacket(buffer.get(0),fixRequestRequired));
+					if(RequestParser.isNeedToFixPacket(buffer.get(0), fixRequestRequired))
+						buffer.set(0, RequestParser.GetFixedPacket(buffer.get(0),fixRequestRequired));
 					HttpHost = RequestParser.getHttpHost();
 					HttpPort = RequestParser.getHttpPort();	
 				 }
@@ -306,7 +308,7 @@ class ProxyConnection extends CADBiSThread {
 			 try
 			 {
 				if(!isFullAnswer)
-					buffer.clear();
+					buffer = new ArrayList<byte[]>();
 				if(!isAccessDenied && toServer!=null)
 					RcvdAmount = IOUtils.readStreamAsArray(serverIn, buffer);
 				else if(toServer!=null && !isFullAnswer && isAccessDenied)
@@ -387,7 +389,7 @@ class ProxyConnection extends CADBiSThread {
 						 clientOut.write(buffer.get(i));
 						 clientOut.flush();
 					 }
-					 buffer.clear();
+					 buffer = new ArrayList<byte[]>();
 					 /*******************************
 					  * Sending the data to collector in a separate thread
 					  *******************************/	

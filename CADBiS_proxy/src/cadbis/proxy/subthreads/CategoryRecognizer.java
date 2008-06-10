@@ -22,7 +22,7 @@ public class CategoryRecognizer extends CADBiSThread {
  	
 	public void run()
 	{	
-		if(!HttpHost.isEmpty())
+		if(HttpHost.length()!=0)
 		{
 			logger.info("Category unknown, have to parse whole response... " );
 			String body = fullResponse.toString();
@@ -34,7 +34,7 @@ public class CategoryRecognizer extends CADBiSThread {
 					if(headerEnd > -1)
 					{
 						body = body.substring(headerEnd + 4);
-						if(!ResponseParser.GetHeader("Content-Length").isEmpty()){
+						if(ResponseParser.GetHeader("Content-Length").length()!=0){
 							Integer content_length = Integer.valueOf(ResponseParser.GetHeader("Content-Length"));
 							if(body.length()>content_length && content_length!=0)
 								body = body.substring(0,content_length);
