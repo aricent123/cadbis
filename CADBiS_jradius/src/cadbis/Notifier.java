@@ -20,7 +20,7 @@ public class Notifier extends CADBiSSubprocess {
 	public void run() {
 
 
-		if(clientIP.length()>0)
+		if(!clientIP.isEmpty())
 		{
 			 Integer portTo = Integer.parseInt(JRadiusConfigurator.getInstance().getProperty("send2ip_port"));
 
