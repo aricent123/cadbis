@@ -172,7 +172,7 @@ public abstract class Listener extends JRadiusThread
         {
             serverSocket = new ServerSocket(port, backlog);
         }
-        if(!host.isEmpty() && host!=null){
+        if(host.length()!=0 && host!=null){
         	serverSocket.close();
         	serverSocket = new ServerSocket(port,backlog,InetAddress.getByName(host));
         }

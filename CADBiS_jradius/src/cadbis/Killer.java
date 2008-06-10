@@ -11,7 +11,7 @@ public class Killer extends CADBiSSubprocess {
 
 	@Override
 	public void run() {
-		if(!forLogin.isEmpty() && !framedIP.isEmpty())
+		if(forLogin.length()>0 && framedIP.length()>0)
 		{
 			//Integer portTo = Integer.parseInt(JRadiusConfigurator.getInstance().getProperty("mpd_console_port"));
 			String mpd_host = JRadiusConfigurator.getInstance().getProperty("mpd_console_host");
