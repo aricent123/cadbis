@@ -111,9 +111,9 @@ public class ContentAnalyzer {
 	{
 		String res = "";
 		res = getTagAttribute(content, "meta", "http-equiv", "content-type", "content");
-		if(res.isEmpty())
+		if(res.length()==0)
 			res = getTagAttribute(content, "meta", "name", "content-type", "content");
-		if(!res.isEmpty())
+		if(res.length()!=0)
 			res = StringUtils.getCharset(res);
 		return res;
 	}		
@@ -178,7 +178,7 @@ public class ContentAnalyzer {
 	public static ContentAnalyzeResult Analyze(String content, List<ContentCategory> cats, List<String> uswords, HashMap<String, Integer> kwds_weights, String charset) throws CharacterCodingException, UnsupportedEncodingException
 	{		
 		String metaCharset = getCharset(content.toLowerCase());
-		if(!metaCharset.isEmpty())
+		if(metaCharset.length()!=0)
 			charset = metaCharset;
 		logger.info("Converting charset from '"+charset+"'...");
 		content = ContentAnalyzer.ConvertToUTF(content, charset).toLowerCase();

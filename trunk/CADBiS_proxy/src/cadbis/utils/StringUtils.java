@@ -125,7 +125,7 @@ public class StringUtils {
 	{
 		String res = "";
 		for(int i=0;i<array.size();++i)
-			res += ((res.isEmpty())?"":delimiter) + array.get(i);
+			res += ((res.length()==0)?"":delimiter) + array.get(i);
 		return res;
 	}
 	
@@ -149,7 +149,7 @@ public class StringUtils {
 	{
 		String res = UTF_CHARSET;
 		Integer iofcharset = ctype.lastIndexOf("charset=");
-		if(!ctype.isEmpty() && iofcharset>=0)
+		if(ctype.length()!=0 && iofcharset>=0)
 			res = ctype.substring(iofcharset + 8);
 		if(res.endsWith(";"))
 			res = res.substring(0,res.length()-1);
