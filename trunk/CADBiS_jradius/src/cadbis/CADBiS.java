@@ -62,7 +62,7 @@ public class CADBiS extends CADBiSDaemon{
 	protected void KillInactiveUsers()
 	{
 		String sTout = JRadiusConfigurator.getInstance().getProperty("session_maxinacct_time");
-		if(sTout.length()>0){
+		if(!sTout.isEmpty()){
 			Long timeout = Long.valueOf(sTout);		
 			new ActionDAO().execSql(String.format("update `actions` set `terminate_cause`='Inactive-Request', `stop_time`=NOW() where `terminate_cause`='Online' and `last_change`< UNIX_TIMESTAMP(NOW()) - %d ",timeout));
 		}
