@@ -47,8 +47,10 @@ public class CADBiS extends CADBiSDaemon{
 		dayLimits = new PacketsTodayLimits();
 		ActionDAO dao = new ActionDAO();
 		KillInactiveUsers();
-		for(Action act : dao.getOnlineSessions())
+		for(Action act : dao.getOnlineSessions()){
 			activeSessions.put(act.getId(), act.getUnique_id());
+			logger.info("Restoring session '"+act.getId()+"' with unique_id='"+ act.getUnique_id()+"'");
+		}
 	}
 	
 	@Override
