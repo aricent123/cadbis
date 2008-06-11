@@ -21,6 +21,7 @@ public class PreCollector extends CADBiSThread {
  	 	this.UserIp = UserIp;
  	 	this.ContentType = ContentType;
  	 	this.HostIp = HostIp;
+ 	 	logger.debug("PreCollector starts for '"+HttpHost+"' with "+RcvBytes+" bytes");
  	}
 	public void run()
 	{	
@@ -35,9 +36,9 @@ public class PreCollector extends CADBiSThread {
 			catch(IOException e)
 			{
 				logger.error("PreCollector fails to recognize the host's ip address of '"+HttpHost+"': " + e.getMessage());
-			}
-			Collector.getInstance().Collect(UserIp, HttpHost, RcvBytes, new Date(), HostIp, ContentType);
-		}		
+			}			
+		}	
+		Collector.getInstance().Collect(UserIp, HttpHost, RcvBytes, new Date(), HostIp, ContentType);
 		complete();
 	}
 	

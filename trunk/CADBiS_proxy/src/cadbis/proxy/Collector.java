@@ -143,6 +143,8 @@ public class Collector extends CADBiSDaemon{
 				action.getCollectedUrls().add(new CollectedData(hostUrl,rcvdBytes,date, hostIp,content_type));
 				logger.debug("Collecting data... ip="+hostIp+", url="+hostUrl+", bytes="+rcvdBytes);
 			}
+			else
+				logger.warn("Collecting '"+hostUrl+"'("+rcvdBytes+") failed: action of ip='"+userIp+"' not found!");
 		}
 	}
 	//------------------------------------------------------

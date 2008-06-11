@@ -38,7 +38,7 @@ public abstract class CADBiSDaemon extends CADBiSThread {
 		prerun();
 			while(true)
 			{
-				logger.debug("daemonize...");				
+				//logger.debug("daemonize...");				
 				daemonize();
 				sleep(this.delay);
 				postdaemonize();
