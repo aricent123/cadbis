@@ -1,5 +1,6 @@
 #!/usr/local/bin/php
 <?
+
 class cmd{
 	const IPFW_PROXY_ADD = 'ipfw add 320 fwd 127.0.0.1,8888 tcp from 10.0.0.0/8 to any 80';
 	const IPFW_PROXY_DELETE  = 'ipfw delete 320';
@@ -12,7 +13,12 @@ class cmd{
 	const CADBIS_START = 'java -jar -server /home/smecsia/cadbis/daemon/cadbis.jar /home/smecsia/cadbis/daemon/conf/jradius-config.xml > /home/smecsia/cadbis/daemon/cadbis.log &';
 	const CADBIS_STOP = 'killall java > /dev/null &';	
 	const FREERADIUS_START = 'radiusd &';
-	const FREERADIUS_STOP = 'killall radiusd > /dev/null &';		
+	const FREERADIUS_STOP = 'killall radiusd > /dev/null &';
+	const CADBIS_STATUS = array(array('cmd'=>'sockstat | grep java','ok'=>array('127.0.0.1:8888','127.0.0.1:1814'),'fail'=>array('')));
+	const MPD_STATUS = array(array('cmd'=>'sockstat | grep mpd4','ok'=>array('127.0.0.1:5005'),'fail'=>array('')));
+	const FREERADIUS_STATUS = array(array('cmd'=>'ps ax | grep radiusd','ok'=>array(' radiusd'),'fail'=>array('')));
+	const SQUID_STATUS = array(array('cmd'=>'sockstat | grep squid','ok'=>array('127.0.0.1:3128'),'fail'=>array('')));	
+	
 }
 
 class proxy{
@@ -50,6 +56,16 @@ class cadbis{
 	public static function open(){
 		shell::exec(cmd::IPFW_OPEN_ALL);
 	}
+	
+	protected static function test_app($app){
+		foreach($app as $el)
+			self::test_app($el);
+		
+	}
+	
+	public static function status(){
+		
+	}
 }
 
 
@@ -67,6 +83,11 @@ class shell{
 	public static function exec($cmd)
 	{
 		exec($cmd);
+	}
+	
+	public static function passthru($cmd)
+	{
+		return passthru($cmd);
 	}
 
 	protected function proceed_proxy($argv, $argc)
