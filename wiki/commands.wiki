@@ -1,6 +1,6 @@
 #CADBiS commands
 
-= Introduction =
+= Описание =
 
 команды для управления биллингом
 
