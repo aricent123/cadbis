@@ -1,4 +1,4 @@
-#CADBiS commands
+#summary CADBiS commands -команды для управления биллингом
 
 = Описание =
 
