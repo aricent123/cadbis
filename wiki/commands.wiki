@@ -1,0 +1,29 @@
+#CADBiS commands
+
+= Introduction =
+
+команды для управления биллингом
+
+
+= Команды =
+открывает инет без VPN
+{{{
+localhost#cadbis open  
+}}}
+закрывает инет без VPN
+{{{
+localhost#cadbis close
+}}} 
+если проксю надо отключить то:
+{{{
+localhost#cadbis proxy stop
+}}}
+система поднимается командами:
+{{{
+localhost#cadbis start
+localhost#cadbis proxy start
+}}}
+если проксю надо отключить то:
+{{{
+localhost#cadbis proxy stop
+}}}
