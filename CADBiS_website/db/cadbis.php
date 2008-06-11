@@ -29,14 +29,14 @@ class cadbis{
 		self::stop();
 		shell::exec(cmd::MPD_START);
 		shell::exec(cmd::FREERADIUS_START);
-		#shell::exec(cmd::SQUID_START);
+		shell::exec(cmd::SQUID_START);
 		shell::exec(cmd::CADBIS_START);
 		
 	}
 	public static function stop(){
 		shell::exec(cmd::MPD_STOP);
 		shell::exec(cmd::FREERADIUS_STOP);
-		#shell::exec(cmd::SQUID_STOP);
+		shell::exec(cmd::SQUID_STOP);
 		shell::exec(cmd::CADBIS_STOP);		
 	}
 }
