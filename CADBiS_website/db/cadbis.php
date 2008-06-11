@@ -95,13 +95,15 @@ class shell{
 				$this->proceed_proxy($argv, $argc);
 			break;
 			case 'start':
-				echo "please wait while CADBiS starting...";
+				echo "please wait while CADBiS starting...\r\n";
 				cadbis::start();
 			break;
 			case 'stop':
+				echo "please wait while CADBiS stopping...\r\n";
 				cadbis::stop();
 			break;
 			case 'open':
+				echo "Warning! Now Internet is open for whole LAN! ...\r\n";
 				cadbis::open();
 			break;	
 			case 'close':
