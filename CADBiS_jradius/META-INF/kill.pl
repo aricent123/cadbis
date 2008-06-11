@@ -8,7 +8,7 @@ use Net::Telnet ();
 $t = new Net::Telnet (Timeout => 2,Port => $port,Binmode => '\015\012',
                                Prompt => '/\[\]/');
 $t->open("$hostname");
-$t->login("mpd", "password");
+$t->login("admin", "admin");
 
 $t->print("bundle bnd".$nasport);
 $t->print("");
