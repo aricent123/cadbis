@@ -27,3 +27,10 @@ localhost#cadbis proxy start
 {{{
 localhost#cadbis proxy stop
 }}}
+
+короче 
+{{{
+localhost# cadbis
+Usage: cadbis [option] status | start | stop | restart | open | close
+ option can have the following values: proxy
+}}}
