@@ -60,3 +60,15 @@ JRadius status : [RUNNED]
 
 RUNNED означает что демон запущен
 STOPPED означает что демон остановлен
+
+
+localhost# cadbis proxy status
+CADBiS proxy status : [RUNNED]
+
+для прокси RUNNED означает что запущены демоны и при этом прописано правило
+localhost# cadbis proxy stop
+localhost# cadbis proxy status
+CADBiS proxy status : [STOPPED]
+
+STOPPED означает что либо не запущены демоны либо не прописано правило. 
+Если демоны запущены, а эта команда показывает STOPPED значит что система работает но без прокси
