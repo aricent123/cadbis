@@ -51,3 +51,12 @@ cadbis status
 
 cadbis proxy status
 показывает включена ли прокся (и прописано ли правило)
+
+localhost# cadbis status
+MPD status : [RUNNED]
+FreeRADIUS status : [RUNNED]
+Squid status : [RUNNED]
+JRadius status : [RUNNED]
+
+RUNNED означает что демон запущен
+STOPPED означает что демон остановлен
