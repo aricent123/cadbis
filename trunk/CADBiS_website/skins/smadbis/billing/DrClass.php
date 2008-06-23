@@ -122,12 +122,18 @@ function AddUser($user)
 	$query="Insert into `".$GV["users_tbl"].
         "`(`user`,`password`,`gid`,`fio`,`phone`,`address`,`prim`,`add_uid`,`nick`,`gender`,`email`,`icq`,`url`,`rang`,`group`,`city`,`country`,`raiting`,`signature`,`info`,`add_date`
         ,`max_total_traffic`,`max_month_traffic`,`max_week_traffic`,`max_day_traffic`,`simultaneous_use`) values ('"
-        .$user['user']."','".$user['password']."','".$user['gid']."','".$user['fio']."','".$user['phone']."','".$user['address']."','"
-	  .$user['prim']."','".$user['add_uid']."','".$user['nick']."','".$user['gender']."','".$user['email']."','".$user['icq']."','".$user['url']."','"
-	  .$user['rang']."','".$user['group']."','".$user['city']."','".$user['country']."','".$user['raiting']."','".$user['signature']."','".$user['info']."','"
-	  .norm_date_yymmdd(time())."',".$user['max_total_traffic'].",".$user['max_month_traffic'].",".$user['max_week_traffic'].",".$user['max_day_traffic'].",".$user['simultaneous_use'].");";
+        .$user['user']."','".$user['password']."',".$user['gid'].",'".
+        $user['fio']."','".$user['phone']."','".$user['address']."','".       
+        $user['prim']."',".$user['add_uid'].",'".$user['nick']."',".
+        $user['gender'].",'".$user['email']."','".$user['icq']."','".
+        $user['url']."','".$user['rang']."','".$user['group']."','".
+        $user['city']."','".$user['country']."',".$user['raiting'].
+        ",'".$user['signature']."','".$user['info']."','".norm_date_yymmdd(time())."',".
+        $user['max_total_traffic'].",".$user['max_month_traffic'].",".$user['max_week_traffic'].
+        ",".$user['max_day_traffic'].",".$user['simultaneous_use'].");";
+	  
         $result=mysql_query($query,$this->link)or die("Invalid query(Add User): " . mysql_error());
-
+		
         //Журналирование событий
         $data["uid"]=$CURRENT_USER["id"];
         $data["event"]="Добавление пользователя: ".$user["user"];

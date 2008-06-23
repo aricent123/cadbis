@@ -42,7 +42,7 @@ if(isset($mod)  && $mod=="add")
  $user['max_month_traffic'] 	= addslashes($vars[5]);
  $user['max_week_traffic'] 		= addslashes($vars[6]);
  $user['max_day_traffic'] 		= addslashes($vars[7]);
- $user['simultaneouse_use'] 	= addslashes($vars[8]);
+ $user['simultaneous_use'] 	= addslashes($vars[8]);
  
  $user['fio']        = addslashes($vars[9]);
  $user['email']      = addslashes($vars[10]);
@@ -279,8 +279,11 @@ if($form)
  
  $k=0;
  
- if(!isset($mode) || $mode!="edit")
+ if(!isset($mode) || $mode!="edit"){
   OUT("<div align=center><b>Добавление нового пользователя:</b></div>");
+  for($i=4;$i<=8;++$i)
+	$vars[$i] = "0";  
+ }
  else OUT(" <div align=center><b>Редактирование пользователя:</b></div>");
  ?>
 
