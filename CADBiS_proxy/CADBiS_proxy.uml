@@ -4741,29 +4741,29 @@
         <node xmi:type="uml:ForkNode" xmi:id="_ZXDVMCt-Ed239LwpEivL3A" name="Creates">
           <eAnnotations xmi:id="_ZXDVMSt-Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_IvlXMCt_Ed239LwpEivL3A" name="Recieve Request" outgoing="_RRHTYCt_Ed239LwpEivL3A">
+        <node xmi:type="uml:OpaqueAction" xmi:id="_IvlXMCt_Ed239LwpEivL3A" name="&#x41f;&#x43e;&#x43b;&#x443;&#x447;&#x435;&#x43d;&#x438;&#x435; &#x437;&#x430;&#x43f;&#x440;&#x43e;&#x441;&#x430;" outgoing="_RRHTYCt_Ed239LwpEivL3A">
           <eAnnotations xmi:id="_IvlXMSt_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_ODe5wCt_Ed239LwpEivL3A" name="Parse Request" outgoing="_bliJgCt_Ed239LwpEivL3A _78Mu0Ct_Ed239LwpEivL3A" incoming="_RRHTYCt_Ed239LwpEivL3A">
+        <node xmi:type="uml:OpaqueAction" xmi:id="_ODe5wCt_Ed239LwpEivL3A" name="&#x420;&#x430;&#x437;&#x431;&#x43e;&#x440; &#x437;&#x430;&#x43f;&#x440;&#x43e;&#x441;&#x430;" outgoing="_bliJgCt_Ed239LwpEivL3A _78Mu0Ct_Ed239LwpEivL3A" incoming="_RRHTYCt_Ed239LwpEivL3A">
           <eAnnotations xmi:id="_ODe5wSt_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_VJXXUCt_Ed239LwpEivL3A" name="Recieve Response" outgoing="_hzPo8Ct_Ed239LwpEivL3A" incoming="_bliJgCt_Ed239LwpEivL3A">
+        <node xmi:type="uml:OpaqueAction" xmi:id="_VJXXUCt_Ed239LwpEivL3A" name="&#x41f;&#x43e;&#x43b;&#x443;&#x447;&#x435;&#x43d;&#x438;&#x435; &#x43e;&#x442;&#x432;&#x435;&#x442;&#x430;" outgoing="_hzPo8Ct_Ed239LwpEivL3A" incoming="_bliJgCt_Ed239LwpEivL3A">
           <eAnnotations xmi:id="_VJXXUSt_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_ex-3YCt_Ed239LwpEivL3A" name="Parse Response" outgoing="_H3bxwCuAEd239LwpEivL3A" incoming="_hzPo8Ct_Ed239LwpEivL3A">
+        <node xmi:type="uml:OpaqueAction" xmi:id="_ex-3YCt_Ed239LwpEivL3A" name="&#x420;&#x430;&#x437;&#x431;&#x43e;&#x440; &#x43e;&#x442;&#x432;&#x435;&#x442;&#x430;" outgoing="_H3bxwCuAEd239LwpEivL3A" incoming="_hzPo8Ct_Ed239LwpEivL3A">
           <eAnnotations xmi:id="_ex-3YSt_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_vyXPMCt_Ed239LwpEivL3A" name="Analyze Content" outgoing="_ho16UCuAEd239LwpEivL3A">
+        <node xmi:type="uml:OpaqueAction" xmi:id="_vyXPMCt_Ed239LwpEivL3A" name="&#x410;&#x43d;&#x430;&#x43b;&#x438;&#x437; &#x441;&#x43e;&#x434;&#x435;&#x440;&#x436;&#x438;&#x43c;&#x43e;&#x433;&#x43e;" outgoing="_ho16UCuAEd239LwpEivL3A">
           <eAnnotations xmi:id="_vygZICt_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
         <node xmi:type="uml:ForkNode" xmi:id="_y_i84Ct_Ed239LwpEivL3A" outgoing="_F2GMICuAEd239LwpEivL3A" incoming="_H3bxwCuAEd239LwpEivL3A">
           <eAnnotations xmi:id="_y_i84St_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
           <name xsi:nil="true"/>
         </node>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_1QFcICt_Ed239LwpEivL3A" name="Send Response to client" outgoing="_8B7RcCuBEd239LwpEivL3A" incoming="_F2GMICuAEd239LwpEivL3A">
+        <node xmi:type="uml:OpaqueAction" xmi:id="_1QFcICt_Ed239LwpEivL3A" name="&#x41e;&#x442;&#x441;&#x44b;&#x43b;&#x43a;&#x430; &#x43e;&#x442;&#x432;&#x435;&#x442;&#x430; &#x43a;&#x43b;&#x438;&#x435;&#x43d;&#x442;&#x443;" outgoing="_8B7RcCuBEd239LwpEivL3A" incoming="_F2GMICuAEd239LwpEivL3A">
           <eAnnotations xmi:id="_1QFcISt_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_388D8Ct_Ed239LwpEivL3A" name="Send denial to client" outgoing="_OvBUoCuAEd239LwpEivL3A" incoming="_KSb_ICuBEd239LwpEivL3A">
+        <node xmi:type="uml:OpaqueAction" xmi:id="_388D8Ct_Ed239LwpEivL3A" name="&#x41e;&#x442;&#x441;&#x44b;&#x43b;&#x43a;&#x430; &#x43e;&#x442;&#x432;&#x435;&#x442;&#x430; &quot;&#x437;&#x430;&#x43f;&#x440;&#x435;&#x449;&#x435;&#x43d;&#x43e;&quot;" outgoing="_OvBUoCuAEd239LwpEivL3A" incoming="_KSb_ICuBEd239LwpEivL3A">
           <eAnnotations xmi:id="_388D8St_Ed239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
         <node xmi:type="uml:ActivityFinalNode" xmi:id="_LaYUECuAEd239LwpEivL3A" name="End of ProxyConnection" incoming="_OvBUoCuAEd239LwpEivL3A _8B7RcCuBEd239LwpEivL3A">
@@ -4773,7 +4773,7 @@
           <eAnnotations xmi:id="_9otegSuAEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
           <name xsi:nil="true"/>
         </node>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_GsEVYCuBEd239LwpEivL3A" name="Log the attempt" outgoing="_Ij4LkCuBEd239LwpEivL3A">
+        <node xmi:type="uml:OpaqueAction" xmi:id="_GsEVYCuBEd239LwpEivL3A" name="&#x417;&#x430;&#x43f;&#x438;&#x441;&#x44c; &#x43f;&#x43e;&#x43f;&#x44b;&#x442;&#x43a;&#x438; &#x434;&#x43e;&#x441;&#x442;&#x443;&#x43f;&#x430; &#x432; &#x43b;&#x43e;&#x433;" outgoing="_Ij4LkCuBEd239LwpEivL3A">
           <eAnnotations xmi:id="_GsEVYSuBEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
         <node xmi:type="uml:ActivityFinalNode" xmi:id="_1boS4CuBEd239LwpEivL3A" name="End of CategoryRecognizer" incoming="_ho16UCuAEd239LwpEivL3A">
@@ -4782,33 +4782,33 @@
         <node xmi:type="uml:ActivityFinalNode" xmi:id="_kFhGMCuCEd239LwpEivL3A" name="End of logger" incoming="_Ij4LkCuBEd239LwpEivL3A">
           <eAnnotations xmi:id="_kFhGMSuCEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_y7Kr0CuCEd239LwpEivL3A" name="Collect data" outgoing="_J-O-0CuDEd239LwpEivL3A">
+        <node xmi:type="uml:OpaqueAction" xmi:id="_y7Kr0CuCEd239LwpEivL3A" name="&#x421;&#x431;&#x43e;&#x440; &#x434;&#x430;&#x43d;&#x43d;&#x44b;&#x445;" outgoing="_J-O-0CuDEd239LwpEivL3A">
           <eAnnotations xmi:id="_y7Kr0SuCEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_CmUWECuDEd239LwpEivL3A" name="Wait" incoming="_J-O-0CuDEd239LwpEivL3A">
+        <node xmi:type="uml:OpaqueAction" xmi:id="_CmUWECuDEd239LwpEivL3A" name="&#x41e;&#x436;&#x438;&#x434;&#x430;&#x43d;&#x438;&#x435;" incoming="_J-O-0CuDEd239LwpEivL3A">
           <eAnnotations xmi:id="_CmUWESuDEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_GP0MUCuDEd239LwpEivL3A" name="Aggregate" outgoing="_R8wUkCuDEd239LwpEivL3A" incoming="_mOMNcCuDEd239LwpEivL3A">
+        <node xmi:type="uml:OpaqueAction" xmi:id="_GP0MUCuDEd239LwpEivL3A" name="&#x410;&#x433;&#x433;&#x440;&#x435;&#x433;&#x430;&#x446;&#x438;&#x44f;" outgoing="_R8wUkCuDEd239LwpEivL3A" incoming="_mOMNcCuDEd239LwpEivL3A">
           <eAnnotations xmi:id="_GP0MUSuDEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_G_8owCuDEd239LwpEivL3A" name="Wait" outgoing="_mOMNcCuDEd239LwpEivL3A" incoming="_R8wUkCuDEd239LwpEivL3A">
+        <node xmi:type="uml:OpaqueAction" xmi:id="_G_8owCuDEd239LwpEivL3A" name="&#x41e;&#x436;&#x438;&#x434;&#x430;&#x43d;&#x438;&#x435;" outgoing="_mOMNcCuDEd239LwpEivL3A" incoming="_R8wUkCuDEd239LwpEivL3A">
           <eAnnotations xmi:id="_G_8owSuDEd239LwpEivL3A" source="D:/Projects/EclipseProjects/CADBiS_proxy/vpproject/vpprojectActivityDiagarm.uad"/>
         </node>
-        <edge xmi:type="uml:ControlFlow" xmi:id="_RRHTYCt_Ed239LwpEivL3A" name="Request recieved" source="_IvlXMCt_Ed239LwpEivL3A" target="_ODe5wCt_Ed239LwpEivL3A">
-          <guard xmi:type="uml:OpaqueExpression" xmi:id="_TaDV0Ct_Ed239LwpEivL3A" name=""/>
-          <weight xmi:type="uml:LiteralInteger" xmi:id="_TaDV0St_Ed239LwpEivL3A" value="1"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_RRHTYCt_Ed239LwpEivL3A" name="&#x417;&#x430;&#x43f;&#x440;&#x43e;&#x441; &#x43f;&#x43e;&#x43b;&#x443;&#x447;&#x435;&#x43d;" source="_IvlXMCt_Ed239LwpEivL3A" target="_ODe5wCt_Ed239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_NwvukEC1Ed2pqtd8uIwe7g" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_NwvukUC1Ed2pqtd8uIwe7g" value="1"/>
         </edge>
-        <edge xmi:type="uml:ControlFlow" xmi:id="_bliJgCt_Ed239LwpEivL3A" name="Url is allowed, request sent to server" source="_ODe5wCt_Ed239LwpEivL3A" target="_VJXXUCt_Ed239LwpEivL3A">
-          <guard xmi:type="uml:OpaqueExpression" xmi:id="_BJsHYCuAEd239LwpEivL3A" name=""/>
-          <weight xmi:type="uml:LiteralInteger" xmi:id="_BJsHYSuAEd239LwpEivL3A" value="1"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_bliJgCt_Ed239LwpEivL3A" name="&#x420;&#x435;&#x441;&#x443;&#x440;&#x441; &#x440;&#x430;&#x437;&#x440;&#x435;&#x448;&#x451;&#x43d;, &#x440;&#x435;&#x43a;&#x432;&#x435;&#x441;&#x442; &#x43f;&#x435;&#x440;&#x435;&#x434;&#x430;&#x43d; &#x441;&#x435;&#x440;&#x432;&#x435;&#x440;&#x443;" source="_ODe5wCt_Ed239LwpEivL3A" target="_VJXXUCt_Ed239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_SjtuUEC1Ed2pqtd8uIwe7g" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_SjtuUUC1Ed2pqtd8uIwe7g" value="1"/>
         </edge>
-        <edge xmi:type="uml:ControlFlow" xmi:id="_hzPo8Ct_Ed239LwpEivL3A" name="Response recieved" source="_VJXXUCt_Ed239LwpEivL3A" target="_ex-3YCt_Ed239LwpEivL3A">
-          <guard xmi:type="uml:OpaqueExpression" xmi:id="_kchYUCt_Ed239LwpEivL3A" name=""/>
-          <weight xmi:type="uml:LiteralInteger" xmi:id="_kchYUSt_Ed239LwpEivL3A" value="1"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_hzPo8Ct_Ed239LwpEivL3A" name="&#x41e;&#x442;&#x432;&#x435;&#x442; &#x43f;&#x43e;&#x43b;&#x443;&#x447;&#x435;&#x43d;" source="_VJXXUCt_Ed239LwpEivL3A" target="_ex-3YCt_Ed239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_UsW10EC1Ed2pqtd8uIwe7g" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_UsW10UC1Ed2pqtd8uIwe7g" value="1"/>
         </edge>
-        <edge xmi:type="uml:ControlFlow" xmi:id="_78Mu0Ct_Ed239LwpEivL3A" name="URL is denied" source="_ODe5wCt_Ed239LwpEivL3A" target="_9otegCuAEd239LwpEivL3A">
-          <guard xmi:type="uml:OpaqueExpression" xmi:id="_9sGmMCt_Ed239LwpEivL3A" name=""/>
-          <weight xmi:type="uml:LiteralInteger" xmi:id="_9sGmMSt_Ed239LwpEivL3A" value="1"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_78Mu0Ct_Ed239LwpEivL3A" name="&#x420;&#x435;&#x441;&#x443;&#x440;&#x441; &#x437;&#x430;&#x43f;&#x440;&#x435;&#x449;&#x451;&#x43d;" source="_ODe5wCt_Ed239LwpEivL3A" target="_9otegCuAEd239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_Wm1lgEC1Ed2pqtd8uIwe7g" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_Wm1lgUC1Ed2pqtd8uIwe7g" value="1"/>
         </edge>
         <edge xmi:type="uml:ControlFlow" xmi:id="_F2GMICuAEd239LwpEivL3A" name="" source="_y_i84Ct_Ed239LwpEivL3A" target="_1QFcICt_Ed239LwpEivL3A">
           <guard xmi:type="uml:OpaqueExpression" xmi:id="_yPef8CuBEd239LwpEivL3A" name=""/>
@@ -4846,9 +4846,9 @@
           <guard xmi:type="uml:OpaqueExpression" xmi:id="_SGSrECuDEd239LwpEivL3A" name=""/>
           <weight xmi:type="uml:LiteralInteger" xmi:id="_SGSrESuDEd239LwpEivL3A" value="1"/>
         </edge>
-        <edge xmi:type="uml:ControlFlow" xmi:id="_mOMNcCuDEd239LwpEivL3A" name="Aggregate timer elapsed" source="_G_8owCuDEd239LwpEivL3A" target="_GP0MUCuDEd239LwpEivL3A">
-          <guard xmi:type="uml:OpaqueExpression" xmi:id="_negl0CuDEd239LwpEivL3A" name=""/>
-          <weight xmi:type="uml:LiteralInteger" xmi:id="_negl0SuDEd239LwpEivL3A" value="1"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_mOMNcCuDEd239LwpEivL3A" name="&#x421;&#x440;&#x430;&#x431;&#x43e;&#x442;&#x430;&#x43b; &#x442;&#x430;&#x439;&#x43c;&#x435;&#x440; &#x430;&#x433;&#x433;&#x440;&#x435;&#x433;&#x430;&#x446;&#x438;&#x438;" source="_G_8owCuDEd239LwpEivL3A" target="_GP0MUCuDEd239LwpEivL3A">
+          <guard xmi:type="uml:OpaqueExpression" xmi:id="_ZZ9NYEC1Ed2pqtd8uIwe7g" name=""/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_ZZ9NYUC1Ed2pqtd8uIwe7g" value="1"/>
         </edge>
       </packagedElement>
     </packagedElement>
@@ -5187,6 +5187,90 @@
         <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Omondo.profile.uml#_zrN_1iUoEdmNXYQzyImvfA"/>
       </eAnnotations>
       <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Omondo.profile.uml#_zrN_0iUoEdmNXYQzyImvfA"/>
+    </profileApplication>
+    <profileApplication xmi:id="_HojBQEC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_HosyQEC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Service_3.2_SN.profile.uml#_6VpgcCK5EdujMN-Mf6X4Bw"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Service_3.2_SN.profile.uml#_RgMRQCK2Edu07u_JJk0LDQ"/>
+    </profileApplication>
+    <profileApplication xmi:id="_Ho_tMEC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_Ho_tMUC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Meta_3.2_SN.profile.uml#_7sFH4CK5EdujMN-Mf6X4Bw"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Meta_3.2_SN.profile.uml#_RgVcYiK2Edu07u_JJk0LDQ"/>
+    </profileApplication>
+    <profileApplication xmi:id="_HpSoIEC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_HpSoIUC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/org.eclipse.uml2.uml.resources/profiles/UML2.profile.uml#_dhEUENSUEdqN9tnr0j3PAQ"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/org.eclipse.uml2.uml.resources/profiles/UML2.profile.uml#_0"/>
+    </profileApplication>
+    <profileApplication xmi:id="_HpljEEC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_HpljEUC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Meta.profile.uml#_kycnUIE4EduiecUdqhZMrw"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Meta.profile.uml#_EJn30IE0EduiecUdqhZMrw"/>
+    </profileApplication>
+    <profileApplication xmi:id="_HpvUEEC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_HpvUEUC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Process_3.2_SN.profile.uml#_7D2DMCK5EdujMN-Mf6X4Bw"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Process_3.2_SN.profile.uml#_RgfOnSK2Edu07u_JJk0LDQ"/>
+    </profileApplication>
+    <profileApplication xmi:id="_HqCPAEC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_HqCPAUC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Persistence_3.2_SN.profile.uml#_AevloCK6EdujMN-Mf6X4Bw"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Persistence_3.2_SN.profile.uml#_RgVfdiK2Edu07u_JJk0LDQ"/>
+    </profileApplication>
+    <profileApplication xmi:id="_HqMAAEC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_HqMAAUC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/org.eclipse.uml2.uml.resources/profiles/Standard.profile.uml#_yzU58YinEdqtvbnfB2L_5w"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/org.eclipse.uml2.uml.resources/profiles/Standard.profile.uml#_0"/>
+    </profileApplication>
+    <profileApplication xmi:id="_HqVxAEC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_HqVxAUC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Archetype.profile.uml#_f6v3QOROEduiB7qvAtFfTA"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Archetype.profile.uml#_j-cLoORNEduiB7qvAtFfTA"/>
+    </profileApplication>
+    <profileApplication xmi:id="_Hqor8EC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_Hqor8UC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Presentation_3.2_SN.profile.uml#_4Um1wCK5EdujMN-Mf6X4Bw"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Presentation_3.2_SN.profile.uml#_RgVcjiK2Edu07u_JJk0LDQ"/>
+    </profileApplication>
+    <profileApplication xmi:id="_Hq7m4EC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_Hq7m4UC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Webservice_3.2_SN.profile.uml#_6jgWRSK5EdujMN-Mf6X4Bw"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Webservice_3.2_SN.profile.uml#_RgVmWCK2Edu07u_JJk0LDQ"/>
+    </profileApplication>
+    <profileApplication xmi:id="_HrFX4EC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_HrFX4UC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Omondo.profile.uml#_zrN_1iUoEdmNXYQzyImvfA"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Omondo.profile.uml#_zrN_0iUoEdmNXYQzyImvfA"/>
+    </profileApplication>
+    <profileApplication xmi:id="_HrOh0EC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_HrOh0UC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Java.profile.uml#_aZhLlH6MEdmbwasWWc4yvw"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Java.profile.uml#_aZhLkH6MEdmbwasWWc4yvw"/>
+    </profileApplication>
+    <profileApplication xmi:id="_HrYS0EC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_HriD0EC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Common_3.2_SN.profile.uml#_7hMtlSK5EdujMN-Mf6X4Bw"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Common_3.2_SN.profile.uml#_RgfPHCK2Edu07u_JJk0LDQ"/>
+    </profileApplication>
+    <profileApplication xmi:id="_HrrNwEC1Ed2pqtd8uIwe7g">
+      <eAnnotations xmi:id="_Hr0-wEC1Ed2pqtd8uIwe7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Xml_3.2_SN.profile.uml#_7JNEVSK5EdujMN-Mf6X4Bw"/>
+      </eAnnotations>
+      <appliedProfile href="platform:/plugin/com.omondo.uml.core/profiles/Omondo_Xml_3.2_SN.profile.uml#_RgVfXCK2Edu07u_JJk0LDQ"/>
     </profileApplication>
   </uml:Model>
   <Omondo_1:Omondo__Import xmi:id="_hYdB0CtoEd2DVPgneqAduw" base_Usage="_hYKG4CtoEd2DVPgneqAduw"/>
