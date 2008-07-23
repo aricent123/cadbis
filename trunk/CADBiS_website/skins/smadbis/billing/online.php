@@ -15,7 +15,7 @@ if($BILLEVEL<3)return;
      {
      $klmessage=str_replace("'","",$klmessage);
      $klmessage=$FLTR->DirectProcessString($klmessage);
-     $prg=$GV["send_program"]." ".$klip." '".$klmessage."'";
+     $prg=$GV["send_program"]." ".$klip." '".$klmessage."'"." &";
      //die($prg);
      //$res=shell_exec("nohup $prg> /dev/null 2>&1 &");
      $res=shell_exec("$prg");
@@ -104,12 +104,12 @@ if($BILLEVEL<3)return;
    if($sure=="true")
      {
      
-     $prg=$GV["kill_program"]." ".$klport;
+     $prg=$GV["kill_program"]." ".$klport." &";
      $res=shell_exec("$prg");
      $BILL->KillUser($klport);
 
      $klmessage="youarekilled";
-     $prg=$GV["send_program"]." ".$klip." '".$klmessage."'";
+     $prg=$GV["send_program"]." ".$klip." '".$klmessage."'"." &";
      $res=shell_exec("$prg");  
 
      $BILL->AddEventKillUser($kluser);
