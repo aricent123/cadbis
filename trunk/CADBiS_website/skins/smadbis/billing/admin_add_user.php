@@ -221,7 +221,7 @@ if($form)
   $vars[$k++]=$user['max_month_traffic'];
   $vars[$k++]=$user['max_week_traffic'];
   $vars[$k++]=$user['max_day_traffic'];
-  $vars[$k++]=$user['simultaneouse_use'];  
+  $vars[$k++]=$user['simultaneous_use'];  
   $vars[$k++]=$user['fio'];
   $vars[$k++]=$user['email'];
   $vars[$k++]=$user['phone'];
